@@ -1,0 +1,407 @@
+.DS_Store
+
+# 由 https://www.toptal.com/developers/gitignore/api/visualstudio 創建
+# 編輯網址：https://www.toptal.com/developers/gitignore?templates=visualstudio
+
+### Visual Studio ###
+忽略 Visual Studio 暫存檔案、產生結果和
+## 由流行的 Visual Studio 外掛程式產生的檔案。
+##
+## 從 https://github.com/github/gitignore/blob/main/VisualStudio.gitignore 獲取最新信息
+
+# 使用者特定文件
+*.rsuser
+*.suo
+*。使用者
+*.userosscache
+*.sln.docstates
+
+# 使用者特定檔案（MonoDevelop/Xamarin Studio）
+*.userprefs
+
+# Mono 自動產生的文件
+mono_crash.*
+
+# 取得成果
+[Dd]ebug/
+[Dd]ebugPublic/
+[Rr]釋放/
+[Rr]發布/
+x64/
+x86/
+[Ww][Ii][Nn]32/
+[Aa][Rr][Mm]/
+[Aa][Rr][Mm]64/
+建築物/
+[Bb]in/
+[Oo]bj/
+[Ll]og/
+[Ll]ogs/
+
+# Visual Studio 2015/2017 快取/選項目錄
+.vs/
+# 如果您有任務會在 wwwroot 目錄下建立專案的靜態文件，請取消註釋
+#wwwroot/
+
+# Visual Studio 2017 自動產生的文件
+生成的文件/
+
+# MSTest 測試結果
+[T]測試[Rr]結果*/
+[Bb]建構[L]og.*
+
+# NUnit
+*.VisualState.xml
+測試結果.xml
+nunit-*.xml
+
+# 建構 ATL 專案成果
+[Dd]ebugPS/
+[Rr]釋放PS/
+dlldata.c
+
+# 基準測試結果
+BenchmarkDotNet.Artifacts/
+
+# .NET Core
+project.lock.json
+project.fragment.lock.json
+文物/
+
+# ASP.NET 鷹架
+ScaffoldingReadMe.txt
+
+# StyleCop
+StyleCopReport.xml
+
+# 由 Visual Studio 產生的文件
+*_我知道了
+*_個人電腦
+*_h.h
+*.牛奶
+*.meta
+*.obj
+*.iobj
+*.pch
+*.pdb
+*.ipdb
+*.pgc
+*.pgd
+*.rsp
+*.sbr
+*.tlb
+*.tli
+*.tlh
+*.tmp
+*.tmp_proj
+*_wpftmp.csproj
+*.紀錄
+*.tlog
+*.vspscc
+*.vssscc
+.builds
+*.pidb
+*.svclog
+*.scc
+
+# 厚顏無恥測試文件
+膽大妄為*
+
+# Visual C++ 快取文件
+ipch/
+*.aps
+*.ncb
+*.opendb
+*.opensdf
+*.sdf
+*.cachefile
+*.VC.db
+*.VC.VC.opendb
+
+# Visual Studio 分析器
+*.psess
+*.vsp
+*.vspx
+*。樹液
+
+# Visual Studio 追蹤文件
+*.e2e
+
+# TFS 2012 本地工作區
+$tf/
+
+# 導航自動化工具包
+*.gpState
+
+# ReSharper 是一個 .NET 程式設計插件
+_ReSharper*/
+*.[Rr]e[Ss]harper
+*.DotSettings.user
+
+# TeamCity 是一個建置插件
+_TeamCity*
+
+# DotCover 是一款程式碼覆蓋率工具
+*.dotCover
+
+# AxoCover 是一款程式碼覆蓋率工具
+.axoCover/*
+!.axoCover/settings.json
+
+Coverlet 是一款免費的跨平台程式碼覆蓋率工具。
+coverage*.json
+coverage*.xml
+覆蓋範圍*.info
+
+# Visual Studio 程式碼覆蓋率結果
+*.覆蓋範圍
+*.coveragexml
+
+# NCrunch
+_NCrunch_*
+.*crunch*.local.xml
+nCrunchTemp_*
+
+# 強大的麋鹿
+*。毫米。 *
+AutoTest.Net/
+
+# Web 工作台（sass）
+.sass-cache/
+
+# InstallShield 輸出資料夾
+[Ee]快遞/
+
+# DocProject 是一個文檔產生器插件
+DocProject/buildhelp/
+DocProject/Help/*.HxT
+DocProject/Help/*.HxC
+DocProject/Help/*.hhc
+DocProject/Help/*.hhk
+DocProject/Help/*.hhp
+DocProject/幫助/Html2
+DocProject/Help/html
+
+# Click-Once 目錄
+發布/
+
+# 發布 Web 輸出
+*.[Pp]ublish.xml
+*.azurePubxml
+# 注意：如果您想提交 Web 部署設置，請註解掉下一行。
+但是資料庫連接字串（可能包含密碼）將未加密。
+*.pubxml
+*.publishproj
+
+# Microsoft Azure Web 應用程式發佈設定。如果需要，請註解掉下一行。
+# 請檢查您的 Azure Web 應用程式發布設置，但其中包含敏感訊息
+# 這些腳本中的資料將未加密
+發布腳本/
+
+# NuGet 套件
+*.nupkg
+# NuGet 符號包
+*.snupkg
+由於軟體包還原機制，可以忽略 packages 資料夾。
+**/[Pp]包裹/*
+# 除了 build/ 之外，它被用作 MSBuild 目標。
+!**/[Pp]packages/build/
+# 如有必要，請取消註釋，但通常情況下，它會在需要時重新產生。
+#!**/[Pp]packages/repositories.config
+NuGet v3 的 project.json 檔案會產生更多可忽略的文件
+*.nuget.props
+*.nuget.targets
+
+# Microsoft Azure 建置輸出
+csx/
+*.build.csdef
+
+# Microsoft Azure 模擬器
+ecf/
+rcf/
+
+# Windows 應用程式商店應用程式套件目錄和文件
+應用程式包/
+捆綁工件/
+Package.StoreAssociation.xml
+_pkginfo.txt
+*.appx
+*.appxbundle
+*.appxupload
+
+# Visual Studio 快取文件
+以 .cache 結尾的檔案可以忽略。
+*.[Cc]ache
+但要追蹤以 .cache 結尾的目錄。
+!?*.[Cc]ache/
+
+＃ 其他的
+客戶端Bin/
+~$*
+*~
+*.dbmdl
+*.dbproj.schemaview
+*.jfm
+*.pfx
+*.publishsettings
+orleans.codegen.cs
+
+# 包含強名稱檔案可能會帶來安全風險
+# (https://github.com/github/gitignore/pull/2483#issue-259490424)
+#*.snk
+
+# 由於存在多個工作流程，請取消註解下一行以忽略 bower_components
+# (https://github.com/github/gitignore/pull/1529#issuecomment-104372622)
+#鮑爾組件/
+
+# RIA/Silverlight項目
+產生的程式碼/
+
+# 備份和報告轉換舊專案文件時產生的文件
+# 升級到更新版本的 Visual Studio。無需備份檔案。
+因為我們有 Git ;-)
+_升級報告文件/
+備份*/
+UpgradeLog*.XML
+升級日誌*.htm
+ServiceFabric備份/
+*.rptproj.bak
+
+# SQL Server 文件
+*.mdf
+*.ldf
+*.ndf
+
+# 商業智慧項目
+*.rdl.數據
+*.bim.layout
+*.bim_*.settings
+*.rptproj.rsuser
+*- [Bb]備份.rdl
+*- [Bb]備份([0-9]).rdl
+*- [Bb]備份([0-9][0-9]).rdl
+
+#微軟假貨
+偽程序集/
+
+# GhostDoc 外掛程式設定檔
+*.GhostDoc.xml
+
+# 適用於 Visual Studio 的 Node.js 工具
+.ntvs_analysis.dat
+node_modules/
+
+# Visual Studio 6 建置日誌
+*.plg
+
+# Visual Studio 6 工作區選項文件
+*。選擇
+
+# Visual Studio 6 自動產生的工作區檔案（包含已開啟的檔案等資訊）
+*.vbw
+
+# Visual Studio 6 自動產生的專案檔案（包含已開啟的檔案等資訊）
+*.vbp
+
+# Visual Studio 6 工作區和專案文件（包含要包含在專案中的文件的工作項目文件）
+*.dsw
+*.dsp
+
+# Visual Studio 6 技術文件
+
+# Visual Studio LightSwitch 建置輸出
+**/*.HTMLClient/GeneratedArtifacts
+**/*.DesktopClient/GeneratedArtifacts
+**/*.DesktopClient/ModelManifest.xml
+**/*.Server/GeneratedArtifacts
+**/*.Server/ModelManifest.xml
+_Pvt_Extensions
+
+# Paket依賴管理器
+.paket/paket.exe
+包文件/
+
+# 假的 - F# 製作
+。偽造的/
+
+# CodeRush 個人設置
+.cr/個人
+
+# Visual Studio 的 Python 工具 (PTVS)
+__pycache__/
+*.pyc
+
+# 蛋糕 - 如果您正在使用它，請取消註釋
+＃ 工具/**
+# !tools/packages.config
+
+# Tabs Studio
+*.tss
+
+# Telerik 的 JustMock 設定文件
+*.jmconfig
+
+# BizTalk 建置輸出
+*.btp.cs
+*.btm.cs
+*.odx.cs
+*.xsd.cs
+
+# OpenCover UI 分析結果
+開蓋/
+
+# Azure Stream Analytics 本機運作輸出
+ASALocalRun/
+
+# MSBuild 二進位和結構化日誌
+*.binlog
+
+# NVIDIA Nsight GPU 偵錯器設定檔
+*.nvuser
+
+# MFractors（Xamarin 生產力工具）工作資料夾
+.mfractor/
+
+# Visual Studio 本機歷史記錄
+.localhistory/
+
+# Visual Studio 歷史記錄 (VSHistory) 文件
+.vshistory/
+
+# BeatPulse 健康檢查臨時資料庫
+健康檢查資料庫
+
+# Visual Studio 2017 中套件引用轉換工具的備份資料夾
+遷移備份/
+
+# Ionide（跨平台 F# VS Code 工具）工作資料夾
+.離子化物/
+
+# Fody - 自動產生的 XML 模式
+FodyWeavers.xsd
+
+# 適用於使用多種工具的使用者的 VS Code 文件
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+*.code-workspace
+
+# Visual Studio Code 的本機歷史記錄
+。歷史/
+
+# 來自建置輸出的 Windows Installer 文件
+*.計程車
+*.msi
+*.msix
+*.msm
+*.msp
+
+# JetBrains Rider
+*.sln.iml
+
+### VisualStudio 補丁 ###
+# Visual Studio 產生的其他文件
+
+# https://www.toptal.com/developers/gitignore/api/visualstudio 結束
