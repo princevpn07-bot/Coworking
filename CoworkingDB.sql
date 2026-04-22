@@ -56,3 +56,19 @@ CREATE TABLE [dbo].[Contracts] (
     CONSTRAINT [FK_Contracts_Spaces] FOREIGN KEY ([space_id]) REFERENCES [dbo].[Spaces] ([space_id])
 );
 GO
+
+-- 5. 建立 Users (使用者表)
+CREATE TABLE [dbo].[Users] (
+    [user_id]    INT           IDENTITY (1, 1) NOT NULL,
+    [company_id] INT           NULL,
+    [email]      NVARCHAR (50) NULL,
+    [password]   NVARCHAR (50) NULL,
+    [name]       NVARCHAR (50) NULL,
+    [phone]      NVARCHAR (50) NULL,
+    [role]       INT           NULL,
+    [line_id]    NVARCHAR (50) NULL,
+    [is_active]  BIT           NULL,
+    CONSTRAINT [PK_Users] PRIMARY KEY CLUSTERED ([user_id] ASC),
+    CONSTRAINT [FK_Users_Companies] FOREIGN KEY ([company_id]) REFERENCES [dbo].[Companies] ([company_id])
+);
+GO
