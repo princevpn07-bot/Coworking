@@ -23,6 +23,14 @@ namespace CoworkingAPI.Controllers
             return Ok(space);
         }
 
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetById(int id)
+        {
+            var space = await _context.Spaces.FirstOrDefaultAsync(s => s.space_id == id);
+            if (space == null) return NotFound($"沒有{id}");
+            return Ok(space);
+        }
+
         [HttpPost("Add")]
         public async Task<IActionResult> Add([FromBody] Space Space)
         {
@@ -39,8 +47,8 @@ namespace CoworkingAPI.Controllers
             space.location_id = Space.location_id;
             space.space_number = Space.space_number;
             space.capacity = Space.capacity;
-            space.rent = Space.rent;
-            space.is_rented = Space.is_rented;
+            space.status = Space.status;
+            space.image = Space.image;
 
             _context.Spaces.Update(space);
             await _context.SaveChangesAsync();

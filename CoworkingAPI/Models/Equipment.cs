@@ -4,16 +4,18 @@ using System.Text.Json.Serialization;
 
 namespace CoworkingAPI.Models
 {
-    public class Space
+    [Table("equipment")]
+    public class Equipment
     {
         [Key]
-        public int space_id { get; set; }
+        public int equipment_id { get; set; }
         [ForeignKey("Location")]
         public int? location_id { get; set; }
-        public string? space_number { get; set; }
-        public int? capacity { get; set; }
-        public int? status { get; set; }
-        public string? image { get; set; }
+        public string? category { get; set; }
+        public string? full_name { get; set; }
+        public DateTime? create_date { get; set; }
+        public decimal? cost { get; set; }
+        public int? total_amount { get; set; }
 
         [JsonIgnore]
         public Location? Location { get; set; }

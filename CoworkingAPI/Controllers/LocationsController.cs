@@ -26,9 +26,9 @@ namespace CoworkingAPI.Controllers
         [HttpPost("Add")]
         public async Task<IActionResult> Add([FromBody]Location Location)
         {
-            var location = _context.Locations.Add(Location);
+            _context.Locations.Add(Location);
             await _context.SaveChangesAsync();
-            return CreatedAtAction(nameof(GetAll), location);
+            return CreatedAtAction(nameof(GetAll), Location);
         }
 
         [HttpPut("Update")]
@@ -38,8 +38,10 @@ namespace CoworkingAPI.Controllers
             if (location == null) return NotFound($"沒有{Location.location_id}");
             location.country = Location.country;
             location.city = Location.city;
-            location.building_name = Location.building_name;
             location.address = Location.address;
+            location.phone = Location.phone;
+            location.longitude = Location.longitude;
+            location.latitude = Location.latitude;
 
             _context.Locations.Update(location);
             await _context.SaveChangesAsync();

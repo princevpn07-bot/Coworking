@@ -2,6 +2,12 @@ using Microsoft.AspNetCore.Mvc;
 using CoworkingAPI.Data;
 using CoworkingAPI.Models;
 using Microsoft.EntityFrameworkCore;
+using CoworkingAPI.Dto;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
+using System.Security.Claims;
+using System.IdentityModel.Tokens.Jwt;
+using System.ComponentModel;
 
 namespace CoworkingAPI.Controllers
 {
@@ -10,10 +16,12 @@ namespace CoworkingAPI.Controllers
     public class UsersController : ControllerBase
     {
         private readonly AppDbContext _context;
+        private readonly IConfiguration _config;
 
-        public UsersController(AppDbContext context)
+        public UsersController(AppDbContext context, IConfiguration config)
         {
             _context = context;
+            _config = config;
         }
 
         [HttpGet("GetAll")]
@@ -36,10 +44,10 @@ namespace CoworkingAPI.Controllers
         {
             var user = await _context.Users.FirstOrDefaultAsync(u => u.user_id == User.user_id);
             if (user == null) return NotFound($"沒有{User.user_id}");
-            user.company_id = User.company_id;
+            user.name = User.name;
             user.email = User.email;
             user.password = User.password;
-            user.name = User.name;
+            user.image = User.image;
             user.phone = User.phone;
             user.role = User.role;
             user.line_id = User.line_id;
@@ -58,6 +66,36 @@ namespace CoworkingAPI.Controllers
             _context.Users.Remove(user);
             await _context.SaveChangesAsync();
             return NoContent();
+        }
+
+        [HttpPost("Login")]
+        public async Task<IActionResult> Login([FromBody]Login login)
+        {
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.email == login.email && u.password == login.password);
+            if (user == null) return Unauthorized("帳號或密碼錯誤");
+            var jwtsetting = _config.GetSection("JwtSettings");
+            var issuer = jwtsetting.GetValue<string>("Issuer");
+            var audience = jwtsetting.GetValue<string>("Audience");
+            var secretkey = jwtsetting.GetValue<string>("Key");
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretkey!));
+            var crypt = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+
+            var claims = new[]
+            {
+                new Claim(JwtRegisteredClaimNames.Sub, user.email!),
+                new Claim(JwtRegisteredClaimNames.Jti,Guid.NewGuid().ToString()),
+                new Claim(ClaimTypes.Role, user.role.ToString()!)
+            };
+
+            var token = new JwtSecurityToken(
+                issuer: issuer,
+                audience: audience,
+                claims: claims,
+                expires: DateTime.Now.AddHours(1),
+                signingCredentials: crypt
+            );
+            return Ok(new {token = new JwtSecurityTokenHandler().WriteToken(token)});
+
         }
     }
 }
