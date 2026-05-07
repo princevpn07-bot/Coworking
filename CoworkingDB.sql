@@ -2,6 +2,12 @@
 -- 專案：共享辦公室租賃系統
 -- =========================================
 
+-- 建立資料庫
+CREATE DATABASE [LOCUS];
+GO
+USE [LOCUS];
+GO
+
 -- 1. 建立 Locations (房地產據點表)
 CREATE TABLE [dbo].[Locations] (
     [location_id] INT           IDENTITY (1, 1) NOT NULL,
