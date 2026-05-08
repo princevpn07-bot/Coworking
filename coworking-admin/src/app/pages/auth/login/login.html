@@ -1,4 +1,48 @@
-<p><input [(ngModel)]="credentials.email" placeholder="請輸入email"></p>
-<p><input type="password" [(ngModel)]="credentials.password" placeholder="請輸入密碼"></p>
+<div class="login-page">
+  <aside class="hero-section">
+    <img alt="Modern Coworking Space" class="hero-image" src="https://images.unsplash.com/photo-1497366216548-37526070297c?w=1200&q=80"/>
+  </aside>
 
-<p><button (click)="login()">登入</button></p>
+  <main class="content-section">
+    <header class="header">
+      <div class="brand">LUXEWORK</div>
+    </header>
+
+    <div class="login-container">
+      <div class="login-intro">
+        <h1>Welcome back to your space.</h1>
+        <p>Enter your details to access your workspace.</p>
+      </div>
+
+      <form class="login-card">
+        <div class="form-group">
+          <label for="email">Email Address</label>
+          <div class="input-wrapper">
+            <svg class="input-icon" fill="none" height="20" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" width="20">
+              <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+              <polyline points="22,6 12,13 2,6"></polyline>
+            </svg>
+            <input [(ngModel)]="credentials.email" name="email" id="email" placeholder="name@company.com" type="email"/>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="password">Password</label>
+          <div class="input-wrapper">
+            <svg class="input-icon" fill="none" height="20" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" width="20">
+              <rect height="11" rx="2" ry="2" width="18" x="3" y="11"></rect>
+              <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+            </svg>
+            <input [(ngModel)]="credentials.password" name="password" id="password" placeholder="••••••••" type="password"/>
+          </div>
+        </div>
+
+        <button class="btn-primary" type="button" (click)="login()">Sign In</button>
+      </form>
+    </div>
+
+    <footer class="footer">
+      <p>© 2024 Luxework Spaces. Architectural Precision. Human Warmth.</p>
+    </footer>
+  </main>
+</div>

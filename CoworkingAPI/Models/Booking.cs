@@ -13,7 +13,7 @@ namespace CoworkingAPI.Models
         public int? user_id { get; set; }
         [ForeignKey("Rent")]
         public int? rent_id { get; set; }
-        [ForeignKey("Employess")]
+        [ForeignKey("Employee")]
         public int? employees_id { get; set; }
         public DateTime? created_date { get; set; }
         public DateTime? start_date { get; set; }
@@ -28,9 +28,9 @@ namespace CoworkingAPI.Models
         [JsonIgnore]
         public User? User { get; set; }
         [JsonIgnore]
-        public Rent? rent {get; set;}
+        public Rent? Rent {get; set;}
         [JsonIgnore]
-        public Employee? employee {get; set;}
+        public Employee? Employee {get; set;}
         
     }
 }
