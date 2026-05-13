@@ -4,6 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace CoworkingAPI.Models;
 
+[Table("space_asserts")]
 public class SpaceAsserts
 {
     [Key]

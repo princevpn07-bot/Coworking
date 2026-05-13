@@ -1,1 +1,9 @@
 /* You can add global styles to this file, and also import other style files */
+
+.event-chip.paid { background: #D1E9CF; color: #2D4A2B; }
+.event-chip.pending { background: #FFE8D1; color: #6B4C1E; }
+.event-chip.cancelled { background: #F0F0F0; color: #6B6B6B; }
+
+.booking-status-badge.paid { background: #D1E9CF; color: #2D4A2B; }
+.booking-status-badge.pending { background: #FFE8D1; color: #6B4C1E; }
+.booking-status-badge.cancelled { background: #F0F0F0; color: #6B6B6B; }

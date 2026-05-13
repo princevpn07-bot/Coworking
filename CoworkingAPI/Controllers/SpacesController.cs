@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using CoworkingAPI.Data;
 using CoworkingAPI.Models;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authorization;
 
 namespace CoworkingAPI.Controllers
 {
@@ -54,7 +55,7 @@ namespace CoworkingAPI.Controllers
             await _context.SaveChangesAsync();
             return NoContent();
         }
-
+        
         [HttpDelete("Delete/{id}")]
         public async Task<IActionResult> Delete(int id)
         {

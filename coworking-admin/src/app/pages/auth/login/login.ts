@@ -31,7 +31,7 @@ export class Login
           const role = this.authservices.getrole();
           if (role == Role.Admin || role == Role.Staff)
           {
-            this.router.navigate(['/backend/spaces']);
+            this.router.navigate(['/backend/dashboard']);
           }
           else
           {

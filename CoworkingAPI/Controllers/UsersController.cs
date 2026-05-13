@@ -8,6 +8,7 @@ using System.Text;
 using System.Security.Claims;
 using System.IdentityModel.Tokens.Jwt;
 using System.ComponentModel;
+using Microsoft.AspNetCore.Authorization;
 
 namespace CoworkingAPI.Controllers
 {
@@ -23,7 +24,7 @@ namespace CoworkingAPI.Controllers
             _context = context;
             _config = config;
         }
-
+        
         [HttpGet("GetAll")]
         public async Task<IActionResult> GetAll()
         {

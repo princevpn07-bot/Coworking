@@ -19,7 +19,7 @@ namespace CoworkingAPI.Models
         public DateTime? start_date { get; set; }
         public DateTime? end_date { get; set; }
         public string? company_name { get; set; }
-        public int? tax_id { get; set; }
+        public string? tax_id { get; set; }
         public int? status { get; set; }
         public DateTime? pay_deadline { get; set; }
         public DateTime? cancelled_daedline { get; set; }

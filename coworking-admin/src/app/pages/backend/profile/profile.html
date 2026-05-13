@@ -1,0 +1,57 @@
+<div class="settings-container">
+
+  <section class="settings-card">
+    <div class="card-header">
+      <span class="material-symbols-outlined">person</span>
+      <h3>基本資料</h3>
+    </div>
+
+    <div class="profile-header">
+      <div class="initials-avatar">王</div>
+      <div class="profile-info-brief">
+        <p class="info-label">系統角色</p>
+        <span class="role-badge">企業管理員</span>
+      </div>
+    </div>
+
+    <div class="form-grid">
+      <div class="form-group">
+        <label for="name">姓名</label>
+        <input type="text" id="name" value="王大為" placeholder="請輸入姓名"/>
+      </div>
+      <div class="form-group">
+        <label for="email">電子郵件 (唯讀)</label>
+        <input type="email" id="email" value="david.wang&#64;luxework.com" disabled/>
+        <p class="input-hint">電子郵件作為登入帳號，無法自行修改</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="settings-card">
+    <div class="card-header">
+      <span class="material-symbols-outlined">lock</span>
+      <h3>變更密碼</h3>
+    </div>
+
+    <div class="form-grid">
+      <div class="form-group">
+        <label for="current-password">當前密碼</label>
+        <input type="password" id="current-password" value="********"/>
+      </div>
+      <div class="form-group">
+        <label for="new-password">新密碼</label>
+        <input type="password" id="new-password" placeholder="請輸入新密碼"/>
+      </div>
+      <div class="form-group">
+        <label for="confirm-password">確認新密碼</label>
+        <input type="password" id="confirm-password" placeholder="再次輸入新密碼"/>
+        <p class="input-hint">密碼長度需至少 8 個字元</p>
+      </div>
+    </div>
+  </section>
+
+  <div class="actions-row">
+    <button type="submit" class="btn-primary">儲存變更</button>
+  </div>
+
+</div>
