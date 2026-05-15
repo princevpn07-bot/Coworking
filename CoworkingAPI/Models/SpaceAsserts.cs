@@ -1,6 +1,7 @@
 using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
 
 namespace CoworkingAPI.Models;
 
@@ -9,8 +10,14 @@ public class SpaceAsserts
 {
     [Key]
     public int asserts_id {get; set;}
-    [ForeignKey("Space")]
-    public int space_id {get; set;}
-    public string? category {get; set;}
-    public decimal? amount {get; set;}
+    public int? space_id {get; set;}
+    public int? equipment_id {get; set;}
+    public int? amount {get; set;}
+
+    [JsonIgnore]
+    [ForeignKey("space_id")]
+    public Space? space {get; set;}
+    [JsonIgnore]
+    [ForeignKey("equipment_id")]
+    public Equipment? equipment {get; set;}
 }

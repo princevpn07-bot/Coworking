@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 
 namespace CoworkingAPI.Models
 {
@@ -12,5 +13,12 @@ namespace CoworkingAPI.Models
         public string? phone {get; set;}
         public decimal? longitude {get; set;}
         public decimal? latitude {get; set;}
+
+        [JsonIgnore]
+        public ICollection<Space>? Spaces { get; set; }
+        [JsonIgnore]
+        public ICollection<Equipment>? Equipments { get; set; }
+        [JsonIgnore]
+        public ICollection<Employee>? Employees { get; set; }
     }
 }

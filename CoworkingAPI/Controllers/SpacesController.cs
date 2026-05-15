@@ -51,7 +51,6 @@ namespace CoworkingAPI.Controllers
             space.status = Space.status;
             space.image = Space.image;
 
-            _context.Spaces.Update(space);
             await _context.SaveChangesAsync();
             return NoContent();
         }

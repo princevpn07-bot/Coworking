@@ -46,7 +46,7 @@ namespace CoworkingAPI.Controllers
             var assert = await _context.spaceasserts.FirstOrDefaultAsync(a => a.asserts_id == spaceAsserts.asserts_id);
             if (assert == null) return NotFound($"找不到{spaceAsserts.asserts_id}");
             assert.space_id = spaceAsserts.space_id;
-            assert.category = spaceAsserts.category;
+            assert.equipment_id = spaceAsserts.equipment_id;
             assert.amount = spaceAsserts.amount;
 
             _context.spaceasserts.Update(assert);
