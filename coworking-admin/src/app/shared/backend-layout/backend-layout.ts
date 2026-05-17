@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, NgZone, ChangeDetectorRef } from '@angular/core';
 import { RouterOutlet, RouterLink, RouterLinkActive, Router, ActivatedRoute, NavigationEnd } from '@angular/router';
 import { filter } from 'rxjs';
 
@@ -15,7 +15,12 @@ export class BackendLayout implements OnInit, OnDestroy {
   currentTime = '';
   private timer: ReturnType<typeof setInterval> | null = null;
 
-  constructor(private router: Router, private activatedRoute: ActivatedRoute) {}
+  constructor(
+    private router: Router,
+    private activatedRoute: ActivatedRoute,
+    private ngZone: NgZone,
+    private cdr: ChangeDetectorRef,
+  ) {}
 
   ngOnInit() {
     this.pageTitle = this.getTitle();
@@ -24,7 +29,12 @@ export class BackendLayout implements OnInit, OnDestroy {
     ).subscribe(() => this.pageTitle = this.getTitle());
 
     this.updateTime();
-    this.timer = setInterval(() => this.updateTime(), 1000);
+    this.ngZone.runOutsideAngular(() => {
+      this.timer = setInterval(() => {
+        this.updateTime();
+        this.cdr.detectChanges();
+      }, 1000);
+    });
   }
 
   ngOnDestroy() {

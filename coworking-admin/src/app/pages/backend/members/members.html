@@ -1,14 +1,14 @@
 <div class="members-top-bar">
   <div class="tabs">
-    <button class="tab-item active">客戶 / 公司</button>
-    <button class="tab-item">內部員工</button>
+    <button class="tab-item" [class.active]="activeTab === 'client'" (click)="setTab('client')">客戶 / 公司</button>
+    <button class="tab-item" [class.active]="activeTab === 'staff'" (click)="setTab('staff')">內部員工</button>
   </div>
   <div class="header-actions">
     <div class="search-box">
       <span class="material-symbols-outlined search-icon">search</span>
-      <input placeholder="搜尋公司或成員..." type="text"/>
+      <input placeholder="搜尋姓名或 Email..." type="text" [(ngModel)]="searchQuery" />
     </div>
-    <button class="btn-primary">
+    <button class="btn-primary" (click)="openCreateModal()">
       <span class="material-symbols-outlined">add</span>
       新增成員
     </button>
@@ -19,7 +19,7 @@
   <div class="stat-card">
     <span class="label">總成員數</span>
     <div class="value-row">
-      <span class="value">1,284</span>
+      <span class="value">{{ data?.totalMembers ?? '-' }}</span>
     </div>
     <span class="trend up">
       <span class="material-symbols-outlined">trending_up</span>
@@ -27,9 +27,9 @@
     </span>
   </div>
   <div class="stat-card">
-    <span class="label">活躍公司</span>
+    <span class="label">活躍預約人數</span>
     <div class="value-row">
-      <span class="value">82</span>
+      <span class="value">{{ data?.activeBookingUsers ?? '-' }}</span>
     </div>
     <span class="trend up">
       <span class="material-symbols-outlined">check_circle</span>
@@ -39,7 +39,7 @@
   <div class="stat-card alert">
     <span class="label">異常 / 停權帳號</span>
     <div class="value-row">
-      <span class="value">3</span>
+      <span class="value">{{ data?.suspendedCount ?? '-' }}</span>
       <span class="material-symbols-outlined warning-icon">warning</span>
     </div>
     <span class="trend alert-text">需立即處理</span>
@@ -52,214 +52,205 @@
       <tr>
         <th>成員姓名</th>
         <th>權限角色</th>
-        <th>所屬公司</th>
-        <th>最後登入</th>
+        <th>{{ activeTab === 'client' ? '累計預約次數' : '' }}</th>
+        <th>帳號狀態</th>
         <th class="text-right">操作</th>
       </tr>
     </thead>
     <tbody>
-      <tr>
-        <td>
-          <div class="member-info">
-            <div class="avatar-placeholder">陳</div>
-            <div>
-              <div class="name">陳小明</div>
-              <div class="email">hsiao.ming&#64;starlight.com</div>
+      @for (member of filteredMembers; track member.userId; let i = $index) {
+        <tr>
+          <td>
+            <div class="member-info">
+              <div [class]="'avatar-placeholder ' + avatarColor(i)">{{ avatarInitial(member.name) }}</div>
+              <div>
+                <div class="name">{{ member.name }}</div>
+                <div class="email">{{ member.email }}</div>
+              </div>
             </div>
-          </div>
-        </td>
-        <td><span class="badge admin">管理員</span></td>
-        <td>星曜科技</td>
-        <td>2 分鐘前</td>
-        <td class="actions">
-          <button class="btn-icon btn-manage" title="更改權限"><span class="material-symbols-outlined">manage_accounts</span></button>
-          <button class="btn-icon btn-reset" title="重置密碼"><span class="material-symbols-outlined">lock_reset</span></button>
-          <button class="btn-icon btn-block" title="停用帳戶"><span class="material-symbols-outlined">block</span></button>
-        </td>
-      </tr>
-      <tr>
-        <td>
-          <div class="member-info">
-            <div class="avatar-placeholder bg-green">林</div>
-            <div>
-              <div class="name">林美惠</div>
-              <div class="email">mei.hui&#64;creative.io</div>
+          </td>
+          <td><span [class]="'badge ' + roleClass(member.role)">{{ roleLabel(member.role) }}</span></td>
+          <td>{{ activeTab === 'client' ? ((member.totalBookings ?? 0) + ' 次') : '' }}</td>
+          <td>
+            @if (member.status) {
+              <span class="status active">🟢 正常 (Active)</span>
+            } @else {
+              <span class="status suspended">🔴 已停權 (Suspended)</span>
+            }
+          </td>
+          <td>
+            <div class="actions">
+              <button class="btn-icon btn-manage" [title]="isSelf(member) ? '無法操作自己的帳號' : '更改權限'"
+                      [disabled]="isSelf(member)" (click)="openRoleModal(member)">
+                <span class="material-symbols-outlined">manage_accounts</span>
+              </button>
+              <button class="btn-icon btn-reset" [title]="isSelf(member) ? '無法操作自己的帳號' : '重置密碼'"
+                      [disabled]="isSelf(member)" (click)="openResetModal(member)">
+                <span class="material-symbols-outlined">lock_reset</span>
+              </button>
+              <button class="btn-icon btn-block" [title]="isSelf(member) ? '無法操作自己的帳號' : (member.status ? '封鎖帳戶' : '解除封鎖')"
+                      [disabled]="isSelf(member)" (click)="openBlockModal(member)">
+                <span class="material-symbols-outlined">{{ member.status ? 'block' : 'lock_open' }}</span>
+              </button>
             </div>
-          </div>
-        </td>
-        <td><span class="badge editor">編輯者</span></td>
-        <td>創研設計</td>
-        <td>1 小時前</td>
-        <td class="actions">
-          <button class="btn-icon btn-manage"><span class="material-symbols-outlined">manage_accounts</span></button>
-          <button class="btn-icon btn-reset"><span class="material-symbols-outlined">lock_reset</span></button>
-          <button class="btn-icon btn-block"><span class="material-symbols-outlined">block</span></button>
-        </td>
-      </tr>
-      <tr>
-        <td>
-          <div class="member-info">
-            <div class="avatar-placeholder bg-blue">王</div>
-            <div>
-              <div class="name">王大為</div>
-              <div class="email">david.wang&#64;luxework.com</div>
-            </div>
-          </div>
-        </td>
-        <td><span class="badge viewer">檢視者</span></td>
-        <td>LUXEWORK Co.</td>
-        <td>3 小時前</td>
-        <td class="actions">
-          <button class="btn-icon btn-manage"><span class="material-symbols-outlined">manage_accounts</span></button>
-          <button class="btn-icon btn-reset"><span class="material-symbols-outlined">lock_reset</span></button>
-          <button class="btn-icon btn-block"><span class="material-symbols-outlined">block</span></button>
-        </td>
-      </tr>
-      <tr>
-        <td>
-          <div class="member-info">
-            <div class="avatar-placeholder bg-blue">李</div>
-            <div>
-              <div class="name">李子豪</div>
-              <div class="email">zi.hao&#64;techflow.net</div>
-            </div>
-          </div>
-        </td>
-        <td><span class="badge editor">編輯者</span></td>
-        <td>TechFlow Systems</td>
-        <td>昨天 16:40</td>
-        <td class="actions">
-          <button class="btn-icon btn-manage"><span class="material-symbols-outlined">manage_accounts</span></button>
-          <button class="btn-icon btn-reset"><span class="material-symbols-outlined">lock_reset</span></button>
-          <button class="btn-icon btn-block"><span class="material-symbols-outlined">block</span></button>
-        </td>
-      </tr>
-      <tr>
-        <td>
-          <div class="member-info">
-            <div class="avatar-placeholder bg-purple">張</div>
-            <div>
-              <div class="name">張雅婷</div>
-              <div class="email">ya.ting&#64;studio.com</div>
-            </div>
-          </div>
-        </td>
-        <td><span class="badge viewer">檢視者</span></td>
-        <td>Creative Studio</td>
-        <td>2 天前</td>
-        <td class="actions">
-          <button class="btn-icon btn-manage"><span class="material-symbols-outlined">manage_accounts</span></button>
-          <button class="btn-icon btn-reset"><span class="material-symbols-outlined">lock_reset</span></button>
-          <button class="btn-icon btn-block"><span class="material-symbols-outlined">block</span></button>
-        </td>
-      </tr>
-      <tr>
-        <td>
-          <div class="member-info">
-            <div class="avatar-placeholder">黃</div>
-            <div>
-              <div class="name">黃品睿</div>
-              <div class="email">pin.rui&#64;starlight.com</div>
-            </div>
-          </div>
-        </td>
-        <td><span class="badge admin">管理員</span></td>
-        <td>星曜科技</td>
-        <td>3 天前</td>
-        <td class="actions">
-          <button class="btn-icon btn-manage"><span class="material-symbols-outlined">manage_accounts</span></button>
-          <button class="btn-icon btn-reset"><span class="material-symbols-outlined">lock_reset</span></button>
-          <button class="btn-icon btn-block"><span class="material-symbols-outlined">block</span></button>
-        </td>
-      </tr>
-      <tr>
-        <td>
-          <div class="member-info">
-            <div class="avatar-placeholder bg-green">周</div>
-            <div>
-              <div class="name">周曉彤</div>
-              <div class="email">hsiao.tung&#64;creative.io</div>
-            </div>
-          </div>
-        </td>
-        <td><span class="badge editor">編輯者</span></td>
-        <td>創研設計</td>
-        <td>1 週前</td>
-        <td class="actions">
-          <button class="btn-icon btn-manage"><span class="material-symbols-outlined">manage_accounts</span></button>
-          <button class="btn-icon btn-reset"><span class="material-symbols-outlined">lock_reset</span></button>
-          <button class="btn-icon btn-block"><span class="material-symbols-outlined">block</span></button>
-        </td>
-      </tr>
-      <tr>
-        <td>
-          <div class="member-info">
-            <div class="avatar-placeholder bg-orange">郭</div>
-            <div>
-              <div class="name">郭家豪</div>
-              <div class="email">chia.hao&#64;techflow.net</div>
-            </div>
-          </div>
-        </td>
-        <td><span class="badge viewer">檢視者</span></td>
-        <td>TechFlow Systems</td>
-        <td>2 週前</td>
-        <td class="actions">
-          <button class="btn-icon btn-manage"><span class="material-symbols-outlined">manage_accounts</span></button>
-          <button class="btn-icon btn-reset"><span class="material-symbols-outlined">lock_reset</span></button>
-          <button class="btn-icon btn-block"><span class="material-symbols-outlined">block</span></button>
-        </td>
-      </tr>
-      <tr>
-        <td>
-          <div class="member-info">
-            <div class="avatar-placeholder bg-green">徐</div>
-            <div>
-              <div class="name">徐若瑄</div>
-              <div class="email">vivian&#64;luxework.com</div>
-            </div>
-          </div>
-        </td>
-        <td><span class="badge editor">編輯者</span></td>
-        <td>LUXEWORK Co.</td>
-        <td>1 個月前</td>
-        <td class="actions">
-          <button class="btn-icon btn-manage"><span class="material-symbols-outlined">manage_accounts</span></button>
-          <button class="btn-icon btn-reset"><span class="material-symbols-outlined">lock_reset</span></button>
-          <button class="btn-icon btn-block"><span class="material-symbols-outlined">block</span></button>
-        </td>
-      </tr>
-      <tr>
-        <td>
-          <div class="member-info">
-            <div class="avatar-placeholder bg-red">林</div>
-            <div>
-              <div class="name">林書豪</div>
-              <div class="email">jeremy&#64;starlight.com</div>
-            </div>
-          </div>
-        </td>
-        <td><span class="badge suspended">停權中</span></td>
-        <td>星曜科技</td>
-        <td>3 個月前</td>
-        <td class="actions">
-          <button class="btn-icon btn-manage"><span class="material-symbols-outlined">manage_accounts</span></button>
-          <button class="btn-icon btn-reset"><span class="material-symbols-outlined">lock_reset</span></button>
-          <button class="btn-icon btn-block"><span class="material-symbols-outlined">block</span></button>
-        </td>
-      </tr>
+          </td>
+        </tr>
+      }
     </tbody>
   </table>
 
   <footer class="pagination-bar">
-    <span class="pagination-info">顯示 1 到 10 條，共 1,284 條結果</span>
+    <span class="pagination-info">共 {{ filteredMembers.length }} 位成員</span>
     <div class="pagination-controls">
       <button class="btn-page"><span class="material-symbols-outlined">chevron_left</span></button>
       <button class="btn-page active">1</button>
-      <button class="btn-page">2</button>
-      <button class="btn-page">3</button>
-      <span class="pagination-dots">...</span>
       <button class="btn-page"><span class="material-symbols-outlined">chevron_right</span></button>
     </div>
   </footer>
 </section>
+
+@if (showRoleModal()) {
+  <div class="modal-backdrop" (click)="closeRoleModal()"></div>
+  <div class="modal-dialog modal-dialog--sm" role="dialog">
+    <div class="modal-header">
+      <h4>更改權限</h4>
+      <button type="button" class="modal-close-btn" (click)="closeRoleModal()">
+        <span class="material-symbols-outlined">close</span>
+      </button>
+    </div>
+    <div class="modal-body">
+      <p class="modal-member-name">{{ selectedMember?.name }}</p>
+      <div class="form-group">
+        <label>角色</label>
+        <select [(ngModel)]="pendingRole">
+          <option [ngValue]="20">客戶</option>
+          <option [ngValue]="80">員工</option>
+          <option [ngValue]="99">管理員</option>
+        </select>
+      </div>
+    </div>
+    @if (actionError()) {
+      <p class="submit-error"><span class="material-symbols-outlined">error</span>{{ actionError() }}</p>
+    }
+    <div class="modal-footer">
+      <button type="button" class="btn-cancel" (click)="closeRoleModal()">取消</button>
+      <button type="button" class="btn-submit" [disabled]="actionSubmitting()" (click)="submitRoleChange()">
+        {{ actionSubmitting() ? '更新中...' : '確認更改' }}
+      </button>
+    </div>
+  </div>
+}
+
+@if (showResetModal()) {
+  <div class="modal-backdrop" (click)="closeResetModal()"></div>
+  <div class="modal-dialog modal-dialog--sm" role="dialog">
+    <div class="modal-header">
+      <h4>重置密碼</h4>
+      <button type="button" class="modal-close-btn" (click)="closeResetModal()">
+        <span class="material-symbols-outlined">close</span>
+      </button>
+    </div>
+    <div class="modal-body">
+      <p class="confirm-text">
+        確定要重置 <strong>{{ selectedMember?.name }}</strong> 的密碼嗎？<br>
+        <span class="confirm-hint">密碼將重置為 <code>123456</code>，請提醒使用者登入後立即更改。</span>
+      </p>
+    </div>
+    @if (actionError()) {
+      <p class="submit-error"><span class="material-symbols-outlined">error</span>{{ actionError() }}</p>
+    }
+    <div class="modal-footer">
+      <button type="button" class="btn-cancel" (click)="closeResetModal()">取消</button>
+      <button type="button" class="btn-submit" [disabled]="actionSubmitting()" (click)="submitResetPassword()">
+        {{ actionSubmitting() ? '重置中...' : '確認重置' }}
+      </button>
+    </div>
+  </div>
+}
+
+@if (showBlockModal()) {
+  <div class="modal-backdrop" (click)="closeBlockModal()"></div>
+  <div class="modal-dialog modal-dialog--sm" role="dialog">
+    <div class="modal-header">
+      <h4>{{ selectedMember?.status ? '封鎖帳戶' : '解除封鎖' }}</h4>
+      <button type="button" class="modal-close-btn" (click)="closeBlockModal()">
+        <span class="material-symbols-outlined">close</span>
+      </button>
+    </div>
+    <div class="modal-body">
+      <p class="confirm-text">
+        確定要{{ selectedMember?.status ? '封鎖' : '解除封鎖' }}
+        <strong>{{ selectedMember?.name }}</strong> 的帳號嗎？
+      </p>
+    </div>
+    @if (actionError()) {
+      <p class="submit-error"><span class="material-symbols-outlined">error</span>{{ actionError() }}</p>
+    }
+    <div class="modal-footer">
+      <button type="button" class="btn-cancel" (click)="closeBlockModal()">取消</button>
+      <button type="button" class="btn-submit" [class.btn-danger]="selectedMember?.status"
+              [disabled]="actionSubmitting()" (click)="submitToggleBlock()">
+        {{ actionSubmitting() ? '處理中...' : (selectedMember?.status ? '確認封鎖' : '確認解封') }}
+      </button>
+    </div>
+  </div>
+}
+
+@if (showCreateModal()) {
+  <div class="modal-backdrop" (click)="closeCreateModal()"></div>
+  <div class="modal-dialog" role="dialog">
+    <div class="modal-header">
+      <h4>新增會員</h4>
+      <button type="button" class="modal-close-btn" (click)="closeCreateModal()">
+        <span class="material-symbols-outlined">close</span>
+      </button>
+    </div>
+
+    <div class="modal-body">
+      <div class="form-row">
+        <div class="form-group">
+          <label>姓名 <span class="required">*</span></label>
+          <input type="text" [(ngModel)]="newUser.name" placeholder="請輸入姓名" />
+        </div>
+        <div class="form-group">
+          <label>電話</label>
+          <input type="text" [(ngModel)]="newUser.phone" placeholder="選填" />
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>電子郵件 <span class="required">*</span></label>
+        <input type="email" [(ngModel)]="newUser.email" placeholder="example@email.com" />
+      </div>
+
+      <div class="form-group">
+        <label>密碼 <span class="required">*</span></label>
+        <input type="password" [(ngModel)]="newUser.password" placeholder="請輸入密碼" />
+        <small class="field-hint">至少 6 位，需包含大寫、小寫字母及特殊符號（如 !@#$%）</small>
+      </div>
+
+      <div class="form-group">
+        <label>角色</label>
+        <select [(ngModel)]="newUser.role">
+          <option [ngValue]="20">客戶</option>
+          <option [ngValue]="80">員工</option>
+          <option [ngValue]="99">管理員</option>
+        </select>
+      </div>
+    </div>
+
+    @if (submitError()) {
+      <p class="submit-error">
+        <span class="material-symbols-outlined">error</span>
+        {{ submitError() }}
+      </p>
+    }
+
+    <div class="modal-footer">
+      <button type="button" class="btn-cancel" (click)="closeCreateModal()">取消</button>
+      <button type="button" class="btn-submit" [disabled]="submitting()" (click)="submitCreateUser()">
+        {{ submitting() ? '送出中...' : '確認新增' }}
+      </button>
+    </div>
+  </div>
+}
