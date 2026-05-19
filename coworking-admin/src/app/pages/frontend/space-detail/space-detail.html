@@ -1,0 +1,143 @@
+<div class="container">
+  <!-- Breadcrumb -->
+  <nav class="breadcrumb" aria-label="Breadcrumb">
+    <ol>
+      <li><a routerLink="/">首頁</a></li>
+      <li>
+        <span class="material-symbols-outlined">chevron_right</span>
+        <a routerLink="/all-spaces">空間租借</a>
+      </li>
+      <li>
+        <span class="material-symbols-outlined">chevron_right</span>
+        <span class="active">信義旗艦館 - 獨立辦公室</span>
+      </li>
+    </ol>
+  </nav>
+
+  <!-- Hero Section -->
+  <div class="hero">
+    <div class="hero__gallery">
+      <div class="hero__main-img">
+        <img src="https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&q=80&w=1200" alt="信義旗艦館主圖">
+      </div>
+      <div class="hero__thumbs">
+        <div class="thumb">
+          <img src="https://images.unsplash.com/photo-1531973576160-7125cd663d86?auto=format&fit=crop&q=80&w=400" alt="辦公室一角">
+        </div>
+        <div class="thumb">
+          <img src="https://images.unsplash.com/photo-1497366811353-6870744d04b2?auto=format&fit=crop&q=80&w=400" alt="會議室">
+        </div>
+        <div class="thumb">
+          <img src="https://images.unsplash.com/photo-1524758631624-e2822e304c36?auto=format&fit=crop&q=80&w=400" alt="休息區">
+        </div>
+      </div>
+    </div>
+
+    <div class="hero__info">
+      <div class="hero__header">
+        <h1>信義旗艦館 - 獨立辦公室</h1>
+        <div class="location">
+          <span class="material-symbols-outlined">location_on</span>
+          <span>台北市信義區信義路五段79號</span>
+        </div>
+        <div class="rating">
+          <div class="stars">
+            <span class="material-symbols-outlined">star</span>
+            <span class="material-symbols-outlined">star</span>
+            <span class="material-symbols-outlined">star</span>
+            <span class="material-symbols-outlined">star</span>
+            <span class="material-symbols-outlined">star_half</span>
+          </div>
+          <span class="count">4.8 (128 則評價)</span>
+        </div>
+      </div>
+
+      <div class="hero__amenities-bar">
+        <div class="item"><span class="material-symbols-outlined">meeting_room</span><span>獨立辦公室</span></div>
+        <div class="item"><span class="material-symbols-outlined">chair_alt</span><span>人體工學椅</span></div>
+        <div class="item"><span class="material-symbols-outlined">schedule</span><span>24 小時開放</span></div>
+        <div class="item"><span class="material-symbols-outlined">wifi</span><span>高速 Wi-Fi</span></div>
+      </div>
+
+      <div class="hero__booking-card">
+        <div class="price-row">
+          <span class="price">NT$ 18,000</span>
+          <span class="unit">/ 月起</span>
+          <div class="discount">
+            <span class="old-price">NT$ 20,000</span>
+            <span class="badge">8 折優惠</span>
+          </div>
+        </div>
+        <div class="inputs">
+          <label>選擇時間</label>
+          <div class="date-picker">
+            <div class="input-wrap">
+              <span class="material-symbols-outlined">calendar_today</span>
+              <input type="text" placeholder="開始日期">
+            </div>
+            <span>~</span>
+            <div class="input-wrap">
+              <span class="material-symbols-outlined">calendar_today</span>
+              <input type="text" placeholder="結束日期">
+            </div>
+          </div>
+        </div>
+        <div class="actions">
+          <button class="btn-book" routerLink="/payment">立即預約</button>
+          <button class="btn-fav">
+            <span class="material-symbols-outlined">favorite_border</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Content Tabs -->
+  <div class="content-tabs">
+    <div class="content-tabs__nav">
+      <button class="active">空間介紹</button>
+      <button>設備設施</button>
+      <button>位置交通</button>
+      <button>評價 (128)</button>
+    </div>
+    <div class="content-tabs__grid">
+      <div class="content-tabs__main">
+        <section>
+          <h2>空間介紹</h2>
+          <p>簡約俐落風格的獨立辦公室，適合團隊長期進駐。大面積玻璃窗引入自然光線，提供舒適明亮的辦公環境，提升團隊工作效率，激發創意。WorkspaceCollective 致力於打造一個能讓人靜下心來專注的避風港，摒棄多餘的裝飾，以溫潤的木質調與沉穩的色彩，構築出專業且溫暖的空間氛圍。</p>
+        </section>
+        <section>
+          <div class="map-card">
+            <div class="map-view">
+              <img src="https://images.unsplash.com/photo-1526778548025-fa2f459cd5c1?auto=format&fit=crop&q=80&w=800" alt="Map View">
+            </div>
+            <div class="map-info">
+              <div class="address">
+                <span class="material-symbols-outlined icon">location_on</span>
+                <div class="text">
+                  <p class="main">台北市信義區信義路五段79號</p>
+                  <p class="sub">捷運台北101/世貿站 3 號出口步行 5 分鐘</p>
+                </div>
+              </div>
+              <button class="btn-map">查看 Google 地圖</button>
+            </div>
+          </div>
+        </section>
+      </div>
+      <div class="content-tabs__side">
+        <div class="amenities-card">
+          <h3>設備設施</h3>
+          <ul>
+            <li><span class="material-symbols-outlined">check</span> 高速 Wi-Fi</li>
+            <li><span class="material-symbols-outlined">check</span> 會議空間</li>
+            <li><span class="material-symbols-outlined">check</span> 投影設備</li>
+            <li><span class="material-symbols-outlined">check</span> 白板設備</li>
+            <li><span class="material-symbols-outlined">check</span> 事務機</li>
+            <li><span class="material-symbols-outlined">check</span> 咖啡/茶水間</li>
+            <li><span class="material-symbols-outlined">check</span> 24H 門禁</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

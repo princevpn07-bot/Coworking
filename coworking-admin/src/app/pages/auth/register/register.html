@@ -1,0 +1,72 @@
+<app-frontend-header />
+
+<div class="login-content">
+  <div class="bg-image"></div>
+  <div class="overlay"></div>
+
+  <main class="login-card">
+    <header class="header">
+      <h1>WorkspaceCollective</h1>
+      <p>Create your account.</p>
+    </header>
+
+    <form (ngSubmit)="register()">
+      <div class="input-group">
+        <label for="fullName">Full Name</label>
+        <input
+          [(ngModel)]="fullName"
+          name="fullName"
+          id="fullName"
+          type="text"
+          placeholder="John Doe"
+          required
+        />
+      </div>
+
+      <div class="input-group">
+        <label for="email">Email Address</label>
+        <input
+          [(ngModel)]="email"
+          name="email"
+          id="email"
+          type="email"
+          placeholder="name@example.com"
+          required
+        />
+      </div>
+
+      <div class="input-group">
+        <label for="password">Password</label>
+        <input
+          [(ngModel)]="password"
+          name="password"
+          id="password"
+          type="password"
+          placeholder="••••••••"
+          required
+        />
+      </div>
+
+      <div class="input-group">
+        <label for="confirmPassword">Confirm Password</label>
+        <input
+          [(ngModel)]="confirmPassword"
+          name="confirmPassword"
+          id="confirmPassword"
+          type="password"
+          placeholder="••••••••"
+          required
+        />
+        <p class="error-msg" *ngIf="password && confirmPassword && password !== confirmPassword">
+          * 兩次輸入的密碼不相同
+        </p>
+      </div>
+
+      <button type="submit" class="btn-signin">Join Now</button>
+    </form>
+
+    <footer class="footer">
+      Already a member? <a routerLink="/login">Sign In</a>
+    </footer>
+  </main>
+</div>

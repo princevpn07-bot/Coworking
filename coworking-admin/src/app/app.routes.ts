@@ -2,16 +2,31 @@ import { Spaces } from './pages/backend/spaces/spaces';
 import { Routes } from '@angular/router';
 import { Login } from './pages/auth/login/login';
 import { BackendLayout } from './shared/backend-layout/backend-layout';
+import { FrontendLayout } from './shared/frontend-layout/frontend-layout';
 import { authGuard } from './guards/auth-guard';
 import { Dashboard } from './pages/backend/dashboard/dashboard';
 import { Bookings } from './pages/backend/bookings/bookings';
 import { Resources } from './pages/backend/resources/resources';
 import { Members } from './pages/backend/members/members';
 import { Profile } from './pages/backend/profile/profile';
+import { Home } from './pages/frontend/home/home';
+import { AllSpaces } from './pages/frontend/all-spaces/all-spaces';
+import { SpaceDetail } from './pages/frontend/space-detail/space-detail';
+import { Register } from './pages/auth/register/register';
 
 
 export const routes: Routes = [
-  {path: 'login', component: Login},
+  {
+    path: '',
+    component: FrontendLayout,
+    children: [
+      { path: '', component: Home },
+      { path: 'all-spaces', component: AllSpaces },
+      { path: 'space/:id', component: SpaceDetail },
+    ]
+  },
+  { path: 'login', component: Login },
+  { path: 'register', component: Register },
   {
     path: 'backend',
     component: BackendLayout,
