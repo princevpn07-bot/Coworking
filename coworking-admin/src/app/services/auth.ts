@@ -43,4 +43,12 @@ export class AuthService
     return role;
   }
 
+  getCurrentUserEmail(): string | null
+  {
+    const token = this.gettoken();
+    if (!token) return null;
+    const payload = JSON.parse(atob(token.split('.')[1]));
+    return payload['sub'] ?? null;
+  }
+
 }

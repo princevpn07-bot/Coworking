@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using CoworkingAPI.Data;
+using CoworkingAPI.Dto;
 using CoworkingAPI.Models;
 using Microsoft.EntityFrameworkCore;
 
@@ -21,6 +22,40 @@ namespace CoworkingAPI.Controllers
         {
             var equipments = await _context.Equipments.ToListAsync();
             return Ok(equipments);
+        }
+
+        [HttpGet("GetAllCards")]
+        public async Task<IActionResult> GetAllCards()
+        {
+            var equipments = await _context.Equipments
+                .Include(e => e.Location)
+                .ToListAsync();
+
+            var spaceAsserts = await _context.spaceasserts
+                .Include(sa => sa.space)
+                .ToListAsync();
+
+            var result = equipments.Select(e => new AdminEquipmentCardDto
+            {
+                equipment_id = e.equipment_id,
+                category    = e.category,
+                full_name   = e.full_name,
+                create_date = e.create_date,
+                total_amount = e.total_amount,
+                location_name = e.Location?.city,
+                is_precious = e.cost > 10000,
+                allocations = spaceAsserts
+                    .Where(sa => sa.equipment_id == e.equipment_id)
+                    .Select(sa => new AdminSpaceAllocationDto
+                    {
+                        asserts_id = sa.asserts_id,
+                        space_id   = sa.space_id ?? 0,
+                        space_name = sa.space?.space_number,
+                        amount     = sa.amount ?? 0
+                    }).ToList()
+            }).ToList();
+
+            return Ok(result);
         }
 
         [HttpGet("{id}")]

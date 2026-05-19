@@ -1,5 +1,6 @@
 using System;
 using CoworkingAPI.Data;
+using CoworkingAPI.Dto;
 using CoworkingAPI.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -24,6 +25,24 @@ namespace CoworkingAPI.Controllers
             return Ok(assert);
         }
 
+        [HttpGet("ByEquipment/{equipment_id}")]
+        public async Task<IActionResult> GetByEquipment(int equipment_id)
+        {
+            var allocations = await _context.spaceasserts
+                .Where(sa => sa.equipment_id == equipment_id)
+                .Include(sa => sa.space)
+                .Select(sa => new AdminSpaceAllocationDto
+                {
+                    asserts_id = sa.asserts_id,
+                    space_id   = sa.space_id ?? 0,
+                    space_name = sa.space != null ? sa.space.space_number : null,
+                    amount     = sa.amount ?? 0
+                })
+                .ToListAsync();
+
+            return Ok(allocations);
+        }
+
         [HttpGet("{id}")]
         public async Task<IActionResult>GetId(int id)
         {
@@ -46,7 +65,7 @@ namespace CoworkingAPI.Controllers
             var assert = await _context.spaceasserts.FirstOrDefaultAsync(a => a.asserts_id == spaceAsserts.asserts_id);
             if (assert == null) return NotFound($"找不到{spaceAsserts.asserts_id}");
             assert.space_id = spaceAsserts.space_id;
-            assert.category = spaceAsserts.category;
+            assert.equipment_id = spaceAsserts.equipment_id;
             assert.amount = spaceAsserts.amount;
 
             _context.spaceasserts.Update(assert);

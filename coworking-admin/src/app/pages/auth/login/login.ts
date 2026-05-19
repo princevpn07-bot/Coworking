@@ -2,12 +2,13 @@ import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { LoginRequest } from '../../../models/user.model';
 import { AuthService } from '../../../services/auth';
-import { Router } from '@angular/router';
-import { Role } from '../../../models/role.model';
+import { Router, RouterLink } from '@angular/router';
+import { hasBackendAccess } from '../../../models/role.model';
+import { FrontendHeader } from '../../../shared/frontend-header/frontend-header';
 
 @Component({
   selector: 'app-login',
-  imports: [FormsModule],
+  imports: [FormsModule, RouterLink, FrontendHeader],
   templateUrl: './login.html',
   styleUrl: './login.css',
 })
@@ -29,7 +30,7 @@ export class Login
         {
           this.authservices.savetoken(response.token);
           const role = this.authservices.getrole();
-          if (role == Role.Admin || role == Role.Staff)
+          if (hasBackendAccess(role))
           {
             this.router.navigate(['/backend/dashboard']);
           }

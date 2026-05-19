@@ -1,3 +1,13 @@
+export interface Location {
+  location_id: number;
+  country: string | null;
+  city: string | null;
+  address: string | null;
+  phone: string | null;
+  longitude: number | null;
+  latitude: number | null;
+}
+
 export interface Space {
   space_id: number;
   location_id: number | null;
@@ -5,17 +15,6 @@ export interface Space {
   capacity: number | null;
   status: number | null;
   image: string | null;
-  has_wifi: boolean | null;
-  has_whiteboard: boolean | null;
-  has_projector: boolean | null;
-  has_airconditioner: boolean | null;
-  has_tables: boolean | null;
-  has_chairs: boolean | null;
-  has_windows: boolean | null;
-  has_LCD: boolean | null;
-  has_outlets: boolean | null;
-  has_waterdispenser: boolean | null;
-  has_restrooms: boolean | null;
 }
 
 export interface CreateSpace {
@@ -24,15 +23,41 @@ export interface CreateSpace {
   capacity: number;
   status: number;
   image: string;
-  has_wifi: boolean;
-  has_whiteboard: boolean;
-  has_projector: boolean;
-  has_airconditioner: boolean;
-  has_tables: boolean;
-  has_chairs: boolean;
-  has_windows: boolean;
-  has_LCD: boolean;
-  has_outlets: boolean;
-  has_waterdispenser: boolean;
-  has_restrooms: boolean;
+}
+
+export type SpaceStatus = '可用' | '使用中' | '停用中' | '清潔中';
+
+export interface SpaceAsset {
+  id: number;
+  name: string;
+  icon: string;
+  amount: number;
+}
+
+export interface AdminSpaceAssertsDto {
+  equipment_id: number;
+  equipmentname: string | null;
+  amount: number | null;
+}
+
+export interface SpaceView {
+  id: number;
+  locationId: number;
+  name: string;
+  location: string;
+  capacity: number;
+  status: SpaceStatus;
+  assetCount: number;
+  image: string;
+}
+
+export interface AdminSpaceInfoDto {
+  space_id: number;
+  location_id: number | null;
+  locationname: string | null;
+  spacename: string | null;
+  capacity: number | null;
+  status: number | null;
+  assetcount: number | null;
+  image: string | null;
 }
