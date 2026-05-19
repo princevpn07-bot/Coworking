@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, NgZone, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, OnDestroy, NgZone } from '@angular/core';
 import { RouterOutlet, RouterLink, RouterLinkActive, Router, ActivatedRoute, NavigationEnd } from '@angular/router';
 import { filter } from 'rxjs';
 
@@ -13,16 +13,18 @@ const WEEKDAYS = ['星期日', '星期一', '星期二', '星期三', '星期四
 export class BackendLayout implements OnInit, OnDestroy {
   pageTitle = '';
   currentTime = '';
+  isDark = false;
   private timer: ReturnType<typeof setInterval> | null = null;
 
   constructor(
     private router: Router,
     private activatedRoute: ActivatedRoute,
     private ngZone: NgZone,
-    private cdr: ChangeDetectorRef,
   ) {}
 
   ngOnInit() {
+    this.isDark = localStorage.getItem('theme') === 'dark';
+
     this.pageTitle = this.getTitle();
     this.router.events.pipe(
       filter(e => e instanceof NavigationEnd)
@@ -31,10 +33,14 @@ export class BackendLayout implements OnInit, OnDestroy {
     this.updateTime();
     this.ngZone.runOutsideAngular(() => {
       this.timer = setInterval(() => {
-        this.updateTime();
-        this.cdr.detectChanges();
+        this.ngZone.run(() => this.updateTime());
       }, 1000);
     });
+  }
+
+  toggleDark(): void {
+    this.isDark = !this.isDark;
+    localStorage.setItem('theme', this.isDark ? 'dark' : 'light');
   }
 
   ngOnDestroy() {

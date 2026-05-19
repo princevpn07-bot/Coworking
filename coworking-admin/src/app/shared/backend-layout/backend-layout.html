@@ -1,4 +1,4 @@
-<div class="admin-wrapper">
+<div class="admin-wrapper" [class.dark]="isDark">
   <aside class="sidebar">
     <div class="sidebar-header">
       <h1 class="brand-logo">LUXEWORK Admin</h1>
@@ -44,9 +44,14 @@
   <div class="main-content">
     <header class="top-header">
       <h2 class="page-title">{{ pageTitle }}</h2>
-      <div class="current-time">
-        <span class="material-symbols-outlined">schedule</span>
-        {{ currentTime }}
+      <div class="header-right">
+        <button class="theme-toggle" (click)="toggleDark()" [title]="isDark ? '切換亮色模式' : '切換暗色模式'">
+          <span class="material-symbols-outlined">{{ isDark ? 'light_mode' : 'dark_mode' }}</span>
+        </button>
+        <div class="current-time">
+          <span class="material-symbols-outlined">schedule</span>
+          {{ currentTime }}
+        </div>
       </div>
     </header>
     <main>

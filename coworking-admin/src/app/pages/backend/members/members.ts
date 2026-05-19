@@ -1,4 +1,4 @@
-import { Component, OnInit, inject, signal } from '@angular/core';
+import { Component, OnInit, inject, signal, ChangeDetectorRef } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MemberService } from '../../../services/member';
 import { AuthService } from '../../../services/auth';
@@ -13,6 +13,7 @@ import { CreateUserPayload, MemberItem, MemberPageData } from '../../../models/m
 export class Members implements OnInit {
   private memberService = inject(MemberService);
   private authService = inject(AuthService);
+  private cdr = inject(ChangeDetectorRef);
   private currentUserEmail = this.authService.getCurrentUserEmail();
   data: MemberPageData | null = null;
   activeTab: 'client' | 'staff' = 'client';
@@ -52,7 +53,7 @@ export class Members implements OnInit {
 
   private loadMemberPage(): void {
     this.memberService.getMemberPage().subscribe({
-      next: (data) => (this.data = data),
+      next: (data) => { this.data = data; this.cdr.markForCheck(); },
       error: (err) => console.error('Failed to load member page', err),
     });
   }
