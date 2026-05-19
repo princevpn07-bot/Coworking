@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>WorkspaceCollective Booking</title>
+  <!-- Lucide Icons CDN -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <link rel="stylesheet" href="/src/styles/style.scss" />
+</head>
+<!-- Main Content -->
+<main class="container main-content">
+  <!-- Left Column: Form -->
+  <div class="form-section">
+    <div class="section-header">
+      <h1>結帳預訂</h1>
+      <p>請填寫您的付款資訊以完成專屬固定辦公桌預訂。</p>
+    </div>
+
+    <!-- Payment Method -->
+    <section class="payment-method-section">
+      <div class="section-title">
+        <i data-lucide="credit-card"></i>
+        <span>付款方式</span>
+      </div>
+      <div class="method-grid">
+        <div class="method-card active">
+          <div class="radio-indicator active"></div>
+          <div class="icon"><i data-lucide="credit-card"></i></div>
+          <span>信用卡</span>
+        </div>
+        <div class="method-card">
+          <div class="radio-indicator"></div>
+          <div class="icon"><i data-lucide="wallet"></i></div>
+          <span>LINE Pay</span>
+        </div>
+        <div class="method-card">
+          <div class="radio-indicator"></div>
+          <div class="icon"><i data-lucide="landmark"></i></div>
+          <span>銀行轉帳</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Credit Card Details -->
+    <div class="card-info-form">
+      <div class="form-header">
+        <h2>信用卡資訊</h2>
+        <div class="card-logos">
+          <img src="https://upload.wikimedia.org/wikipedia/commons/d/d6/Visa_2014_logo_detail.svg" alt="Visa" />
+          <img src="https://upload.wikimedia.org/wikipedia/commons/2/2a/Mastercard-logo.svg" alt="Mastercard" />
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>卡號</label>
+        <div class="input-wrapper">
+          <input type="text" placeholder="0000 0000 0000 0000" />
+          <i data-lucide="lock" class="icon-right"></i>
+        </div>
+      </div>
+
+      <div class="form-group row">
+        <div>
+          <label>有效期限 (MM/YY)</label>
+          <div class="input-wrapper">
+            <input type="text" placeholder="MM / YY" />
+          </div>
+        </div>
+        <div>
+          <label>安全碼 (CVV)</label>
+          <div class="input-wrapper">
+            <input type="text" placeholder="123" />
+          </div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>持卡人姓名</label>
+        <div class="input-wrapper">
+          <input type="text" placeholder="請輸入卡片上的英文姓名" />
+        </div>
+      </div>
+    </div>
+
+    <!-- Invoice Info -->
+    <section class="invoice-section">
+      <h2>發票資訊</h2>
+      <div class="form-group row">
+        <div>
+          <label>發票類型</label>
+          <div class="input-wrapper">
+            <select>
+              <option>二聯式 (個人)</option>
+              <option>三聯式 (公司戶)</option>
+            </select>
+          </div>
+        </div>
+        <div>
+          <label>公司名稱</label>
+          <div class="input-wrapper">
+            <input type="text" placeholder="請輸入公司名稱" />
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Billing Address -->
+    <section class="billing-section">
+      <h2>帳單地址</h2>
+      <div class="form-group">
+        <label>街道地址</label>
+        <div class="input-wrapper">
+          <input type="text" placeholder="請輸入街道、門牌" />
+        </div>
+      </div>
+      <div class="form-group row">
+        <div>
+          <label>城市</label>
+          <div class="input-wrapper">
+            <select>
+              <option>台北市</option>
+              <option>新北市</option>
+              <option>台中市</option>
+            </select>
+          </div>
+        </div>
+        <div>
+          <label>郵遞區號</label>
+          <div class="input-wrapper">
+            <input type="text" placeholder="100" />
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Trust Badges -->
+    <div class="trust-badges">
+      <div class="badge">
+        <i data-lucide="shield-check"></i>
+        <span>SSL 安全加密</span>
+      </div>
+      <div class="badge">
+        <i data-lucide="shield"></i>
+        <span>256 位元資料保護</span>
+      </div>
+      <div class="badge">
+        <i data-lucide="history"></i>
+        <span>24小時取消政策</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Right Column: Sidebar -->
+  <aside class="sidebar">
+    <div class="summary-card">
+      <div class="hero-img">
+        <img src="https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&q=80&w=600"
+          alt="Workspace" />
+        <div class="tag">專屬固定辦公桌</div>
+      </div>
+      <div class="summary-details">
+        <h3>訂單摘要</h3>
+        <p class="item-name">專屬固定辦公桌 - 玻璃中庭</p>
+        <div class="date-range">
+          <i data-lucide="calendar"></i>
+          <span>2024/11/01 - 2024/11/30</span>
+        </div>
+
+        <div class="price-breakdown">
+          <div class="line-item">
+            <span>小計</span>
+            <span>NT$ 18,500</span>
+          </div>
+          <div class="line-item">
+            <span>稅額 (5%)</span>
+            <span>NT$ 925</span>
+          </div>
+          <div class="line-item discount">
+            <span>折扣 (秋季優惠)</span>
+            <span>- NT$ 1,500</span>
+          </div>
+        </div>
+
+        <div class="total-row">
+          <span>總計</span>
+          <span class="total-price">NT$ 17,925</span>
+        </div>
+
+        <button class="btn-confirm">
+          確認付款
+          <i data-lucide="arrow-right"></i>
+        </button>
+
+        <p class="disclaimer">
+          點擊確認付款即表示您同意我們的服務條款與隱私政策。
+        </p>
+      </div>
+    </div>
+  </aside>
+</main>

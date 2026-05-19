@@ -1,0 +1,249 @@
+<!-- 頂部篩選列 -->
+<div class="resources-top-bar">
+  <div class="filter-group">
+    <div class="search-box">
+      <span class="material-symbols-outlined search-icon">search</span>
+      <input placeholder="搜尋資源名稱..." [(ngModel)]="filterName" />
+    </div>
+    <select class="filter-select" [(ngModel)]="filterCategory">
+      <option [ngValue]="''">所有分類</option>
+      @for (cat of allCategories; track cat) {
+        <option [ngValue]="cat">{{ cat }}</option>
+      }
+    </select>
+  </div>
+  <button class="btn-primary" (click)="openCreateModal()">
+    <span class="material-symbols-outlined">add</span>
+    新增資源
+  </button>
+</div>
+
+@if (loading()) {
+  <div class="loading-state">
+    <span class="material-symbols-outlined spinning">progress_activity</span>
+    載入中...
+  </div>
+} @else {
+  <div class="asset-grid">
+    @for (card of filteredCards; track card.equipment_id) {
+      <div class="asset-card">
+        <div class="card-header">
+          <div class="icon-box neutral-bg">
+            <span class="material-symbols-outlined">{{ categoryIcon(card.category) }}</span>
+          </div>
+          <div class="header-right">
+            @if (card.is_precious) {
+              <span class="precious-badge">
+                <span class="material-symbols-outlined">diamond</span>
+                貴重
+              </span>
+            }
+            <span class="tag">{{ card.category ?? '未分類' }}</span>
+          </div>
+        </div>
+
+        <h3 class="asset-title">{{ card.full_name ?? '-' }}</h3>
+
+        <div class="meta-row">
+          <span class="material-symbols-outlined meta-icon">calendar_today</span>
+          <span class="meta-text">{{ card.create_date ? (card.create_date | slice:0:10) : '-' }}</span>
+        </div>
+
+        <div class="meta-row location-row">
+          <span class="material-symbols-outlined meta-icon">location_on</span>
+          <span class="meta-text">{{ card.location_name ?? '未指定' }}</span>
+          @if (card.allocations.length > 0) {
+            <span class="allocation-chip" (click)="openDetailModal(card)">
+              已調配至 {{ card.allocations.length }} 個空間
+            </span>
+          }
+        </div>
+
+        <div class="stock-info">
+          <div class="info-item">
+            <span class="label">總數量</span>
+            <span class="amount-value">{{ card.total_amount ?? 0 }}</span>
+          </div>
+          <div class="info-item">
+            <span class="label">剩餘數量</span>
+            <span class="amount-value" [class.amount-zero]="remainingAmount(card) === 0">
+              {{ remainingAmount(card) }}
+            </span>
+          </div>
+        </div>
+
+        <button class="btn-secondary" (click)="openAllocateModal(card)">
+          <span class="material-symbols-outlined">swap_horiz</span>
+          調配空間
+        </button>
+      </div>
+    } @empty {
+      <p class="empty-state">目前沒有設備資料</p>
+    }
+  </div>
+}
+
+<!-- 查看調配清單 Modal -->
+@if (detailCard()) {
+  <div class="modal-overlay" (click)="closeDetailModal()">
+    <div class="modal" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <div>
+          <h3 class="modal-title">{{ detailCard()!.full_name }}</h3>
+          <span class="modal-subtitle">已調配的空間清單</span>
+        </div>
+        <button class="modal-close" (click)="closeDetailModal()">
+          <span class="material-symbols-outlined">close</span>
+        </button>
+      </div>
+
+      <ul class="allocation-list">
+        @for (alloc of detailCard()!.allocations; track alloc.asserts_id) {
+          <li class="allocation-item">
+            <div class="alloc-left">
+              <span class="material-symbols-outlined alloc-icon">meeting_room</span>
+              <span class="alloc-name">{{ alloc.space_name ?? '未命名空間' }}</span>
+            </div>
+            <span class="alloc-amount">{{ alloc.amount }} 件</span>
+          </li>
+        }
+      </ul>
+    </div>
+  </div>
+}
+
+<!-- 調配空間表單 Modal -->
+@if (allocatingCard()) {
+  <div class="modal-overlay" (click)="closeAllocateModal()">
+    <div class="modal" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <div>
+          <h3 class="modal-title">調配空間</h3>
+          <span class="modal-subtitle">{{ allocatingCard()!.full_name }}</span>
+        </div>
+        <button class="modal-close" (click)="closeAllocateModal()">
+          <span class="material-symbols-outlined">close</span>
+        </button>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">選擇空間</label>
+        <select class="form-select" [(ngModel)]="newAllocation.space_id">
+          <option [ngValue]="0" disabled>請選擇空間...</option>
+          @for (space of spaces; track space.space_id) {
+            <option [ngValue]="space.space_id">{{ space.space_number }}</option>
+          }
+        </select>
+        @if (existingAllocation(allocatingCard()!.allocations, newAllocation.space_id); as cur) {
+          <p class="form-hint">此空間已調配 {{ cur.amount }} 件，確認後將更新為新數量。</p>
+        }
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">
+          @if (existingAllocation(allocatingCard()!.allocations, newAllocation.space_id)) {
+            增加數量
+          } @else {
+            調配數量
+          }
+        </label>
+        <input
+          class="form-input"
+          type="number"
+          min="1"
+          [max]="remainingAmount(allocatingCard()!)"
+          [(ngModel)]="newAllocation.amount"
+        />
+        <p class="form-hint">
+          剩餘可調配：{{ remainingAmount(allocatingCard()!) }} 件
+          @if (existingAllocation(allocatingCard()!.allocations, newAllocation.space_id); as cur) {
+            ・此空間目前 {{ cur.amount }} 件，調配後共 {{ cur.amount + newAllocation.amount }} 件
+          }
+        </p>
+      </div>
+
+      @if (submitError()) {
+        <p class="form-error">{{ submitError() }}</p>
+      }
+
+      <div class="modal-actions">
+        <button class="btn-ghost" (click)="closeAllocateModal()" [disabled]="submitting()">取消</button>
+        <button class="btn-confirm" (click)="submitAllocation()" [disabled]="submitting()">
+          @if (submitting()) { 調配中... } @else { 確認調配 }
+        </button>
+      </div>
+    </div>
+  </div>
+}
+
+<!-- 新增資源 Modal -->
+@if (showCreateModal()) {
+  <div class="modal-overlay" (click)="closeCreateModal()">
+    <div class="modal" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <div>
+          <h3 class="modal-title">新增資源</h3>
+          <span class="modal-subtitle">建立新的設備或資材</span>
+        </div>
+        <button class="modal-close" (click)="closeCreateModal()">
+          <span class="material-symbols-outlined">close</span>
+        </button>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">資源名稱 *</label>
+        <input class="form-input" type="text" placeholder="例：Herman Miller 辦公椅" [(ngModel)]="newEquipment.full_name" />
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">分類 *</label>
+          <input class="form-input" type="text" list="category-list" placeholder="例：辦公傢俱" [(ngModel)]="newEquipment.category" />
+          <datalist id="category-list">
+            <option value="消耗品"></option>
+            <option value="辦公傢俱"></option>
+            <option value="視聽設備"></option>
+            <option value="網路設備"></option>
+            <option value="電腦設備"></option>
+          </datalist>
+        </div>
+        <div class="form-group">
+          <label class="form-label">所屬地點</label>
+          <select class="form-select" [(ngModel)]="newEquipment.location_id">
+            <option [ngValue]="null">未指定</option>
+            @for (loc of locations; track loc.location_id) {
+              <option [ngValue]="loc.location_id">{{ loc.city }}</option>
+            }
+          </select>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">總數量 *</label>
+          <input class="form-input" type="number" min="1" [(ngModel)]="newEquipment.total_amount" />
+        </div>
+        <div class="form-group">
+          <label class="form-label">採購成本（NT$）</label>
+          <input class="form-input" type="number" min="0" placeholder="0" [(ngModel)]="newEquipment.cost" />
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">建立日期</label>
+        <input class="form-input" type="date" [(ngModel)]="newEquipment.create_date" />
+      </div>
+
+      @if (createError()) {
+        <p class="form-error">{{ createError() }}</p>
+      }
+
+      <div class="modal-actions">
+        <button class="btn-ghost" (click)="closeCreateModal()" [disabled]="createSubmitting()">取消</button>
+        <button class="btn-confirm" (click)="submitCreate()" [disabled]="createSubmitting()">
+          @if (createSubmitting()) { 新增中... } @else { 確認新增 }
+        </button>
+      </div>
+    </div>
+  </div>
+}

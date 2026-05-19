@@ -1,0 +1,313 @@
+<div class="page-header">
+  <div class="title-group">
+    <h1 class="page-title">空間與資產</h1>
+    <p class="page-subtitle">管理辦公空間、工位及其相關設備資產</p>
+  </div>
+  <div class="action-btns">
+    <button class="btn-secondary" [class.filter-active]="hasActiveFilter()" (click)="toggleFilter()">
+      <span class="material-symbols-outlined">filter_list</span>
+      篩選{{ hasActiveFilter() ? ' ●' : '' }}
+    </button>
+    <button class="btn-primary" (click)="openCreateModal()">
+      <span class="material-symbols-outlined">add</span>
+      新增空間
+    </button>
+  </div>
+</div>
+
+@if (filterOpen()) {
+  <div class="filter-bar">
+    <div class="filter-field">
+      <label>據點</label>
+      <select [ngModel]="filterLocation()" (ngModelChange)="filterLocation.set(+$event)">
+        <option [ngValue]="0">全部據點</option>
+        @for (loc of locationFilterOptions(); track loc.id) {
+          <option [ngValue]="loc.id">{{ loc.name }}</option>
+        }
+      </select>
+    </div>
+    <div class="filter-field">
+      <label>最少容納人數</label>
+      <input type="number" min="0" [ngModel]="filterMinCapacity() || null" (ngModelChange)="filterMinCapacity.set(+$event || 0)" placeholder="不限" />
+    </div>
+    <div class="filter-field">
+      <label>狀態</label>
+      <select [ngModel]="filterStatus()" (ngModelChange)="filterStatus.set($event)">
+        <option value="">全部狀態</option>
+        <option value="可用">可用</option>
+        <option value="使用中">使用中</option>
+        <option value="停用中">停用中</option>
+        <option value="清潔中">清潔中</option>
+      </select>
+    </div>
+    @if (hasActiveFilter()) {
+      <div class="filter-actions">
+        <button class="btn-clear-filter" (click)="clearFilter()">
+          <span class="material-symbols-outlined">close</span>
+          清除篩選
+        </button>
+      </div>
+    }
+  </div>
+}
+
+<section class="stats-grid">
+  <div class="stat-card">
+    <span class="label">總空間數量 (Total Spaces)</span>
+    <div class="value">{{ totalSpaces() }}</div>
+  </div>
+  <div class="stat-card">
+    <span class="label">當前可用率 (Availability)</span>
+    <div class="value success">{{ availabilityRate() }}</div>
+  </div>
+  <div class="stat-card">
+    <div class="card-header-flex">
+      <span class="label">待整備空間 (Pending Turnaround)</span>
+      <span class="material-symbols-outlined warning-icon">cleaning_services</span>
+    </div>
+    <div class="value warning">{{ pendingTurnaround() }}</div>
+    <p class="hint">清潔或設備維護中</p>
+  </div>
+</section>
+
+<section class="content-card">
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th>空間編號／名稱</th>
+        <th>據點 (Location)</th>
+        <th>容納人數</th>
+        <th>當前狀態</th>
+        <th>包含資產數</th>
+      </tr>
+    </thead>
+    <tbody>
+      @if (loading()) {
+      <tr><td colspan="5" class="table-loading">載入中...</td></tr>
+      }
+      @if (!loading() && filteredSpaces().length === 0) {
+      <tr><td colspan="5" class="table-loading">無符合條件的空間</td></tr>
+      }
+      @for (space of filteredSpaces(); track space.id) {
+      <tr class="table-row" (click)="openPanel(space)">
+        <td>
+          <div class="space-info">
+            <div class="space-thumb"></div>
+            <div class="details">
+              <div class="name">{{ space.name }}</div>
+              <div class="id">ID: {{ space.id }}</div>
+            </div>
+          </div>
+        </td>
+        <td>{{ space.location }}</td>
+        <td>{{ space.capacity }} 人</td>
+        <td>
+          <span class="badge" [ngClass]="getSpaceBadgeClass(space.status)">
+            {{ space.status }}
+          </span>
+        </td>
+        <td>{{ space.assetCount }} 項設備</td>
+      </tr>
+      }
+    </tbody>
+  </table>
+  <div class="pagination-bar">
+    <div class="pagination-info">共 {{ filteredSpaces().length }} 項{{ hasActiveFilter() ? '（已篩選）' : '' }}</div>
+    <div class="pagination-controls">
+      <button class="btn-page"><span class="material-symbols-outlined">chevron_left</span></button>
+      <button class="btn-page active">1</button>
+      <button class="btn-page"><span class="material-symbols-outlined">chevron_right</span></button>
+    </div>
+  </div>
+</section>
+
+<!-- Create Space Modal -->
+@if (showCreateModal()) {
+  <div class="modal-backdrop" (click)="closeCreateModal()"></div>
+  <div class="modal-dialog" role="dialog">
+    <div class="modal-header">
+      <h4>新增空間</h4>
+      <button type="button" class="panel-close-btn" (click)="closeCreateModal()">
+        <span class="material-symbols-outlined">close</span>
+      </button>
+    </div>
+
+    <div class="modal-body">
+      <div class="form-group">
+        <label>空間編號／名稱 <span class="required">*</span></label>
+        <input type="text" [(ngModel)]="newSpace.space_number" placeholder="例：A101" />
+      </div>
+
+      <div class="form-group">
+        <label>據點 <span class="required">*</span></label>
+        <select [(ngModel)]="newSpace.location_id">
+          <option [ngValue]="0" disabled>請選擇據點</option>
+          @for (loc of locationOptions(); track loc.location_id) {
+            <option [ngValue]="loc.location_id">{{ loc.city }} · {{ loc.address }}</option>
+          }
+        </select>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label>容納人數 <span class="required">*</span></label>
+          <input type="number" [(ngModel)]="newSpace.capacity" min="1" />
+        </div>
+        <div class="form-group">
+          <label>狀態</label>
+          <select [(ngModel)]="newSpace.status">
+            <option [ngValue]="0">可用</option>
+            <option [ngValue]="1">使用中</option>
+            <option [ngValue]="2">停用中</option>
+            <option [ngValue]="3">清潔中</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>圖片網址</label>
+        <input type="text" [(ngModel)]="newSpace.image" placeholder="選填" />
+      </div>
+    </div>
+
+    @if (submitError()) {
+      <p class="submit-error">
+        <span class="material-symbols-outlined">error</span>
+        {{ submitError() }}
+      </p>
+    }
+
+    <div class="modal-footer">
+      <button type="button" class="btn-cancel" (click)="closeCreateModal()">取消</button>
+      <button type="button" class="btn-submit" [disabled]="submitting()" (click)="submitCreateSpace()">
+        {{ submitting() ? '送出中...' : '確認新增' }}
+      </button>
+    </div>
+  </div>
+}
+
+<!-- Overlay -->
+<div class="panel-overlay" [class.visible]="panelOpen()" (click)="closePanel()"></div>
+
+<!-- Detail Panel -->
+<div class="detail-panel" [class.open]="panelOpen()">
+  @if (selectedSpace(); as space) {
+    <div class="panel-header">
+      <div>
+        <div class="panel-space-name">{{ space.name }}</div>
+        <div class="panel-space-id">ID: {{ space.id }}</div>
+      </div>
+      <div class="panel-header-actions">
+        @if (!panelEditMode()) {
+          <button class="panel-edit-btn" (click)="openEditMode()">
+            <span class="material-symbols-outlined">edit</span>
+          </button>
+        }
+        <button class="panel-close-btn" (click)="closePanel()">
+          <span class="material-symbols-outlined">close</span>
+        </button>
+      </div>
+    </div>
+
+    @if (panelEditMode() && editDraft(); as draft) {
+      <div class="panel-edit-form">
+        <div class="panel-form-group">
+          <label>空間名稱</label>
+          <input type="text" [ngModel]="draft.name" (ngModelChange)="editDraft.update(d => d ? {...d, name: $event} : d)" placeholder="空間編號／名稱" />
+        </div>
+        <div class="panel-form-group">
+          <label>據點</label>
+          <select [ngModel]="draft.locationId" (ngModelChange)="editDraft.update(d => d ? {...d, locationId: $event} : d)">
+            <option [ngValue]="0" disabled>請選擇據點</option>
+            @for (loc of locationOptions(); track loc.location_id) {
+              <option [ngValue]="loc.location_id">{{ loc.city }} · {{ loc.address }}</option>
+            }
+          </select>
+        </div>
+        <div class="panel-form-row">
+          <div class="panel-form-group">
+            <label>容納人數</label>
+            <input type="number" [ngModel]="draft.capacity" (ngModelChange)="editDraft.update(d => d ? {...d, capacity: +$event} : d)" min="1" />
+          </div>
+          <div class="panel-form-group">
+            <label>狀態</label>
+            <select [ngModel]="draft.status" (ngModelChange)="editDraft.update(d => d ? {...d, status: $event} : d)">
+              <option value="可用">可用</option>
+              <option value="使用中">使用中</option>
+              <option value="停用中">停用中</option>
+              <option value="清潔中">清潔中</option>
+            </select>
+          </div>
+        </div>
+        <div class="panel-form-group">
+          <label>圖片網址</label>
+          <input type="text" [ngModel]="draft.image" (ngModelChange)="editDraft.update(d => d ? {...d, image: $event} : d)" placeholder="選填" />
+        </div>
+        @if (panelUpdateError()) {
+          <p class="panel-update-error">
+            <span class="material-symbols-outlined">error</span>
+            {{ panelUpdateError() }}
+          </p>
+        }
+        <div class="panel-edit-actions">
+          <button class="btn-cancel" (click)="cancelEditMode()">取消</button>
+          <button class="btn-submit" [disabled]="panelUpdating()" (click)="savePanel()">
+            {{ panelUpdating() ? '儲存中...' : '儲存變更' }}
+          </button>
+        </div>
+      </div>
+    } @else {
+      <div class="panel-meta">
+        <div class="meta-item">
+          <span class="material-symbols-outlined">location_on</span>
+          {{ space.location }}
+        </div>
+        <div class="meta-item">
+          <span class="material-symbols-outlined">group</span>
+          {{ space.capacity }} 人
+        </div>
+      </div>
+
+      <div class="panel-status-row">
+        <span class="panel-status-label">空間狀態</span>
+        <select
+          class="space-status-select"
+          [ngModel]="space.status"
+          [ngClass]="getSpaceBadgeClass(space.status)"
+          (ngModelChange)="updatePanelStatus($event)">
+          <option value="可用">可用</option>
+          <option value="使用中">使用中</option>
+          <option value="停用中">停用中</option>
+          <option value="清潔中">清潔中</option>
+        </select>
+      </div>
+      @if (panelStatusError()) {
+        <p class="panel-update-error">
+          <span class="material-symbols-outlined">error</span>
+          {{ panelStatusError() }}
+        </p>
+      }
+    }
+
+    <div class="panel-divider"></div>
+
+    <div class="panel-section-title">
+      <span class="material-symbols-outlined">inventory_2</span>
+      空間資產（{{ space.assetCount }} 項）
+    </div>
+
+    @if (assetsLoading()) {
+      <div class="assets-loading">載入資產中...</div>
+    } @else {
+      <div class="asset-list">
+        @for (asset of panelAssets(); track asset.id) {
+        <div class="asset-item">
+          <span class="material-symbols-outlined asset-icon">{{ asset.icon }}</span>
+          <span class="asset-name">{{ asset.name }}</span>
+          <span class="asset-amount">× {{ asset.amount }}</span>
+        </div>
+        }
+      </div>
+    }
+  }
+</div>

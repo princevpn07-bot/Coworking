@@ -1,0 +1,133 @@
+<section class="hero">
+  <div class="hero-bg">
+    <img src="assets/your-background-image.png" alt="Hero background">
+  </div>
+  <div class="container">
+    <div class="hero-content">
+      <h1>一鍵開啟，你的專屬美學辦公室</h1>
+      <p>在喧囂中尋找寧靜，為您的專注與創造力打造專屬的高級避難所。</p>
+      <div class="search-bar">
+        <div class="search-item">
+          <span class="material-symbols-outlined icon">location_on</span>
+          <div class="info">
+            <label>地點</label>
+            <input type="text" placeholder="尋找城市或空間">
+          </div>
+        </div>
+        <div class="search-item">
+          <span class="material-symbols-outlined icon">calendar_today</span>
+          <div class="info">
+            <label>日期</label>
+            <input type="text" placeholder="選擇入住日期">
+          </div>
+        </div>
+        <div class="search-item">
+          <span class="material-symbols-outlined icon">person</span>
+          <div class="info">
+            <label>人數</label>
+            <input type="text" placeholder="新增訪客">
+          </div>
+        </div>
+        <button class="btn-search">搜尋</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="collections">
+  <div class="container">
+    <div class="section-header">
+      <div>
+        <h2>精選空間</h2>
+        <p>為不同工作型態量身打造的專屬領域</p>
+      </div>
+      <a class="view-all" routerLink="/all-spaces">查看所有空間 <span class="material-symbols-outlined">arrow_forward</span></a>
+    </div>
+    <div class="grid">
+      <div class="card">
+        <div class="image-box" [routerLink]="['/space', 'ink-box']">
+          <img src="assets/Featured_space_01.png" alt="墨染方寸">
+        </div>
+        <h3>墨染方寸</h3>
+        <p class="location">信義, 台北</p>
+      </div>
+      <div class="card alt-offset">
+        <div class="image-box">
+          <img src="assets/Featured_space_02.png" alt="光合書屋">
+        </div>
+        <h3>光合書屋</h3>
+        <p class="location">靜安, 上海</p>
+      </div>
+      <div class="card">
+        <div class="image-box">
+          <img src="assets/Featured_space_03.png" alt="知性書閣">
+        </div>
+        <h3>知性書閣</h3>
+        <p class="location">代官山, 東京</p>
+      </div>
+      <div class="card alt-offset">
+        <div class="image-box">
+          <img src="assets/Featured_space_04.png" alt="領袖專屬">
+        </div>
+        <h3>領袖專屬</h3>
+        <p class="location">梅菲爾, 倫敦</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="philosophy">
+  <div class="container">
+    <div class="grid">
+      <div class="content">
+        <h2>策展理念<span>光影與空間的對話</span></h2>
+        <div class="text-body">
+          <p>我們相信，空間不僅是容納物理存在的容器，更是塑造思維與情緒的無形力量。WorkspaceCollective 拒絕過度裝飾，轉而追求「留白」的藝術，讓光線成為設計的主角。</p>
+          <p>每一個角落都經過精心策劃，從材質的觸感、聲學的考量到自然光的引入，皆旨在創造一個能讓心靈沉澱、靈感自然湧現的避難所。在這裡，工作不再是負擔，而是一場優雅的修行。</p>
+        </div>
+        <button class="btn-explore">探索我們的設計語彙</button>
+      </div>
+      <div class="image-wrapper">
+        <img src="assets/Planning_concept_01.png" alt="Curatorial Philosophy">
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="network">
+  <div class="container">
+    <div class="section-header center">
+      <h2>全球網絡</h2>
+      <p>無論您身在何處，都能找到屬於您的寧靜綠洲。</p>
+    </div>
+    <div class="regions">
+      <div class="region">
+        <h3>Asia Pacific</h3>
+        <ul>
+          <li><a href="#">Taipei</a></li>
+          <li><a href="#">Tokyo</a></li>
+          <li><a href="#">Singapore</a></li>
+          <li><a href="#">Sydney</a></li>
+        </ul>
+      </div>
+      <div class="region">
+        <h3>Europe</h3>
+        <ul>
+          <li><a href="#">London</a></li>
+          <li><a href="#">Paris</a></li>
+          <li><a href="#">Berlin</a></li>
+          <li><a href="#">Milan</a></li>
+        </ul>
+      </div>
+      <div class="region">
+        <h3>North America</h3>
+        <ul>
+          <li><a href="#">New York</a></li>
+          <li><a href="#">Los Angeles</a></li>
+          <li><a href="#">Toronto</a></li>
+          <li><a href="#">Vancouver</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>

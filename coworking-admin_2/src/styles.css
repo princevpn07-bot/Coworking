@@ -1,0 +1,342 @@
+/* You can add global styles to this file, and also import other style files */
+
+:root {
+  --primary: #3D5A35;
+  --surface-container: #FFFFFF;
+  --surface-container-low: #F3F3F3;
+  --on-surface: #1A1C1E;
+  --on-surface-variant: #44474E;
+  --outline: #C4C7C5;
+  --error: #BA1A1A;
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.05);
+  --border-radius-lg: 16px;
+  --border-radius-pill: 100px;
+  --transition: all 0.2s ease-in-out;
+}
+
+.event-chip.paid { background: #D1E9CF; color: #2D4A2B; }
+.event-chip.pending { background: #FFE8D1; color: #6B4C1E; }
+.event-chip.cancelled { background: #F0F0F0; color: #6B6B6B; }
+
+.booking-status-badge.paid { background: #D1E9CF; color: #2D4A2B; }
+.booking-status-badge.pending { background: #FFE8D1; color: #6B4C1E; }
+.booking-status-badge.cancelled { background: #F0F0F0; color: #6B6B6B; }
+
+/* ── Dark Mode: CSS variable overrides ─────────────────────────────────── */
+.admin-wrapper.dark {
+  --primary: #6fcf8e;
+  --surface-container: #1e2433;
+  --surface-container-low: #161b27;
+  --on-surface: #e2e8f0;
+  --on-surface-variant: #8892a4;
+  --outline: #2a3244;
+}
+
+/* ── Dark Mode: Dashboard ───────────────────────────────────────────────── */
+.admin-wrapper.dark .stats-card,
+.admin-wrapper.dark .card {
+  background: #1e2433;
+  border-color: #2a3244;
+}
+
+.admin-wrapper.dark .stats-label,
+.admin-wrapper.dark .filter-dropdown,
+.admin-wrapper.dark .view-all,
+.admin-wrapper.dark .activity-meta,
+.admin-wrapper.dark .activity-time,
+.admin-wrapper.dark .chart-labels {
+  color: #8892a4;
+}
+
+.admin-wrapper.dark .chart-labels {
+  border-top-color: #2a3244;
+}
+
+.admin-wrapper.dark .progress-bar {
+  background: #2a3244;
+}
+
+.admin-wrapper.dark .bar {
+  background: #3d5a6e;
+}
+
+.admin-wrapper.dark .bar.highlight {
+  background: #6fcf8e;
+}
+
+.admin-wrapper.dark .note-card.note-priority {
+  background-color: #2a2510;
+  border-left-color: #d4a017;
+}
+
+.admin-wrapper.dark .note-card.note-priority .note-tag { color: #f0c040; }
+
+.admin-wrapper.dark .note-card.note-client {
+  background-color: #0e1e2e;
+  border-left-color: #2196F3;
+}
+
+.admin-wrapper.dark .note-card.note-client .note-tag { color: #64b5f6; }
+
+.admin-wrapper.dark .note-body { color: #e2e8f0; }
+
+/* ── Dark Mode: Settings Panel (Profile) ───────────────────────────────── */
+.admin-wrapper.dark .settings-panel {
+  background-color: #1e2433;
+  border-color: #2a3244;
+}
+
+.admin-wrapper.dark .section-split {
+  border-bottom-color: #2a3244;
+}
+
+.admin-wrapper.dark .section-info {
+  border-right-color: #2a3244;
+}
+
+.admin-wrapper.dark .section-title { color: #e2e8f0; }
+.admin-wrapper.dark .section-desc  { color: #8892a4; }
+
+.admin-wrapper.dark .form-label    { color: #e2e8f0; }
+.admin-wrapper.dark .form-label .eng { color: #8892a4; }
+
+.admin-wrapper.dark .form-input {
+  background-color: #161b27;
+  border-color: #2a3244;
+  color: #e2e8f0;
+}
+
+.admin-wrapper.dark .form-input[readonly] {
+  background-color: #0f1117;
+  color: #8892a4;
+}
+
+.admin-wrapper.dark .form-input:focus {
+  border-color: #6fcf8e;
+  box-shadow: 0 0 0 1px #6fcf8e;
+}
+
+.admin-wrapper.dark .panel-footer {
+  background-color: #161b27;
+  border-top-color: #2a3244;
+}
+
+.admin-wrapper.dark .btn-ghost {
+  background-color: #1e2433;
+  border-color: #2a3244;
+  color: #e2e8f0;
+}
+
+.admin-wrapper.dark .btn-ghost:hover { background-color: #2a3244; }
+
+/* ── Dark Mode: Resources ───────────────────────────────────────────────── */
+.admin-wrapper.dark .asset-card {
+  background: #1e2433;
+  border-color: #2a3244;
+}
+
+.admin-wrapper.dark .amount-value {
+  color: #e2e8f0;
+}
+
+.admin-wrapper.dark .label {
+  color: #8892a4;
+}
+
+.admin-wrapper.dark .stock-info {
+  border-top-color: #2a3244;
+  border-bottom-color: #2a3244;
+}
+
+.admin-wrapper.dark .asset-title {
+  color: #e2e8f0;
+}
+
+.admin-wrapper.dark .search-box input,
+.admin-wrapper.dark .filter-select,
+.admin-wrapper.dark .form-select,
+.admin-wrapper.dark .form-input {
+  background: #161b27;
+  border-color: #2a3244;
+  color: #e2e8f0;
+}
+
+.admin-wrapper.dark .form-label {
+  color: #c4cdd8;
+}
+
+.admin-wrapper.dark .modal {
+  background: #1e2433;
+  color: #e2e8f0;
+}
+
+.admin-wrapper.dark .modal-summary {
+  background: #161b27;
+}
+
+.admin-wrapper.dark .summary-value,
+.admin-wrapper.dark .modal-title,
+.admin-wrapper.dark .alloc-name {
+  color: #e2e8f0;
+}
+
+.admin-wrapper.dark .allocation-item {
+  border-color: #2a3244;
+}
+
+.admin-wrapper.dark .btn-ghost {
+  border-color: #2a3244;
+  color: #c4cdd8;
+}
+
+.admin-wrapper.dark .btn-ghost:hover:not(:disabled) {
+  background: #2a3244;
+}
+
+/* ── Dark Mode: Calendar / Bookings ─────────────────────────────────────── */
+.admin-wrapper.dark .calendar-card,
+.admin-wrapper.dark .day-panel-inner {
+  background: #1e2433;
+  border-color: #2a3244;
+}
+
+.admin-wrapper.dark .calendar-header {
+  border-bottom-color: #2a3244;
+}
+
+.admin-wrapper.dark .calendar-header .current-month {
+  color: #e2e8f0;
+}
+
+.admin-wrapper.dark .calendar-header .view-controls > button,
+.admin-wrapper.dark .calendar-header .btn-group button {
+  background: #1e2433;
+  border-color: #2a3244;
+  color: #c4cdd8;
+}
+
+.admin-wrapper.dark .calendar-header .view-controls > button:hover,
+.admin-wrapper.dark .calendar-header .btn-group button:hover {
+  background: #2a3244;
+}
+
+.admin-wrapper.dark .weekday-label {
+  background: #161b27;
+  color: #8892a4;
+  border-bottom-color: #2a3244;
+}
+
+.admin-wrapper.dark .day-cell {
+  border-right-color: #2a3244;
+  border-bottom-color: #2a3244;
+  color: #e2e8f0;
+}
+
+.admin-wrapper.dark .day-cell.outside-month {
+  background: #161b27;
+}
+
+.admin-wrapper.dark .day-cell:hover:not(.outside-month) {
+  background: rgba(99, 142, 116, 0.12);
+}
+
+.admin-wrapper.dark .day-cell.selected {
+  background: #1a3320;
+}
+
+.admin-wrapper.dark .day-number {
+  color: #e2e8f0;
+}
+
+.admin-wrapper.dark .day-number.today {
+  background: #6fcf8e;
+  color: #0f1117;
+}
+
+.admin-wrapper.dark .calendar-legend {
+  border-top-color: #2a3244;
+  color: #8892a4;
+}
+
+.admin-wrapper.dark .more-events {
+  color: #8892a4;
+}
+
+.admin-wrapper.dark .more-events:hover {
+  background: #2a3244;
+}
+
+.admin-wrapper.dark .day-panel-header {
+  border-bottom-color: #2a3244;
+}
+
+.admin-wrapper.dark .day-panel-header h4 {
+  color: #e2e8f0;
+}
+
+.admin-wrapper.dark .close-btn {
+  color: #8892a4;
+}
+
+.admin-wrapper.dark .close-btn:hover {
+  background: #2a3244;
+}
+
+.admin-wrapper.dark .booking-item {
+  border-bottom-color: #2a3244;
+}
+
+.admin-wrapper.dark .booking-space {
+  color: #e2e8f0;
+}
+
+.admin-wrapper.dark .no-bookings {
+  color: #8892a4;
+}
+
+.admin-wrapper.dark .modal-dialog {
+  background: #1e2433;
+}
+
+.admin-wrapper.dark .modal-header,
+.admin-wrapper.dark .modal-footer {
+  border-color: #2a3244;
+}
+
+.admin-wrapper.dark .modal-header h4 {
+  color: #e2e8f0;
+}
+
+.admin-wrapper.dark .form-group label {
+  color: #c4cdd8;
+}
+
+.admin-wrapper.dark .form-group input,
+.admin-wrapper.dark .form-group select {
+  background: #161b27;
+  border-color: #2a3244;
+  color: #e2e8f0;
+}
+
+.admin-wrapper.dark .btn-cancel {
+  background: #1e2433;
+  border-color: #2a3244;
+  color: #c4cdd8;
+}
+
+.admin-wrapper.dark .btn-cancel:hover {
+  background: #2a3244;
+}
+
+.admin-wrapper.dark .price-note {
+  background: #161b27;
+  color: #c4cdd8;
+}
+
+/* ── Dark Mode: Booking status badges ──────────────────────────────────── */
+.admin-wrapper.dark .event-chip.paid,
+.admin-wrapper.dark .booking-status-badge.paid   { background: #1a3320; color: #6fcf8e; }
+.admin-wrapper.dark .event-chip.pending,
+.admin-wrapper.dark .booking-status-badge.pending { background: #2a1e0e; color: #f0c040; }
+.admin-wrapper.dark .event-chip.cancelled,
+.admin-wrapper.dark .booking-status-badge.cancelled { background: #1e2433; color: #8892a4; }
