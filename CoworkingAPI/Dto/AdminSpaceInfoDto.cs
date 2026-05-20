@@ -9,7 +9,7 @@ namespace CoworkingAPI.Dto
         public int? capacity {get; set;}
         public int? status {get; set;}
         public int? assetcount {get; set;}
-        public string? image {get; set;}
+        public string? imagePath {get; set;}
     }
 
     public class AdminSpaceAssertsDto

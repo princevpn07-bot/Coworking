@@ -28,8 +28,8 @@ namespace CoworkingAPI.Controllers
                 spacename = s.space_number,
                 capacity = s.capacity,
                 status = s.status,
-                image = s.image,
-                assetcount = _context.spaceasserts.Count(sa => sa.space_id == s.space_id)
+                assetcount = _context.spaceasserts.Count(sa => sa.space_id == s.space_id),
+                imagePath = _context.SpaceImages.Where(i => i.space_id == s.space_id).Select(i => i.image_path).FirstOrDefault()
             }).ToListAsync();
             return Ok(spaceinfo);
         }

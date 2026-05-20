@@ -13,7 +13,6 @@ namespace CoworkingAPI.Models
         public string? space_number { get; set; }
         public int? capacity { get; set; }
         public int? status { get; set; }
-        public string? image { get; set; }
 
         [JsonIgnore]
         public Location? Location { get; set; }

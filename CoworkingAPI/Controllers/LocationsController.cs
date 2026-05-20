@@ -42,6 +42,7 @@ namespace CoworkingAPI.Controllers
             location.phone = Location.phone;
             location.longitude = Location.longitude;
             location.latitude = Location.latitude;
+            location.mrt_info = Location.mrt_info;
 
             _context.Locations.Update(location);
             await _context.SaveChangesAsync();

@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using CoworkingAPI.Data;
 using CoworkingAPI.Models;
+using CoworkingAPI.Dto;
 using Microsoft.EntityFrameworkCore;
 
 namespace CoworkingAPI.Controllers
@@ -60,6 +61,31 @@ namespace CoworkingAPI.Controllers
             _context.Bookings.Update(booking);
             await _context.SaveChangesAsync();
             return NoContent();
+        }
+
+        [HttpGet("GetByUser/{user_id}")]
+        public async Task<IActionResult> GetByUser(int user_id)
+        {
+            var orders = await _context.Bookings
+                .Where(b => b.user_id == user_id)
+                .Select(b => new FrontendMyOrderDto
+                {
+                    contract_id = b.contract_id,
+                    space_name = b.Rent != null && b.Rent.Space != null ? b.Rent.Space.space_number : null,
+                    location_city = b.Rent != null && b.Rent.Space != null && b.Rent.Space.Location != null ? b.Rent.Space.Location.city : null,
+                    location_address = b.Rent != null && b.Rent.Space != null && b.Rent.Space.Location != null ? b.Rent.Space.Location.address : null,
+                    price_type = b.Rent != null ? b.Rent.price_type : null,
+                    price = b.Rent != null ? b.Rent.price : null,
+                    start_date = b.start_date,
+                    end_date = b.end_date,
+                    total_price = b.total_price,
+                    status = b.status,
+                    created_date = b.created_date,
+                    pay_deadline = b.pay_deadline
+                })
+                .OrderByDescending(b => b.created_date)
+                .ToListAsync();
+            return Ok(orders);
         }
 
         [HttpDelete("Delete/{id}")]

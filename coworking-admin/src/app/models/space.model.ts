@@ -6,6 +6,7 @@ export interface Location {
   phone: string | null;
   longitude: number | null;
   latitude: number | null;
+  mrt_info: string | null;
 }
 
 export interface Space {
@@ -14,7 +15,6 @@ export interface Space {
   space_number: string | null;
   capacity: number | null;
   status: number | null;
-  image: string | null;
 }
 
 export interface CreateSpace {
@@ -22,7 +22,12 @@ export interface CreateSpace {
   space_number: string;
   capacity: number;
   status: number;
-  image: string;
+}
+
+export interface SpaceImageItem {
+  id: number;
+  space_id: number;
+  image_path: string | null;
 }
 
 export type SpaceStatus = '可用' | '使用中' | '停用中' | '清潔中';
@@ -48,7 +53,7 @@ export interface SpaceView {
   capacity: number;
   status: SpaceStatus;
   assetCount: number;
-  image: string;
+  imagePath: string;
 }
 
 export interface AdminSpaceInfoDto {
@@ -59,5 +64,5 @@ export interface AdminSpaceInfoDto {
   capacity: number | null;
   status: number | null;
   assetcount: number | null;
-  image: string | null;
+  imagePath: string | null;
 }

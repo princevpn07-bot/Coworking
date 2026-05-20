@@ -92,7 +92,11 @@
       <tr class="table-row" (click)="openPanel(space)">
         <td>
           <div class="space-info">
-            <div class="space-thumb"></div>
+            <div class="space-thumb">
+                @if (space.imagePath) {
+                  <img [src]="'http://localhost:5193' + space.imagePath" alt="" />
+                }
+              </div>
             <div class="details">
               <div class="name">{{ space.name }}</div>
               <div class="id">ID: {{ space.id }}</div>
@@ -165,8 +169,11 @@
       </div>
 
       <div class="form-group">
-        <label>圖片網址</label>
-        <input type="text" [(ngModel)]="newSpace.image" placeholder="選填" />
+        <label>空間圖片</label>
+        <input type="file" accept="image/*" (change)="onFileSelected($event)" />
+        @if (selectedFile()) {
+          <p class="file-hint">已選擇：{{ selectedFile()!.name }}</p>
+        }
       </div>
     </div>
 
@@ -239,10 +246,6 @@
             </select>
           </div>
         </div>
-        <div class="panel-form-group">
-          <label>圖片網址</label>
-          <input type="text" [ngModel]="draft.image" (ngModelChange)="editDraft.update(d => d ? {...d, image: $event} : d)" placeholder="選填" />
-        </div>
         @if (panelUpdateError()) {
           <p class="panel-update-error">
             <span class="material-symbols-outlined">error</span>
@@ -287,6 +290,36 @@
           {{ panelStatusError() }}
         </p>
       }
+    }
+
+    <div class="panel-divider"></div>
+
+    <div class="panel-section-title">
+      <span class="material-symbols-outlined">photo_library</span>
+      空間圖片
+      <label class="btn-upload-img" [class.disabled]="uploadingImage()">
+        <span class="material-symbols-outlined">add_photo_alternate</span>
+        {{ uploadingImage() ? '上傳中...' : '新增圖片' }}
+        <input type="file" accept="image/*" (change)="onPanelImageUpload($event)" [disabled]="uploadingImage()" hidden />
+      </label>
+    </div>
+
+    @if (imagesLoading()) {
+      <div class="assets-loading">載入圖片中...</div>
+    } @else {
+      <div class="panel-image-grid">
+        @for (img of panelImages(); track img.id) {
+          <div class="panel-image-item">
+            <img [src]="'http://localhost:5193' + img.image_path" alt="" />
+            <button class="btn-delete-img" (click)="deletePanelImage(img.id)">
+              <span class="material-symbols-outlined">delete</span>
+            </button>
+          </div>
+        }
+        @if (panelImages().length === 0) {
+          <p class="no-images">尚未上傳圖片</p>
+        }
+      </div>
     }
 
     <div class="panel-divider"></div>

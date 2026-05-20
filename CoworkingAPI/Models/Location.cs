@@ -13,6 +13,7 @@ namespace CoworkingAPI.Models
         public string? phone {get; set;}
         public decimal? longitude {get; set;}
         public decimal? latitude {get; set;}
+        public string? mrt_info {get; set;}
 
         [JsonIgnore]
         public ICollection<Space>? Spaces { get; set; }

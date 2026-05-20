@@ -69,6 +69,18 @@ namespace CoworkingAPI.Controllers
             return NoContent();
         }
 
+        [HttpPost("Register")]
+        public async Task<IActionResult> Register([FromBody] User user)
+        {
+            var exists = await _context.Users.AnyAsync(u => u.email == user.email);
+            if (exists) return Conflict("此 Email 已被註冊");
+            user.role = 20;
+            user.is_active = true;
+            _context.Users.Add(user);
+            await _context.SaveChangesAsync();
+            return Ok();
+        }
+
         [HttpPost("Login")]
         public async Task<IActionResult> Login([FromBody]Login login)
         {
@@ -84,8 +96,9 @@ namespace CoworkingAPI.Controllers
             var claims = new[]
             {
                 new Claim(JwtRegisteredClaimNames.Sub, user.email!),
-                new Claim(JwtRegisteredClaimNames.Jti,Guid.NewGuid().ToString()),
-                new Claim(ClaimTypes.Role, user.role.ToString()!)
+                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+                new Claim(ClaimTypes.Role, user.role.ToString()!),
+                new Claim("user_id", user.user_id.ToString())
             };
 
             var token = new JwtSecurityToken(

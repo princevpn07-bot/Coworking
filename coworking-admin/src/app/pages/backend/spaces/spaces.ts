@@ -1,7 +1,7 @@
 import { Component, OnInit, inject, signal, computed } from '@angular/core';
 import { NgClass } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { AdminSpaceAssertsDto, AdminSpaceInfoDto, CreateSpace, Location, SpaceAsset, SpaceStatus, SpaceView } from '../../../models/space.model';
+import { AdminSpaceAssertsDto, AdminSpaceInfoDto, CreateSpace, Location, SpaceAsset, SpaceImageItem, SpaceStatus, SpaceView } from '../../../models/space.model';
 import { SpaceService } from '../../../services/space';
 
 const STATUS_MAP: Record<number, SpaceStatus> = {
@@ -77,17 +77,26 @@ export class Spaces implements OnInit {
   readonly panelUpdating = signal(false);
   readonly panelUpdateError = signal('');
   readonly panelStatusError = signal('');
-  readonly editDraft = signal<{ name: string; locationId: number; capacity: number; status: SpaceStatus; image: string } | null>(null);
+  readonly editDraft = signal<{ name: string; locationId: number; capacity: number; status: SpaceStatus } | null>(null);
+  readonly panelImages = signal<SpaceImageItem[]>([]);
+  readonly imagesLoading = signal(false);
+  readonly uploadingImage = signal(false);
 
   // --- modal state ---
   readonly showCreateModal = signal(false);
   readonly submitting = signal(false);
   readonly submitError = signal('');
   readonly locationOptions = signal<Location[]>([]);
+  readonly selectedFile = signal<File | null>(null);
   newSpace: CreateSpace = this.emptySpace();
 
   private emptySpace(): CreateSpace {
-    return { location_id: 0, space_number: '', capacity: 1, status: 0, image: '' };
+    return { location_id: 0, space_number: '', capacity: 1, status: 0 };
+  }
+
+  onFileSelected(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    this.selectedFile.set(input.files?.[0] ?? null);
   }
 
   ngOnInit(): void {
@@ -117,7 +126,7 @@ export class Spaces implements OnInit {
       capacity: d.capacity ?? 0,
       status: STATUS_MAP[d.status ?? 0] ?? '可用',
       assetCount: d.assetcount ?? 0,
-      image: d.image ?? '',
+      imagePath: d.imagePath ?? '',
     };
   }
 
@@ -137,6 +146,7 @@ export class Spaces implements OnInit {
     this.selectedSpace.set(space);
     this.panelOpen.set(true);
     this.panelAssets.set([]);
+    this.panelImages.set([]);
     this.panelEditMode.set(false);
     this.editDraft.set(null);
     this.panelStatusError.set('');
@@ -149,6 +159,48 @@ export class Spaces implements OnInit {
       error: (err) => {
         console.error('Failed to load assets', err);
         this.assetsLoading.set(false);
+      },
+    });
+    this.loadPanelImages(space.id);
+  }
+
+  private loadPanelImages(spaceId: number): void {
+    this.imagesLoading.set(true);
+    this.spaceService.getSpaceImages(spaceId).subscribe({
+      next: (data) => { this.panelImages.set(data); this.imagesLoading.set(false); },
+      error: () => this.imagesLoading.set(false),
+    });
+  }
+
+  onPanelImageUpload(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    const file = input.files?.[0];
+    const space = this.selectedSpace();
+    if (!file || !space) return;
+    this.uploadingImage.set(true);
+    this.spaceService.uploadSpaceImage(space.id, file).subscribe({
+      next: (img) => {
+        this.panelImages.update(list => [...list, img]);
+        if (this.panelImages().length === 1) {
+          this.spaces.update(list => list.map(s => s.id === space.id ? { ...s, imagePath: img.image_path ?? '' } : s));
+          this.selectedSpace.update(s => s ? { ...s, imagePath: img.image_path ?? '' } : s);
+        }
+        this.uploadingImage.set(false);
+        input.value = '';
+      },
+      error: () => this.uploadingImage.set(false),
+    });
+  }
+
+  deletePanelImage(id: number): void {
+    this.spaceService.deleteSpaceImage(id).subscribe({
+      next: () => {
+        this.panelImages.update(list => list.filter(i => i.id !== id));
+        const space = this.selectedSpace();
+        if (space && this.panelImages().length === 0) {
+          this.spaces.update(list => list.map(s => s.id === space.id ? { ...s, imagePath: '' } : s));
+          this.selectedSpace.update(s => s ? { ...s, imagePath: '' } : s);
+        }
       },
     });
   }
@@ -167,7 +219,7 @@ export class Spaces implements OnInit {
   openEditMode(): void {
     const s = this.selectedSpace();
     if (!s) return;
-    this.editDraft.set({ name: s.name, locationId: s.locationId, capacity: s.capacity, status: s.status, image: s.image });
+    this.editDraft.set({ name: s.name, locationId: s.locationId, capacity: s.capacity, status: s.status });
     this.panelUpdateError.set('');
     this.panelEditMode.set(true);
     if (this.locationOptions().length === 0) {
@@ -197,7 +249,6 @@ export class Spaces implements OnInit {
       space_number: draft.name,
       capacity: draft.capacity,
       status: STATUS_REVERSE[draft.status],
-      image: draft.image,
     };
     this.panelUpdating.set(true);
     this.panelUpdateError.set('');
@@ -210,7 +261,6 @@ export class Spaces implements OnInit {
           location: this.locationOptions().find(l => l.location_id === draft.locationId)?.city ?? s.location,
           capacity: draft.capacity,
           status: draft.status,
-          image: draft.image,
         };
         this.selectedSpace.set(updated);
         this.spaces.update(list => list.map(item => item.id === updated.id ? updated : item));
@@ -240,6 +290,7 @@ export class Spaces implements OnInit {
 
   closeCreateModal(): void {
     this.showCreateModal.set(false);
+    this.selectedFile.set(null);
   }
 
   submitCreateSpace(): void {
@@ -249,10 +300,19 @@ export class Spaces implements OnInit {
     this.submitting.set(true);
     this.submitError.set('');
     this.spaceService.createspace(this.newSpace).subscribe({
-      next: () => {
-        this.submitting.set(false);
-        this.showCreateModal.set(false);
-        this.loadSpaces();
+      next: (created) => {
+        const file = this.selectedFile();
+        if (file) {
+          this.spaceService.uploadSpaceImage(created.space_id, file).subscribe({
+            next: () => { this.submitting.set(false); this.showCreateModal.set(false); this.selectedFile.set(null); this.loadSpaces(); },
+            error: () => { this.submitting.set(false); this.showCreateModal.set(false); this.selectedFile.set(null); this.loadSpaces(); },
+          });
+        } else {
+          this.submitting.set(false);
+          this.showCreateModal.set(false);
+          this.selectedFile.set(null);
+          this.loadSpaces();
+        }
       },
       error: (err) => {
         this.submitting.set(false);
@@ -276,7 +336,6 @@ export class Spaces implements OnInit {
       space_number: s.name,
       capacity: s.capacity,
       status: STATUS_REVERSE[newStatus],
-      image: s.image,
     };
     this.spaceService.update(payload as any).subscribe({
       next: () => {},

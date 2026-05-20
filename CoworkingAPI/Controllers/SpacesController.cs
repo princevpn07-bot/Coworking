@@ -33,11 +33,11 @@ namespace CoworkingAPI.Controllers
         }
 
         [HttpPost("Add")]
-        public async Task<IActionResult> Add([FromBody] Space Space)
+        public async Task<IActionResult> Add([FromBody] Space space)
         {
-            _context.Spaces.Add(Space);
+            _context.Spaces.Add(space);
             await _context.SaveChangesAsync();
-            return CreatedAtAction(nameof(GetAll), Space);
+            return CreatedAtAction(nameof(GetAll), space);
         }
 
         [HttpPut("Update")]
@@ -49,12 +49,11 @@ namespace CoworkingAPI.Controllers
             space.space_number = Space.space_number;
             space.capacity = Space.capacity;
             space.status = Space.status;
-            space.image = Space.image;
 
             await _context.SaveChangesAsync();
             return NoContent();
         }
-        
+
         [HttpDelete("Delete/{id}")]
         public async Task<IActionResult> Delete(int id)
         {

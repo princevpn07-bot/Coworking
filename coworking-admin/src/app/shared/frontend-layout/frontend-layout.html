@@ -4,4 +4,6 @@
   <router-outlet />
 </main>
 
-<app-frontend-footer />
+@if (showFooter) {
+  <app-frontend-footer />
+}

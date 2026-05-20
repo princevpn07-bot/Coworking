@@ -5,11 +5,45 @@
       <p class="subtitle">{{ username }} 的預訂記錄</p>
     </div>
 
-    <div class="empty-state">
-      <div class="empty-icon">📋</div>
-      <h3>尚無訂單紀錄</h3>
-      <p>您目前沒有任何預訂，立即探索我們的空間吧！</p>
-      <a class="btn-browse" routerLink="/all-spaces">瀏覽空間</a>
-    </div>
+    @if (loading()) {
+      <div class="empty-state">
+        <p>載入中...</p>
+      </div>
+    } @else if (orders().length === 0) {
+      <div class="empty-state">
+        <div class="empty-icon">📋</div>
+        <h3>尚無訂單紀錄</h3>
+        <p>您目前沒有任何預訂，立即探索我們的空間吧！</p>
+        <a class="btn-browse" routerLink="/all-spaces">瀏覽空間</a>
+      </div>
+    } @else {
+      <div class="order-list">
+        @for (order of orders(); track order.contract_id) {
+          <div class="order-card">
+            <div class="order-card__header">
+              <span class="order-id"># {{ order.contract_id }}</span>
+              <span class="order-status" [class]="'status-' + order.status">
+                {{ getStatusLabel(order.status) }}
+              </span>
+            </div>
+            <div class="order-card__body">
+              <div class="order-info">
+                <p class="space-name">{{ order.space_name ?? '未知空間' }}</p>
+                <p class="location">{{ order.location_city }} · {{ order.location_address }}</p>
+                <p class="price-type">{{ getPriceTypeLabel(order.price_type) }} · NT$ {{ order.price }} / 單位</p>
+              </div>
+              <div class="order-dates">
+                <p><span class="label">開始</span>{{ order.start_date | date:'yyyy/MM/dd HH:mm' }}</p>
+                <p><span class="label">結束</span>{{ order.end_date | date:'yyyy/MM/dd HH:mm' }}</p>
+                <p><span class="label">建立</span>{{ order.created_date | date:'yyyy/MM/dd' }}</p>
+              </div>
+            </div>
+            <div class="order-card__footer">
+              <span class="total-price">總金額 NT$ {{ order.total_price | number }}</span>
+            </div>
+          </div>
+        }
+      </div>
+    }
   </div>
 </div>

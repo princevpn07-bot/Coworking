@@ -1,5 +1,5 @@
-import { Component } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import { Component, inject } from '@angular/core';
+import { Router, RouterOutlet } from '@angular/router';
 import { FrontendHeader } from '../frontend-header/frontend-header';
 import { FrontendFooter } from '../frontend-footer/frontend-footer';
 
@@ -9,4 +9,10 @@ import { FrontendFooter } from '../frontend-footer/frontend-footer';
   templateUrl: './frontend-layout.html',
   styleUrl: './frontend-layout.css',
 })
-export class FrontendLayout {}
+export class FrontendLayout {
+  private router = inject(Router);
+
+  get showFooter(): boolean {
+    return !this.router.url.startsWith('/all-spaces');
+  }
+}

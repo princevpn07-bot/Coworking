@@ -64,6 +64,15 @@ export class AuthService
     return name.includes('@') ? name.split('@')[0] : name;
   }
 
+  getUserId(): number | null
+  {
+    const token = this.gettoken();
+    if (!token) return null;
+    const payload = JSON.parse(atob(token.split('.')[1]));
+    const id = payload['user_id'];
+    return id ? parseInt(id) : null;
+  }
+
   isLoggedIn(): boolean
   {
     return !!this.gettoken();
