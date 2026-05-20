@@ -85,3 +85,114 @@
 }
 
 .navbar .btn-book:hover { opacity: 0.9; }
+
+/* 使用者選單 */
+.user-menu {
+  position: relative;
+}
+
+.user-avatar-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 6px 10px;
+  border-radius: 8px;
+  font-family: inherit;
+  transition: background 0.2s;
+}
+
+.user-avatar-btn:hover {
+  background: rgba(105, 92, 78, 0.08);
+}
+
+.avatar-circle {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: #534434;
+  color: #fff;
+  font-size: 14px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.welcome-text {
+  font-size: 14px;
+  font-weight: 600;
+  color: #3d3028;
+  max-width: 120px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.chevron {
+  font-size: 18px;
+  color: #695c4e;
+  transition: transform 0.2s;
+  line-height: 1;
+}
+
+.chevron.open {
+  transform: rotate(180deg);
+}
+
+/* 下拉選單 */
+.dropdown-menu {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  background: #fff;
+  border: 1px solid rgba(126, 118, 109, 0.15);
+  border-radius: 10px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+  min-width: 150px;
+  padding: 6px 0;
+  z-index: 100;
+  animation: fadeIn 0.15s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-4px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.dropdown-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  padding: 10px 16px;
+  background: none;
+  border: none;
+  font-family: inherit;
+  font-size: 14px;
+  color: #3d3028;
+  cursor: pointer;
+  text-decoration: none;
+  transition: background 0.15s;
+}
+
+.dropdown-item:hover {
+  background: rgba(105, 92, 78, 0.07);
+}
+
+.dropdown-divider {
+  height: 1px;
+  background: rgba(126, 118, 109, 0.15);
+  margin: 4px 0;
+}
+
+.logout-item {
+  color: #c0392b;
+}
+
+.item-icon {
+  font-size: 15px;
+}

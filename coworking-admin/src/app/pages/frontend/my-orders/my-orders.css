@@ -1,0 +1,68 @@
+.orders-page {
+  min-height: calc(100vh - 80px);
+  background: #fef8f6;
+  padding: 60px 0;
+}
+
+.container {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+.page-header {
+  margin-bottom: 40px;
+}
+
+.page-header h1 {
+  font-size: 28px;
+  font-weight: 700;
+  color: #3d3028;
+  margin: 0 0 6px;
+}
+
+.subtitle {
+  font-size: 15px;
+  color: #7e766d;
+  margin: 0;
+}
+
+.empty-state {
+  text-align: center;
+  padding: 80px 20px;
+  background: #fff;
+  border-radius: 16px;
+  border: 1px solid rgba(126, 118, 109, 0.12);
+}
+
+.empty-icon {
+  font-size: 56px;
+  margin-bottom: 16px;
+}
+
+.empty-state h3 {
+  font-size: 20px;
+  font-weight: 600;
+  color: #3d3028;
+  margin: 0 0 8px;
+}
+
+.empty-state p {
+  font-size: 14px;
+  color: #7e766d;
+  margin: 0 0 28px;
+}
+
+.btn-browse {
+  display: inline-block;
+  background: #534434;
+  color: #fff;
+  padding: 12px 28px;
+  border-radius: 8px;
+  font-weight: 700;
+  font-size: 14px;
+  text-decoration: none;
+  transition: opacity 0.2s;
+}
+
+.btn-browse:hover { opacity: 0.9; }

@@ -13,6 +13,7 @@ import { Home } from './pages/frontend/home/home';
 import { AllSpaces } from './pages/frontend/all-spaces/all-spaces';
 import { SpaceDetail } from './pages/frontend/space-detail/space-detail';
 import { Register } from './pages/auth/register/register';
+import { MyOrders } from './pages/frontend/my-orders/my-orders';
 
 
 export const routes: Routes = [
@@ -23,6 +24,7 @@ export const routes: Routes = [
       { path: '', component: Home },
       { path: 'all-spaces', component: AllSpaces },
       { path: 'space/:id', component: SpaceDetail },
+      { path: 'my-orders', component: MyOrders },
     ]
   },
   { path: 'login', component: Login },

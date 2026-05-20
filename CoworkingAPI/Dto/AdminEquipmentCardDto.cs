@@ -11,4 +11,12 @@ namespace CoworkingAPI.Dto
         public bool is_precious { get; set; }
         public List<AdminSpaceAllocationDto> allocations { get; set; } = new();
     }
+
+    public class AdminSpaceAllocationDto
+    {
+        public int asserts_id { get; set; }
+        public int space_id { get; set; }
+        public string? space_name { get; set; }
+        public int amount { get; set; }
+    }
 }

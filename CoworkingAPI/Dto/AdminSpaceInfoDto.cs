@@ -11,4 +11,11 @@ namespace CoworkingAPI.Dto
         public int? assetcount {get; set;}
         public string? image {get; set;}
     }
+
+    public class AdminSpaceAssertsDto
+    {
+        public int equipment_id { get; set; }
+        public string? equipmentname { get; set; }
+        public int? amount { get; set; }
+    }
 }
