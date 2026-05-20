@@ -1,0 +1,84 @@
+<div class="page-container">
+
+  <div class="page-header">
+    <h1 class="page-title">個人設定</h1>
+    <p class="page-description">您的帳戶詳細資料與系統權限設定。</p>
+  </div>
+
+  <div class="settings-panel">
+
+    <!-- Section 1: Basic Information -->
+    <section class="section-split">
+      <div class="section-info">
+        <h2 class="section-title">基本資料</h2>
+        <p class="section-desc">您的個人檔案資訊，電子郵件作為登入憑證無法自行修改。</p>
+      </div>
+      <div class="section-content">
+        <div class="profile-header">
+          <div class="avatar-lg">{{ avatarInitial }}</div>
+          <div class="badge">
+            <span class="material-symbols-outlined">verified_user</span>
+            {{ roleLabel }}
+          </div>
+        </div>
+        <div class="form-grid">
+          <div class="form-group">
+            <label class="form-label" for="userName">
+              姓名 <span class="eng">(Name)</span>
+            </label>
+            <input class="form-input" id="userName" type="text" [(ngModel)]="name" />
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="userEmail">
+              電子郵件 <span class="eng">(Email)</span>
+            </label>
+            <div class="form-input-wrapper">
+              <span class="material-symbols-outlined icon-left">lock</span>
+              <input class="form-input has-icon" id="userEmail" readonly type="email" [value]="email" />
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 2: Security & Password -->
+    <section class="section-split no-border">
+      <div class="section-info">
+        <h2 class="section-title">安全與密碼</h2>
+        <p class="section-desc">請定期更新您的密碼。密碼長度需至少 8 個字元。</p>
+      </div>
+      <div class="section-content">
+        <div class="security-form">
+          <div class="form-group">
+            <label class="form-label" for="currentPassword">當前密碼</label>
+            <input class="form-input" id="currentPassword" type="password" [(ngModel)]="currentPassword" placeholder="請輸入當前密碼" />
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="newPassword">新密碼</label>
+            <input class="form-input" id="newPassword" type="password" [(ngModel)]="newPassword" placeholder="至少 6 位，需含大小寫及特殊符號" />
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="confirmPassword">確認新密碼</label>
+            <input class="form-input" id="confirmPassword" type="password" [(ngModel)]="confirmPassword" placeholder="再次輸入新密碼" />
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Panel Footer -->
+    <div class="panel-footer">
+      @if (saveError()) {
+        <span class="msg-error">{{ saveError() }}</span>
+      }
+      @if (saveSuccess()) {
+        <span class="msg-success">儲存成功</span>
+      }
+      <button class="btn btn-ghost" type="button" (click)="cancel()">取消</button>
+      <button class="btn btn-primary" type="button" (click)="save()" [disabled]="saving()">
+        {{ saving() ? '儲存中...' : '儲存變更' }}
+      </button>
+    </div>
+
+  </div>
+
+</div>

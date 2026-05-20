@@ -1,0 +1,61 @@
+<div class="admin-wrapper" [class.dark]="isDark">
+  <aside class="sidebar">
+    <div class="sidebar-header">
+      <h1 class="brand-logo">LUXEWORK Admin</h1>
+      <p class="brand-subtext">企業管理控制台</p>
+    </div>
+    <nav class="sidebar-nav">
+      <a class="nav-item" routerLink="/backend/dashboard" routerLinkActive="active">
+        <span class="material-symbols-outlined">dashboard</span>
+        儀表板
+      </a>
+      <a class="nav-item" routerLink="/backend/bookings" routerLinkActive="active">
+        <span class="material-symbols-outlined">calendar_month</span>
+        預訂與日曆
+      </a>
+      <a class="nav-item" routerLink="/backend/spaces" routerLinkActive="active">
+        <span class="material-symbols-outlined">layers</span>
+        空間與資產
+      </a>
+      <a class="nav-item" routerLink="/backend/resources" routerLinkActive="active">
+        <span class="material-symbols-outlined">inventory_2</span>
+        資源調配
+      </a>
+      <a class="nav-item" routerLink="/backend/members" routerLinkActive="active">
+        <span class="material-symbols-outlined">group</span>
+        成員與公司
+      </a>
+
+    </nav>
+    <div class="sidebar-footer">
+      <a class="user-profile" routerLink="/backend/profile" routerLinkActive="active">
+        <span class="material-symbols-outlined">account_circle</span>
+        <div class="user-info">
+          <span class="user-name">個人資料</span>
+          <span class="user-role">管理員</span>
+        </div>
+      </a>
+      <a class="logout-link" href="#">
+        <span class="material-symbols-outlined">logout</span>
+        退出登錄
+      </a>
+    </div>
+  </aside>
+  <div class="main-content">
+    <header class="top-header">
+      <h2 class="page-title">{{ pageTitle }}</h2>
+      <div class="header-right">
+        <button class="theme-toggle" (click)="toggleDark()" [title]="isDark ? '切換亮色模式' : '切換暗色模式'">
+          <span class="material-symbols-outlined">{{ isDark ? 'light_mode' : 'dark_mode' }}</span>
+        </button>
+        <div class="current-time">
+          <span class="material-symbols-outlined">schedule</span>
+          {{ currentTime }}
+        </div>
+      </div>
+    </header>
+    <main>
+      <router-outlet />
+    </main>
+  </div>
+</div>
