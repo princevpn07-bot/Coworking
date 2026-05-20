@@ -13,7 +13,7 @@ import { Home } from './pages/frontend/home/home';
 import { AllSpaces } from './pages/frontend/all-spaces/all-spaces';
 import { SpaceDetail } from './pages/frontend/space-detail/space-detail';
 import { Register } from './pages/auth/register/register';
-
+import { PaymentComponent } from './pages/frontend/payment-component/payment-component';
 
 export const routes: Routes = [
   {
@@ -23,6 +23,7 @@ export const routes: Routes = [
       { path: '', component: Home },
       { path: 'all-spaces', component: AllSpaces },
       { path: 'space/:id', component: SpaceDetail },
+      { path: 'payment', component: PaymentComponent },
     ]
   },
   { path: 'login', component: Login },
