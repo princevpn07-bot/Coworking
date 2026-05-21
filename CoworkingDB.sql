@@ -55,19 +55,7 @@ CREATE TABLE [dbo].[Users] (
 );
 GO
 
--- 4. 建立企業表 (Companies)
-CREATE TABLE [dbo].[Companies] (
-    [company_id]    INT           IDENTITY (1, 1) NOT NULL,
-    [company_name]  NVARCHAR (50) NULL,
-    [tax_id]        NVARCHAR (50) NULL,
-    [contact_name]  NVARCHAR (50) NULL,
-    [contact_phone] NVARCHAR (50) NULL,
-    [contact_email] NVARCHAR (50) NULL,
-    CONSTRAINT [PK_Companies] PRIMARY KEY CLUSTERED ([company_id] ASC)
-);
-GO
-
--- 5. 建立設備表 (equipment)
+-- 4. 建立設備表 (equipment)
 CREATE TABLE [dbo].[equipment] (
     [equipment_id] INT           IDENTITY (1, 1) NOT NULL,
     [location_id]  INT           NULL,
@@ -80,7 +68,7 @@ CREATE TABLE [dbo].[equipment] (
 );
 GO
 
--- 6. 建立空間資產關聯表 (space_asserts)
+-- 5. 建立空間資產關聯表 (space_asserts)
 CREATE TABLE [dbo].[space_asserts] (
     [asserts_id]   INT IDENTITY (1, 1) NOT NULL,
     [space_id]     INT NULL,
@@ -90,7 +78,7 @@ CREATE TABLE [dbo].[space_asserts] (
 );
 GO
 
--- 7. 建立空間圖片表 (spaceimage)
+-- 6. 建立空間圖片表 (spaceimage)
 CREATE TABLE [dbo].[spaceimage] (
     [Id]         INT           IDENTITY (1, 1) NOT NULL,
     [space_id]   INT           NOT NULL,
@@ -99,7 +87,7 @@ CREATE TABLE [dbo].[spaceimage] (
 );
 GO
 
--- 8. 建立租金表 (rents)
+-- 7. 建立租金表 (rents)
 CREATE TABLE [dbo].[rents] (
     [rent_id]    INT          IDENTITY (1, 1) NOT NULL,
     [space_id]   INT          NULL,
@@ -110,7 +98,7 @@ CREATE TABLE [dbo].[rents] (
 );
 GO
 
--- 9. 建立報修清單 (fix_list)
+-- 8. 建立報修清單 (fix_list)
 CREATE TABLE [dbo].[fix_list] (
     [fix_id]          INT           IDENTITY (1, 1) NOT NULL,
     [space_id]        INT           NULL,
@@ -122,7 +110,7 @@ CREATE TABLE [dbo].[fix_list] (
 );
 GO
 
--- 10. 建立員工表 (employees)
+-- 9. 建立員工表 (employees)
 CREATE TABLE [dbo].[employees] (
     [employees_id] INT           IDENTITY (1, 1) NOT NULL,
     [user_id]      INT           NULL,
@@ -135,7 +123,7 @@ CREATE TABLE [dbo].[employees] (
 );
 GO
 
--- 11. 建立預約/合約表 (booking)
+-- 10. 建立預約/合約表 (booking)
 CREATE TABLE [dbo].[booking] (
     [contract_id]        INT           IDENTITY (1, 1) NOT NULL,
     [user_id]            INT           NULL,
