@@ -155,6 +155,28 @@ export class Members implements OnInit {
     });
   }
 
+  // ── LINE ID ──────────────────────────────────────────────────────────────────
+  readonly showLineModal = signal(false);
+  pendingLineId = '';
+
+  openLineModal(member: MemberItem): void {
+    this.selectedMember = member;
+    this.pendingLineId = member.lineId ?? '';
+    this.actionError.set('');
+    this.showLineModal.set(true);
+  }
+
+  closeLineModal(): void { this.showLineModal.set(false); }
+
+  submitLineId(): void {
+    if (!this.selectedMember?.userId) return;
+    this.actionSubmitting.set(true);
+    this.memberService.updateLineId(this.selectedMember.userId, this.pendingLineId).subscribe({
+      next: () => { this.actionSubmitting.set(false); this.closeLineModal(); this.loadMemberPage(); },
+      error: (err) => { this.actionError.set(err?.error ?? '更新失敗'); this.actionSubmitting.set(false); },
+    });
+  }
+
   // ── Block / Unblock ──────────────────────────────────────────────────────────
   readonly showBlockModal = signal(false);
 

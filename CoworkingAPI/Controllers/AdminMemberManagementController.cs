@@ -43,7 +43,8 @@ namespace CoworkingAPI.Controllers
                 Name = m.name,
                 Email = m.email,
                 Role = m.role == 99 ? "admin" : m.role == 80 ? "staff" : m.role == 20 ? "client" : "unknown",
-                Status = m.is_active 
+                Status = m.is_active,
+                LineId = m.line_id
             }).ToListAsync();
 
             foreach (var member in memberlist)
@@ -88,6 +89,16 @@ namespace CoworkingAPI.Controllers
             var user = await _context.Users.FindAsync(id);
             if (user == null) return NotFound("找不到該會員");
             user.is_active = !(user.is_active ?? true);
+            await _context.SaveChangesAsync();
+            return NoContent();
+        }
+
+        [HttpPatch("updatelineid/{id}")]
+        public async Task<IActionResult> UpdateLineId(int id, [FromBody] UpdateLineIdDto dto)
+        {
+            var user = await _context.Users.FindAsync(id);
+            if (user == null) return NotFound("找不到該會員");
+            user.line_id = dto.LineId;
             await _context.SaveChangesAsync();
             return NoContent();
         }

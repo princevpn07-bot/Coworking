@@ -2,10 +2,11 @@ import { Component, inject } from '@angular/core';
 import { Router, RouterOutlet } from '@angular/router';
 import { FrontendHeader } from '../frontend-header/frontend-header';
 import { FrontendFooter } from '../frontend-footer/frontend-footer';
+import { ChatWidget } from '../chat-widget/chat-widget';
 
 @Component({
   selector: 'app-frontend-layout',
-  imports: [RouterOutlet, FrontendHeader, FrontendFooter],
+  imports: [RouterOutlet, FrontendHeader, FrontendFooter, ChatWidget],
   templateUrl: './frontend-layout.html',
   styleUrl: './frontend-layout.css',
 })

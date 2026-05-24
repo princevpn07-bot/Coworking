@@ -21,4 +21,5 @@ export interface MemberItem {
   role: string | null;
   totalBookings: number | null;
   status: boolean | null;
+  lineId: string | null;
 }

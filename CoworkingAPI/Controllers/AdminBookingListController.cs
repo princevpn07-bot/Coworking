@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using CoworkingAPI.Data;
 using CoworkingAPI.Dto;
 using CoworkingAPI.Models;
+using CoworkingAPI.Services;
 using Microsoft.EntityFrameworkCore;
 
 namespace CoworkingAPI.Controllers
@@ -11,10 +12,12 @@ namespace CoworkingAPI.Controllers
     public class AdminBookingListController : ControllerBase
     {
         private readonly AppDbContext _context;
+        private readonly ILineService _lineService;
 
-        public AdminBookingListController(AppDbContext context)
+        public AdminBookingListController(AppDbContext context, ILineService lineService)
         {
             _context = context;
+            _lineService = lineService;
         }
 
         [HttpPatch("{id}/status")]
@@ -93,6 +96,28 @@ namespace CoworkingAPI.Controllers
                 };
                 _context.Bookings.Add(booking);
                 await _context.SaveChangesAsync();
+
+                // 發 LINE 推播通知
+                if (dto.user_id.HasValue)
+                {
+                    var user = await _context.Users.FindAsync(dto.user_id.Value);
+                    if (user?.line_id != null)
+                    {
+                        var spaceRent = await _context.Rents
+                            .Include(r => r.Space)
+                            .FirstOrDefaultAsync(r => r.rent_id == dto.rent_id);
+                        var spaceName = spaceRent?.Space?.space_number ?? "共享空間";
+                        var date = start.ToString("yyyy/MM/dd");
+                        var timeRange = $"{start:HH:mm} - {end:HH:mm}";
+                        var confirmCode = $"CW-{booking.contract_id:D4}";
+                        try
+                        {
+                            await _lineService.SendBookingConfirmationAsync(user.line_id, spaceName, date, timeRange, confirmCode);
+                        }
+                        catch { }
+                    }
+                }
+
                 return Ok(new { contract_id = booking.contract_id, total_price = booking.total_price });
             }
             catch (Exception ex)

@@ -30,4 +30,8 @@ export class MemberService {
   toggleBlock(userId: number): Observable<unknown> {
     return this.http.patch(`${this.apiUrl}/toggleblock/${userId}`, {});
   }
+
+  updateLineId(userId: number, lineId: string): Observable<unknown> {
+    return this.http.patch(`${this.apiUrl}/updatelineid/${userId}`, { lineId });
+  }
 }

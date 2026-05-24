@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using CoworkingAPI.Data;
 using CoworkingAPI.Models;
 using CoworkingAPI.Dto;
+using CoworkingAPI.Services;
 using Microsoft.EntityFrameworkCore;
 
 namespace CoworkingAPI.Controllers
@@ -11,10 +12,12 @@ namespace CoworkingAPI.Controllers
     public class BookingsController : ControllerBase
     {
         private readonly AppDbContext _context;
+        private readonly ILineService _lineService;
 
-        public BookingsController(AppDbContext context)
+        public BookingsController(AppDbContext context, ILineService lineService)
         {
             _context = context;
+            _lineService = lineService;
         }
 
         [HttpGet("GetAll")]
@@ -37,6 +40,38 @@ namespace CoworkingAPI.Controllers
         {
             _context.Bookings.Add(Booking);
             await _context.SaveChangesAsync();
+
+            // 預約成功後發 LINE 通知
+            if (Booking.user_id.HasValue)
+            {
+                var user = await _context.Users.FindAsync(Booking.user_id.Value);
+                if (user?.line_id != null)
+                {
+                    var spaceName = "共享空間";
+                    if (Booking.rent_id.HasValue)
+                    {
+                        var rent = await _context.Rents
+                            .Include(r => r.Space)
+                            .FirstOrDefaultAsync(r => r.rent_id == Booking.rent_id);
+                        if (rent?.Space?.space_number != null)
+                            spaceName = rent.Space.space_number;
+                    }
+
+                    var date = Booking.start_date?.ToString("yyyy/MM/dd") ?? "-";
+                    var timeRange = $"{Booking.start_date?.ToString("HH:mm")} - {Booking.end_date?.ToString("HH:mm")}";
+                    var confirmCode = $"CW-{Booking.contract_id:D4}";
+
+                    try
+                    {
+                        await _lineService.SendBookingConfirmationAsync(user.line_id, spaceName, date, timeRange, confirmCode);
+                    }
+                    catch
+                    {
+                        // LINE 通知失敗不影響預約流程
+                    }
+                }
+            }
+
             return CreatedAtAction(nameof(GetAll), Booking);
         }
 

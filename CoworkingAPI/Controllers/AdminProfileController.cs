@@ -31,7 +31,8 @@ namespace CoworkingAPI.Controllers
             {
                 Name = user.name,
                 Email = user.email,
-                Role = user.role
+                Role = user.role,
+                LineId = user.line_id
             });
         }
 

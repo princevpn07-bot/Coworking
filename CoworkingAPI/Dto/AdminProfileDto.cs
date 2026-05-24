@@ -5,6 +5,7 @@ namespace CoworkingAPI.Dto
         public string? Name { get; set; }
         public string? Email { get; set; }
         public int? Role { get; set; }
+        public string? LineId { get; set; }
     }
 
     public class AdminChangePasswordDto

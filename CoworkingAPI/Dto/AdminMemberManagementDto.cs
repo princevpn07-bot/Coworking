@@ -19,11 +19,17 @@ namespace CoworkingAPI.Dto
     public class MemberListItemDto
     {
         public int? UserId { get; set; }
-        public string? Name { get; set; } 
+        public string? Name { get; set; }
         public string? Email { get; set; }
-        public string? Role { get; set; }  
-        public int? TotalBookings { get; set; }  
-        public bool? Status { get; set; }          
+        public string? Role { get; set; }
+        public int? TotalBookings { get; set; }
+        public bool? Status { get; set; }
+        public string? LineId { get; set; }
+    }
+
+    public class UpdateLineIdDto
+    {
+        public string? LineId { get; set; }
     }
 
     public class CreateMemberDto

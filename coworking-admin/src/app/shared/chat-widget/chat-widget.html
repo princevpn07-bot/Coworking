@@ -1,0 +1,40 @@
+@if (isOpen()) {
+  <div class="chat-box">
+    <div class="chat-header">
+      <span>CoWork AI 助理</span>
+      <button class="close-btn" (click)="toggle()">✕</button>
+    </div>
+
+    <div class="chat-messages" #messageContainer>
+      @for (msg of messages; track $index) {
+        <div class="message" [class.user]="msg.role === 'user'" [class.assistant]="msg.role === 'assistant'">
+          <div class="bubble">{{ msg.content }}</div>
+        </div>
+      }
+      @if (isLoading()) {
+        <div class="message assistant">
+          <div class="bubble loading">
+            <span></span><span></span><span></span>
+          </div>
+        </div>
+      }
+    </div>
+
+    <div class="chat-input">
+      <textarea
+        [(ngModel)]="userInput"
+        (keydown)="onKeydown($event)"
+        placeholder="輸入問題，按 Enter 送出..."
+        rows="1"
+        [disabled]="isLoading()"
+      ></textarea>
+      <button (click)="send()" [disabled]="isLoading()">
+        ➤
+      </button>
+    </div>
+  </div>
+}
+
+<button class="chat-toggle" (click)="toggle()" [class.open]="isOpen()">
+  @if (isOpen()) { ✕ } @else { 💬 }
+</button>

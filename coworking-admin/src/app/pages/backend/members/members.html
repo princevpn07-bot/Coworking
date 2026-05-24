@@ -66,6 +66,9 @@
               <div>
                 <div class="name">{{ member.name }}</div>
                 <div class="email">{{ member.email }}</div>
+                @if (member.lineId) {
+                  <div class="line-id-tag">LINE 已綁定</div>
+                }
               </div>
             </div>
           </td>
@@ -91,6 +94,10 @@
               <button class="btn-icon btn-block" [title]="isSelf(member) ? '無法操作自己的帳號' : (member.status ? '封鎖帳戶' : '解除封鎖')"
                       [disabled]="isSelf(member)" (click)="openBlockModal(member)">
                 <span class="material-symbols-outlined">{{ member.status ? 'block' : 'lock_open' }}</span>
+              </button>
+              <button class="btn-icon" [title]="'設定 LINE ID'" (click)="openLineModal(member)"
+                      [style.color]="member.lineId ? '#06c755' : ''">
+                <span class="material-symbols-outlined">chat</span>
               </button>
             </div>
           </td>
@@ -191,6 +198,35 @@
       <button type="button" class="btn-submit" [class.btn-danger]="selectedMember?.status"
               [disabled]="actionSubmitting()" (click)="submitToggleBlock()">
         {{ actionSubmitting() ? '處理中...' : (selectedMember?.status ? '確認封鎖' : '確認解封') }}
+      </button>
+    </div>
+  </div>
+}
+
+@if (showLineModal()) {
+  <div class="modal-backdrop" (click)="closeLineModal()"></div>
+  <div class="modal-dialog modal-dialog--sm" role="dialog">
+    <div class="modal-header">
+      <h4>設定 LINE ID</h4>
+      <button type="button" class="modal-close-btn" (click)="closeLineModal()">
+        <span class="material-symbols-outlined">close</span>
+      </button>
+    </div>
+    <div class="modal-body">
+      <p class="modal-member-name">{{ selectedMember?.name }}</p>
+      <div class="form-group">
+        <label>LINE User ID</label>
+        <input type="text" [(ngModel)]="pendingLineId" placeholder="請輸入 LINE User ID（可留空清除）" />
+        <small class="field-hint">用戶加入官方帳號為好友後，Bot 會自動回傳其 LINE User ID。</small>
+      </div>
+    </div>
+    @if (actionError()) {
+      <p class="submit-error"><span class="material-symbols-outlined">error</span>{{ actionError() }}</p>
+    }
+    <div class="modal-footer">
+      <button type="button" class="btn-cancel" (click)="closeLineModal()">取消</button>
+      <button type="button" class="btn-submit" [disabled]="actionSubmitting()" (click)="submitLineId()">
+        {{ actionSubmitting() ? '儲存中...' : '確認儲存' }}
       </button>
     </div>
   </div>
