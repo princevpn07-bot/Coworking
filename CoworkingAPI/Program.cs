@@ -13,6 +13,7 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 
 builder.Services.AddScoped<IAIService, AIService>();
 builder.Services.AddScoped<ILineService, LineService>();
+builder.Services.AddScoped<IECPayService, ECPayService>();
 builder.Services.AddControllers();
 builder.Services.AddCors(options =>
 {
