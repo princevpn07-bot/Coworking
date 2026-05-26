@@ -5,7 +5,9 @@
       <div class="search-group">
         <div class="search-group__item">
           <span class="material-symbols-outlined">search</span>
-          <input type="text" placeholder="地點" />
+          <input type="text" class="search-group__item" [(ngModel)]="searchKeyword" (keyup.enter)="onSearch()"
+            placeholder="地點" />
+
         </div>
         <div class="search-group__item">
           <span class="material-symbols-outlined">calendar_today</span>
@@ -13,11 +15,15 @@
         </div>
         <div class="search-group__item" style="max-width: 120px;">
           <span class="material-symbols-outlined">person</span>
-          <select>
-            <option>1-60+</option>
+          <select [(ngModel)]="selectedCapacity" (change)="onSearch()">
+            <option [value]="0">不限人數</option>
+            <option [value]="2">2 人以上</option>
+            <option [value]="10">10 人以上</option>
+            <option [value]="20">20 人以上</option>
+            <option [value]="30">30 人以上</option>
           </select>
         </div>
-        <button class="search-group__submit">搜尋</button>
+        <button class="search-group__submit" (click)="onSearch()">搜尋</button>
       </div>
       <div class="filters">
         <button class="filters__btn">
@@ -30,18 +36,18 @@
     </div>
 
     <div class="listing-section__feed">
-      <p class="listing-info">已顯示可租用空間 總共 368 個空間</p>
-      <div class="card-grid">
+      <p class="listing-info">已顯示可租用空間 總共 {{ spaces?.length || 0 }} 個空間</p>
+      <div class="card-grid" *ngIf="spaces && spaces.length > 0; else noDataBlock">
         <article class="card" *ngFor="let space of spaces">
           <div class="card__image-wrapper">
-            <img [src]="space.img" [alt]="space.name" />
-            <span class="card__badge">{{ space.capacity }}</span>
+            <img [src]="space?.img" [alt]="space?.name" />
+            <span class="card__badge">{{ space?.capacity }}</span>
           </div>
           <div class="card__content">
             <div>
-              <h3 class="card__title">{{ space.name }}</h3>
-              <p class="card__location">{{ space.location }}</p>
-              <p class="card__price">NT$ {{ space.price }} / 月起</p>
+              <h3 class="card__title">{{ space?.name }}</h3>
+              <p class="card__location">{{ space?.location }}</p>
+              <p class="card__price">NT$ {{ space?.price }} / 月起</p>
             </div>
             <button class="card__fav">
               <span class="material-symbols-outlined">favorite_border</span>
@@ -49,6 +55,14 @@
           </div>
         </article>
       </div>
+
+      <ng-template #noDataBlock>
+        <div style="padding: 40px; text-align: center; color: #888;">
+          <p>正在努力從資料庫加載星際空間中，請稍候...</p>
+        </div>
+      </ng-template>
+
+
 
       <div class="pagination">
         <button class="pagination__btn pagination__btn--border">
