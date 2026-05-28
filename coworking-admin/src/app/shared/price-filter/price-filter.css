@@ -1,0 +1,579 @@
+/* src/index.css - Custom Pure CSS Styling matching 'Natural Sanctuary v2' */
+
+@import url('https://fonts.googleapis.com/css2?family=Noto+Serif:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap');
+
+:root {
+  --bg-color-main: #fef8f6;
+  --bg-image-opacity: 0.35;
+
+  --primary-color: #504538;
+  --primary-color-hover: #Tracking;
+  --primary-color-actual: #504538;
+  --primary-color-hover-actual: #695c4e;
+  --on-primary: #ffffff;
+
+  --surface-low: #f8f2f0;
+  --surface-container-highest: #e7e1df;
+  --surface-container: #f2edea;
+  --surface-border: #cfc5bb;
+  --surface-border-light: #e7e1df;
+
+  --text-primary: #1d1b1a;
+  --text-muted: #4c463e;
+  --text-light: #7e766d;
+
+  --font-display: 'Noto Serif', serif;
+  --font-body: 'Plus Jakarta Sans', sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  background-color: var(--bg-color-main);
+  color: var(--text-primary);
+  font-family: var(--font-body);
+    /* 📍 定位與層級（精準黏在價格按鈕下方 8px，不影響全域 body） */
+  position: absolute !important;
+  top: calc(27% + 8px) !important;     /* 精準黏在價格按鈕下方 8px */
+  left: 34px !important;                  /* 靠左對齊價格按鈕 */
+  width: 420px !;             /* 限制選單卡片寬度 */
+  z-index: 9999 !important;            /* 層級全開，確保壓在卡片與地圖上方 */
+
+  /* 🎨 完美對齊右圖：大地色調外貌 */
+  background-color:#ffff; /* 👈 高質感不透明奶茶色背景 */
+  border-radius: 8px !important;
+  border: 1px solid #e3dac9 !important;  /* 細緻暖調邊框 */
+  box-shadow: 0 12px 30px rgba(74, 60, 49, 0.12) !important; /* 擴散陰影 */
+  overflow: hidden;                     /* 確保底座圓角不*/
+}
+
+
+
+/* Fullscreen app layout backdrop with contextual inspiration */
+.app-viewport {
+  /*position: relative;
+  width: 100%;
+  height: 100%;
+  padding: 24px;
+  display: flex;
+  */
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.background-cover {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -10;
+  opacity: var(--bg-image-opacity);
+  background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuCKDgBdqCEuE7moGU0WNmh95Tzpfhbiq9MrmI8HgQQhiZXWnXZDbMEc2xh8368by0iE54iRDe29OCKj4W9zrT6rU-UzlbPGn5J8QDVZZBlV0r1xWHZEhgd6ClCI2POfv7tpAhbqTHzGahGPiKlDXcF1bpFl1bMErbDifrbzsFvqj4k-4twJ3HqZh5mkvO3acVabRpuBRft2HRVdW6I_2sEyCB_hC_gRC4MT3iOWSpJU9eCgKru5hujZbeYQMttGxDBEiVinNmrZbjU');
+  background-size: cover;
+  background-position: center;
+  transition: opacity 0.5s ease;
+}
+
+/* App Header title outside the card for premium branding */
+.app-branding-tag {
+  font-family: var(--font-display);
+  font-size: 14px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--text-light);
+  margin-bottom: 24px;
+  font-weight: 500;
+  user-select: none;
+  text-align: center;
+  animation: slideDown 0.6s ease;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Modal Outer Card Container */
+.filter-card {
+  width: 100%;
+  max-width: 420px;
+  background-color: var(--surface-low);
+  border: 1px solid var(--surface-border);
+  border-radius: 16px;
+  box-shadow: 0 10px 30px rgba(80, 69, 56, 0.08);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  position: relative;
+  z-index: 10;
+  animation: scaleIn 0.35s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+  transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.2s ease;
+}
+
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.filter-card:hover {
+  box-shadow: 0 12px 35px rgba(80, 69, 56, 0.12);
+}
+
+/* Closed state button */
+.open-trigger-container {
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  animation: scaleIn 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.open-trigger-button {
+  background-color: var(--primary-color-actual);
+  color: var(--on-primary);
+  border: none;
+  font-family: var(--font-display);
+  font-size: 16px;
+  font-weight: 500;
+  padding: 14px 28px;
+  border-radius: 12px;
+  box-shadow: 0 4px 15px rgba(80, 69, 56, 0.15);
+  cursor: pointer;
+  transition: background-color 0.2s ease, transform 0.1s ease;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.open-trigger-button:hover {
+  background-color: var(--primary-color-hover-actual);
+}
+
+.open-trigger-button:active {
+  transform: scale(0.98);
+}
+
+/* Header design */
+.card-header {
+  padding: 24px 24px 16px 24px !important;
+  border-bottom: 1px solid #e8e0d5 !important; /* 細緻的淺米黃分隔線 */
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.card-title {
+  font-family: var(--font-display);
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--primary-color-actual);
+  letter-spacing: -0.01em;
+}
+
+.close-btn {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #4a3c31;
+  transition: background-color 0.2s ease, color 0.15s ease;
+}
+
+.close-btn:hover {
+  background-color: rgba(80, 69, 56, 0.06);
+  color: var(--primary-color-actual);
+}
+
+/* Card Body Section */
+.card-body {
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+}
+
+/* Slider Section */
+.slider-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.slider-scale-labels {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-family: var(--font-display);
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-muted);
+}
+
+/* Multi Range Slider Container containing 2 handles and tracks */
+.double-slider-box {
+  position: relative;
+  height: 24px;
+  display: flex;
+  align-items: center;
+}
+
+/* Core track lines */
+.slider-rail {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background-color: var(--surface-border);
+  border-radius: 4px;
+  z-index: 1;
+}
+
+.slider-selection-bar {
+  position: absolute;
+  height: 4px;
+  background-color: #d3c6b7;
+  border-radius: 4px;
+  z-index: 2;
+  transition: left 0.05s ease, right 0.05s ease;
+  left: 20%;
+  right: 20%;
+}
+
+/* The real inputs overlaid */
+.native-range-input {
+  position: absolute;
+  background-color: #504538 ;
+  width: 100%;
+  height: 0;
+  margin: 0;
+  padding: 0;
+  background: transparent;
+  pointer-events: none;
+  appearance: none;
+  -webkit-appearance: none;
+  outline: none;
+  z-index: 5;
+}
+
+/* Styles for Chrome/Safari handles */
+.native-range-input::-webkit-slider-thumb {
+  background-color: #504538;
+  pointer-events: auto;
+  appearance: none;
+  -webkit-appearance: none;
+  height: 20px;
+  width: 20px;
+  border-radius: 50%;
+  background-color: var(--primary-color-actual);
+  cursor: pointer;
+  border: 4px solid var(--bg-color-main);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+  transition: transform 0.1s ease, background-color 0.2s ease, box-shadow 0.15s ease;
+}
+
+.native-range-input::-webkit-slider-thumb:hover {
+  transform: scale(1.18);
+  background-color: var(--primary-color-hover-actual);
+}
+
+.native-range-input::-webkit-slider-thumb:active {
+  box-shadow: 0 0 0 8px rgba(80, 69, 56, 0.15);
+  background-color: var(--primary-color-actual);
+}
+
+/* Styles for Firefox handles */
+.native-range-input::-moz-range-thumb {
+  pointer-events: auto;
+  appearance: none;
+  height: 20px;
+  width: 20px;
+  border-radius: 50%;
+  background-color: var(--primary-color-actual);
+  cursor: pointer;
+  border: 4px solid var(--bg-color-main);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+  transition: transform 0.1s ease, background-color 0.2s ease, box-shadow 0.15s ease;
+}
+
+.native-range-input::-moz-range-thumb:hover {
+  transform: scale(1.18);
+  background-color: var(--primary-color-hover-actual);
+}
+
+.native-range-input::-moz-range-thumb:active {
+  box-shadow: 0 0 0 8px rgba(80, 69, 56, 0.15);
+  background-color: var(--primary-color-actual);
+}
+
+/* Numeric text input controls details */
+.numeric-controls {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.price-input-module {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.price-input-label {
+  font-family: var(--font-display);
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-muted);
+}
+
+.prefix-input-field-relative {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.input-currency-symbol {
+  position: absolute;
+  left: 14px;
+  font-family: var(--font-body);
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text-muted);
+  user-select: none;
+  pointer-events: none;
+}
+
+.price-numeric-input {
+  width: 100%;
+  padding: 12px 14px 12px 30px;
+  font-family: var(--font-body);
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text-primary);
+  background-color: #ffffff;
+  border: 1px solid var(--surface-border-light);
+  border-radius: 8px;
+  outline: none;
+  transition: border-color 0.25s ease, box-shadow 0.25s ease;
+}
+
+.price-numeric-input:hover {
+  border-color: var(--surface-border);
+}
+
+.price-numeric-input:focus {
+  border-color: var(--primary-color-actual);
+  box-shadow: 0 0 0 3px rgba(80, 69, 56, 0.08);
+}
+
+/* Connective line minus icon styling */
+.divider-hyphen {
+  margin-top: 26px;
+  height: 2px;
+  width: 12px;
+  background-color: var(--surface-border);
+  flex-shrink: 0;
+}
+
+/* Preset Chips Area */
+.preset-section {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  border-top: 1px dashed var(--surface-border-light);
+  padding-top: 18px;
+}
+
+.preset-title {
+  font-family: var(--font-display);
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-light);
+}
+
+.preset-chip-flex {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.preset-badge {
+  background-color: rgba(80, 69, 56, 0.03);
+  border: 1px solid var(--surface-border-light);
+  padding: 6px 14px;
+  border-radius: 30px;
+  font-size: 12px;
+  font-family: var(--font-body);
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.165, 0.84, 0.44, 1);
+  user-select: none;
+  outline: none;
+}
+
+.preset-badge:hover {
+  background-color: var(--primary-color-actual);
+  color: #ffffff;
+  border-color: var(--primary-color-actual);
+}
+
+.preset-badge.active {
+  background-color: var(--primary-color-actual);
+  color: #ffffff;
+  border-color: var(--primary-color-actual);
+  font-weight: 600;
+}
+
+/* Footer layout inside the card */
+.card-footer {
+  padding: 18px 24px;
+  background-color: var(--surface-container);
+  border-top: 1px solid var(--surface-border-light);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.clear-text-btn {
+  background: transparent;
+  border: none;
+  font-family: var(--font-display);
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-muted);
+  cursor: pointer;
+  padding: 6px 0;
+  transition: color 0.2s ease;
+  position: relative;
+  outline: none;
+}
+
+.clear-text-btn::after {
+  content: '';
+  position: absolute;
+  bottom: 2px;
+  left: 0;
+  width: 100%;
+  height: 1px;
+  background-color: transparent;
+  transition: background-color 0.2s ease;
+}
+
+.clear-text-btn:hover {
+  color: var(--primary-color-actual);
+}
+
+.clear-text-btn:hover::after {
+  background-color: var(--primary-color-actual);
+}
+
+.apply-submit-btn {
+  background-color: #504538;
+  color:#ffff;
+  border: none;
+  font-family: var(--font-display);
+  font-size: 14px;
+  font-weight: 600;
+  padding: 12px 24px;
+  border-radius: 12px;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(80, 69, 56, 0.1);
+  transition: all 0.25s cubic-bezier(0.165, 0.84, 0.44, 1);
+  outline: none;
+}
+
+.apply-submit-btn:hover {
+  background-color: var(--primary-color-hover-actual);
+  box-shadow: 0 6px 16px rgba(80, 69, 56, 0.15);
+}
+
+.apply-submit-btn:active {
+  transform: translateY(1px);
+}
+
+/* Notification Dialog standard toast */
+.notification-banner {
+  position: fixed;
+  top: 24px;
+  right: 24px;
+  background-color: #1e1e24;
+  color: #ffffff;
+  border-radius: 12px;
+  padding: 16px 20px;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  z-index: 1000;
+  transform: translateY(-50px);
+  opacity: 0;
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  pointer-events: none;
+}
+
+.notification-banner.visible {
+  transform: translateY(0);
+  opacity: 1;
+}
+
+.ban-icon {
+  flex-shrink: 0;
+  width: 18px;
+  height: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.banner-content {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.banner-title {
+  font-family: var(--font-display);
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.banner-desc {
+  font-size: 12px;
+  opacity: 0.9;
+  font-weight: 400;
+}
+
+/* SVG Icon definitions */
+.svg-icon {
+  stroke: currentColor;
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}

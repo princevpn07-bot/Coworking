@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="zh-Hant">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Price Filter Menu - Natural Sanctuary</title>
+
+  <!-- Google Fonts for custom refined display typography -->
+  <link
+    href="https://fonts.googleapis.com/css2?family=Noto+Serif:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap"
+    rel="stylesheet" />
+
+  <!-- Beautiful custom external stylesheet separated -->
+  <link rel="stylesheet" href="/src/index.css" />
+</head>
+
+<body>
+  <!-- App Main Context Box -->
+  <div class="airbnb-price-dropdown" [style.display]="isOpen ? 'block' : 'none'">
+
+  <div class="notification-banner" [class.visible]="toastVisible">
+    <div class="ban-icon">
+      <svg class="svg-icon" width="18" height="18" viewBox="0 0 24 24" stroke-width="3">
+        <polyline points="20 6 9 17 4 12"></polyline>
+      </svg>
+    </div>
+    <div class="banner-content">
+      <span class="banner-title">{{ toastTitle }}</span>
+      <span class="banner-desc">{{ toastDesc }}</span>
+    </div>
+  </div>
+
+  <div class="filter-card" id="pricing-filter-modal" style="margin: 0; box-shadow: none; border: none; width: 100%; background: transparent; animation: none;">
+
+    <div class="card-header">
+      <h2 class="card-title">價格範圍</h2>
+      <button class="close-btn" id="hide-modal-btn" title="關閉選單" aria-label="Close Filter Window" (click)="closeModal()">
+        <svg class="svg-icon" width="18" height="18" viewBox="0 0 24 24" stroke-width="2.5">
+          <line x1="18" y1="6" x2="6" y2="18"></line>
+          <line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
+      </button>
+    </div>
+
+    <div class="card-body">
+      <div class="slider-wrapper">
+        <div class="slider-scale-labels">
+          <span>$0</span>
+          <span>$50,000+</span>
+        </div>
+
+        <div class="double-slider-box">
+          <div class="slider-rail"></div>
+          <div class="slider-selection-bar" [style.left.%]="minPercent" [style.right.%]="maxPercent"></div>
+
+          <input type="range" [min]="0" [max]="maxLimit" [(ngModel)]="minVal" (input)="syncInputs('slider')" class="native-range-input" id="min-range-slider" />
+          <input type="range" [min]="0" [max]="maxLimit" [(ngModel)]="maxVal" (input)="syncInputs('slider')" class="native-range-input" id="max-range-slider" />
+        </div>
+      </div>
+
+      <div class="numeric-controls">
+        <div class="price-input-module">
+          <label class="price-input-label" for="min-num-field">最低價格</label>
+          <div class="prefix-input-field-relative">
+            <span class="input-currency-symbol">$</span>
+            <input type="text" id="min-num-field" [(ngModel)]="minInput" (blur)="syncInputs('input')" (keyup.enter)="syncInputs('input')" class="price-numeric-input" autocomplete="off" />
+          </div>
+        </div>
+
+        <div class="divider-hyphen"></div>
+
+        <div class="price-input-module">
+          <label class="price-input-label" for="max-num-field">最高價格</label>
+          <div class="prefix-input-field-relative">
+            <span class="input-currency-symbol">$</span>
+            <input type="text" id="max-num-field" [(ngModel)]="maxInput" (blur)="syncInputs('input')" (keyup.enter)="syncInputs('input')" class="price-numeric-input" autocomplete="off" />
+          </div>
+        </div>
+      </div>
+
+      <div class="preset-section">
+        <h4 class="preset-title">推薦篩選區間</h4>
+        <div class="preset-chip-flex">
+          <button type="button" class="preset-badge" (click)="applyPreset(1000, 4000)" id="preset-popular">
+            熱門 $1,000 - $4,000
+          </button>
+          <button type="button" class="preset-badge" (click)="applyPreset(0, 1500)" id="preset-affordable">
+            親民 $0 - $1,500
+          </button>
+          <button type="button" class="preset-badge" (click)="applyPreset(1500, 3500)" id="preset-medium">
+            中階 $1,500 - $3,500
+          </button>
+          <button type="button" class="preset-badge" (click)="applyPreset(3500, 50000)" id="preset-collector">
+            收藏 $3,500+
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="card-footer">
+      <button class="clear-text-btn" id="clean-all-btn" (click)="handleClear()">清除全部</button>
+      <button class="apply-submit-btn" id="apply-filters-btn" (click)="handleApply()">套用篩選</button>
+    </div>
+  </div>
+</div>

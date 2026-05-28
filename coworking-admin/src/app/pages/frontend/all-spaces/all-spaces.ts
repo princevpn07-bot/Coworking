@@ -2,12 +2,12 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { LocationService } from '../../../services/location';
 import { FormsModule } from '@angular/forms';
-
+import { PriceFilter } from '../../../shared/price-filter/price-filter';
 
 @Component({
   selector: 'app-all-spaces',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, PriceFilter],
   templateUrl: './all-spaces.html',
   styleUrl: './all-spaces.css',
 })
@@ -15,8 +15,17 @@ export class AllSpaces implements OnInit {
 
   // 宣告空間陣列
   spaces: any[] = [];
+
+  // 💡 新增：用來完好保存從後端 API 撈出來的「最原始、未篩選」的數據快照
+  allSpacesData: any[] = [];
+
   selectedCapacity: number = 0; // 宣告綁定選單的人數變數（預設 0 代表不限）
   searchKeyword: string = '';   // 搜尋關鍵字
+
+  // 💡 新增：控制價格篩選子組件開關的變數
+  isPriceFilterOpen: boolean = false;
+  // 💡 新增：儲存目前由子組件回傳的價格區間（預設為 0 ~ 100000）
+  currentPriceRange = { min: 0, max: 100000 };
 
   // 💡 當頂端有成功 import 後，這裡的紅線就會自動消失了！
   constructor(private locationService: LocationService) { }
@@ -25,16 +34,14 @@ export class AllSpaces implements OnInit {
     this.loadSpacesFromDb(); //初始載入空間資料
   }
 
+
   loadSpacesFromDb(keyword?: string, capacity?: number): void {
     this.locationService.getFrontendSpaces(keyword, capacity).subscribe({
       next: (data: any[]) => {
         console.log('✨ 成功串通！收到三表聯查的精美 DTO 數據：', data);
 
-        // 💡 100% 純動態映射，直接點亮網頁卡片
-        this.spaces = data.map((item: any) => {
-          // 🌟 核心修正：處理真實資料庫圖片網址
-          // 如果資料庫有回傳 image_path，就黏上後端伺服器主機網址（例如 http://localhost:5193）
-          // 如果沒圖，就拿原本的 assets/Featured_space_01.png 當作備用防破圖
+        const mappedSpaces = data.map((item: any) => {
+
           const finalImg = item.image_path
             ? `http://localhost:5193${item.image_path}`
             : 'assets/Featured_space_01.png';
@@ -57,6 +64,11 @@ export class AllSpaces implements OnInit {
             //img: `assets/Featured_space_0${(item.space_id % 4) || 1}.png`
           };
         });
+
+        this.spaces = mappedSpaces;          // 供目前畫面渲染顯示
+        this.allSpacesData = mappedSpaces;   // 👈 直接把整串陣列塞給快照，紅線絕對會立刻消失！
+
+        console.log('📦 快照備份成功，目前總共有：', this.allSpacesData.length, '筆原始資料可用於篩選');
       },
       error: (err) => {
         console.error('❌ 前端讀取 API 失敗，請確認後端是否正在啟動狀態：', err);
@@ -71,21 +83,50 @@ export class AllSpaces implements OnInit {
 
     console.log('🔍 開始搜尋關鍵字：', this.searchKeyword);
     this.loadSpacesFromDb(targetKeyword, targetCapacity);
-    /* spaces = [
-       { name: 'The Timber Lounge', location: '捷運大安站 2 分鐘', price: '8,500', capacity: '8人', img: 'assets/Featured_space_01.png' },
-       { name: 'Clay & Canvas Studio', location: '捷運信義安和站 5 分鐘', price: '12,000', capacity: '3人', img: 'assets/Featured_space_02.png' },
-       { name: 'Zen Archive Office', location: '捷運南京復興站 3 分鐘', price: '15,000', capacity: '12人', img: 'assets/Featured_space_03.png' },
-       { name: 'The Collective Workspace', location: '捷運市政府站 5 分鐘', price: '25,000', capacity: '20人', img: 'assets/Featured_space_04.png' },
-       { name: 'Urban Nest Hub', location: '捷運中山站 4 分鐘', price: '9,800', capacity: '6人', img: 'assets/Featured_space_01.png' },
-       { name: 'Creative Loft', location: '捷運忠孝敦化 2 分鐘', price: '18,000', capacity: '15人', img: 'assets/Featured_space_02.png' },
-       { name: 'The Timber Lounge', location: '捷運大安站 2 分鐘', price: '8,500', capacity: '8人', img: 'https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&q=80&w=800' },
-       { name: 'Clay & Canvas Studio', location: '捷運信義安和站 5 分鐘', price: '12,000', capacity: '3人', img: 'https://images.unsplash.com/photo-1524758631624-e2822e304c36?auto=format&fit=crop&q=80&w=800' },
-       { name: 'Zen Archive Office', location: '捷運南京復興站 3 分鐘', price: '15,000', capacity: '12人', img
-       { name: 'The Collective Workspace', location: '捷運市政府站 5 分鐘', price: '25,000', capacity: '20人', img: 'https://images.unsplash.com/photo-1542744094-24638eff58bb?auto=format&fit=crop&q=80&w=800' },
-       { name: 'Clay & Canvas Studio', location: '捷運信義安和站 5 分鐘', price: '12,000', capacity: '3人', img: 'https://images.unsplash.com/photo-1524758631624-e2822e304c36?auto=format&fit=crop&q=80&w=800' },
-       { name: 'The Collective Workspace', location: '捷運市政府站 5 分鐘', price: '25,000', capacity: '20人', img: 'https://images.unsplash.com/photo-1542744094-24638eff58bb?auto=format&fit=crop&q=80&w=800' },
-     ];
-     */
+
+  }
+
+  // 💡 新增：當使用者點選 HTML 上的「價格 ▽」按鈕時執行的開關控制
+  openFilter(): void {
+    this.isPriceFilterOpen = true;
+    console.log('🔮 價格彈窗開關已觸發，當前狀態為：', this.isPriceFilterOpen);
+  }
+
+  // 把原本的 budget: { min: number; max: number } 改成 any
+  onPriceFilterApplied(budget: { min: number; max: number }): void {
+    this.currentPriceRange = budget;
+    console.log('📥 父組件收到子組件回傳的價格範圍：', budget);
+
+    // 直接在前端對現有的資料集進行即時價格過濾
+    this.applyFrontendFilters();
+
+    // 收工關閉彈窗
+    this.isPriceFilterOpen = false;
+  }
+
+  // 💡 新增：純前端的複合式價格過濾演算法
+  private applyFrontendFilters(): void {
+    // 🔍 檢查快照是否有安全載入，避免對空陣列過濾
+    if (!this.allSpacesData || this.allSpacesData.length === 0) {
+      console.warn('⚠️ 警告：快照資料 allSpacesData 目前是空的，無法執行篩選！');
+      return;
+    }
+
+    // 🌟 強制轉型純數字防呆
+    const filterMin = Number(this.currentPriceRange.min);
+    const filterMax = Number(this.currentPriceRange.max);
+
+    // 拿備份的 allSpacesData 來篩選，才不會讓資料被過濾到不見
+    this.spaces = this.allSpacesData.filter((space) => {
+      const spacePrice = Number(space.price);
+
+      // 檢查空間的 price 是否落在使用者選定的最下限與最上限之間
+      const matchesPrice = spacePrice >= filterMin && spacePrice <= filterMax;
+      return matchesPrice;
+    });
+
+    console.log(`🎯 前端價格過濾完成！在目前的資料中，有 ${this.spaces.length} 個空間符合預算。`);
+
   }
 }
 
