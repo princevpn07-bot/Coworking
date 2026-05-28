@@ -3,6 +3,9 @@ import { CommonModule } from '@angular/common';
 import { LocationService } from '../../../services/location';
 import { FormsModule } from '@angular/forms';
 import { PriceFilter } from '../../../shared/price-filter/price-filter';
+import * as L from 'leaflet';
+import 'leaflet.markercluster';
+import { AfterViewInit,ViewEncapsulation} from '@angular/core';
 
 @Component({
   selector: 'app-all-spaces',
@@ -10,8 +13,9 @@ import { PriceFilter } from '../../../shared/price-filter/price-filter';
   imports: [CommonModule, FormsModule, PriceFilter],
   templateUrl: './all-spaces.html',
   styleUrl: './all-spaces.css',
+  encapsulation: ViewEncapsulation.None
 })
-export class AllSpaces implements OnInit {
+export class AllSpaces implements OnInit, AfterViewInit {
 
   // 宣告空間陣列
   spaces: any[] = [];
@@ -29,6 +33,63 @@ export class AllSpaces implements OnInit {
 
   // 💡 當頂端有成功 import 後，這裡的紅線就會自動消失了！
   constructor(private locationService: LocationService) { }
+
+  map!: L.Map;
+  markerLayer!: L.LayerGroup;
+  ngAfterViewInit(): void {
+
+
+
+    requestAnimationFrame(() => {
+
+      this.map = L.map('map')
+        .setView([25.0478, 121.517], 13);
+
+
+      L.tileLayer(
+        'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+        {
+          attribution: '&copy; OpenStreetMap',
+        }
+      ).addTo(this.map);
+
+      this.markerLayer =(L as any).markerClusterGroup({
+
+        iconCreateFunction: (cluster:any) => {
+
+          return L.divIcon({
+
+            html: `
+                <div class="cluster-inner">
+                  ${cluster.getChildCount()}
+                </div>
+              `,
+
+            className: 'custom-cluster',
+
+            iconSize: L.point(50, 50)
+
+          });
+
+        }
+
+      });
+      this.map.addLayer(this.markerLayer);
+
+      requestAnimationFrame(() => {
+        this.map.invalidateSize(true);
+        requestAnimationFrame(() => {
+          this.renderMarkers();
+        });
+
+      });
+
+
+    });
+
+  }
+
+
 
   ngOnInit(): void {
     this.loadSpacesFromDb(); //初始載入空間資料
@@ -59,14 +120,18 @@ export class AllSpaces implements OnInit {
             // 交通資訊：直接顯示資料庫 dbo.Locations.mrt_info 的超長細節敘述！
             location: item.mrt_info || '捷運站步行可達',
 
-            img: finalImg
+            img: finalImg,
             // 卡片圖片：依據 space_id 輪流指派 assets 裡的精美空間圖，解決 undefined 破圖問題
             //img: `assets/Featured_space_0${(item.space_id % 4) || 1}.png`
+            latitude: item.latitude,
+            longitude: item.longitude
+
           };
         });
 
         this.spaces = mappedSpaces;          // 供目前畫面渲染顯示
         this.allSpacesData = mappedSpaces;   // 👈 直接把整串陣列塞給快照，紅線絕對會立刻消失！
+        this.renderMarkers();
 
         console.log('📦 快照備份成功，目前總共有：', this.allSpacesData.length, '筆原始資料可用於篩選');
       },
@@ -128,5 +193,77 @@ export class AllSpaces implements OnInit {
     console.log(`🎯 前端價格過濾完成！在目前的資料中，有 ${this.spaces.length} 個空間符合預算。`);
 
   }
+
+  renderMarkers(): void {
+
+    if (!this.map) return;
+
+    this.markerLayer.clearLayers();
+    const bounds = L.latLngBounds([]);
+    this.spaces.forEach(space => {
+      if (space.latitude == null || space.longitude == null) return;
+
+      const latlng: L.LatLngExpression = [
+        space.latitude,
+        space.longitude
+      ];
+
+      bounds.extend(latlng);
+
+      const customIcon = L.divIcon({
+        className: 'custom-marker',
+        html: `
+          <div class="marker-pin">
+           <div class="marker-dot"></div>
+          </div>
+         `,
+        iconSize: [30, 30],
+        iconAnchor: [15, 15]
+      });
+
+      const marker = L.marker(latlng, { icon: customIcon, riseOnHover: true }).bindPopup(`
+        <div class="map-popup">
+        <div class="map-popup__title">
+          ${space.name}
+        </div>
+
+        <div class="map-popup__location">
+          ${space.location}
+        </div>
+
+        <div class="map-popup__price">
+          NT$ ${space.price} / 月
+        </div>
+
+        </div>
+      `, {
+        offset: L.point(-5, -18)
+      }
+      ); // 調整彈出視窗位置，讓它不會蓋住 marker;
+      marker.on('mouseover', () => {
+        marker.openPopup();
+      });
+
+      marker.on('mouseout', () => {
+        marker.closePopup();
+      });
+
+      this.markerLayer.addLayer(marker);
+
+    });
+
+    if (bounds.isValid()) {
+      this.map.fitBounds(bounds, {
+        padding: [50, 50]
+      });
+      setTimeout(() => {
+        this.map.invalidateSize(true);
+      }, 50);
+    }
+
+
+  }
+
+
 }
 

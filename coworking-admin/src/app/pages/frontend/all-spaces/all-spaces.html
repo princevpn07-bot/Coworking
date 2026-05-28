@@ -31,9 +31,7 @@
           價格 <span class="material-symbols-outlined">expand_more</span>
         </button>
 
-        <app-price-filter
-         [isOpen]="isPriceFilterOpen"
-         (closeMarquee)="isPriceFilterOpen = false"
+        <app-price-filter [isOpen]="isPriceFilterOpen" (closeMarquee)="isPriceFilterOpen = false"
           (priceApplied)="onPriceFilterApplied($event)">
         </app-price-filter>
 
@@ -44,7 +42,7 @@
     </div>
 
     <div class="listing-section__feed">
-      <p class="listing-info">已顯示可租用空間 總共 {{ spaces?.length || 0 }} 個空間</p>
+      <p class="listing-info">已顯示可租用空間 總共 {{ spaces.length || 0 }} 個空間</p>
 
       <p style="font-size: 12px; color: #695c4e; margin: -8px 0 16px 0;"
         *ngIf="currentPriceRange.min > 0 || currentPriceRange.max < 5000">
@@ -73,7 +71,7 @@
 
       <ng-template #noDataBlock>
         <div style="padding: 40px; text-align: center; color: #888;">
-          <p>正在努力從資料庫加載星際空間中，請稍候...</p>
+          <p>正在從資料庫加載空間中，請稍候...</p>
         </div>
       </ng-template>
 
@@ -97,9 +95,7 @@
 
   <!-- Right: Map -->
   <aside class="map-section">
-    <img
-      src="https://api.mapbox.com/styles/v1/mapbox/light-v10/static/121.54,25.04,13.5,0/1280x1280?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTAwMHozN243YXN2Y3NseGkifQ.0X6_8_d4_x4X4X4X4X4X4X"
-      class="map-section__img" alt="Map" />
+    <div id="map"></div>
     <div class="map-section__overlay">
       <div class="map-section__toggle-wrapper">
         <div class="map-section__toggle">
@@ -107,9 +103,6 @@
           <div class="switch"></div>
         </div>
       </div>
-      <div class="map-section__pin map-section__pin--1">336</div>
-      <div class="map-section__pin map-section__pin--2">23</div>
-      <div class="map-section__pin map-section__pin--3">9</div>
       <button class="map-section__fab">
         <span class="material-symbols-outlined">my_location</span>
       </button>
