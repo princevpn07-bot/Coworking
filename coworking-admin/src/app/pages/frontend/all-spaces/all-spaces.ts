@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { LocationService } from '../../../services/location';
 import { FormsModule } from '@angular/forms';
 import { PriceFilter } from '../../../shared/price-filter/price-filter';
+import { RegionFilterComponent } from '../../../shared/region-filter/region-filter.component';
 import * as L from 'leaflet';
 import 'leaflet.markercluster';
 import { AfterViewInit,ViewEncapsulation} from '@angular/core';
@@ -10,7 +11,7 @@ import { AfterViewInit,ViewEncapsulation} from '@angular/core';
 @Component({
   selector: 'app-all-spaces',
   standalone: true,
-  imports: [CommonModule, FormsModule, PriceFilter],
+  imports: [CommonModule, FormsModule, PriceFilter, RegionFilterComponent],
   templateUrl: './all-spaces.html',
   styleUrl: './all-spaces.css',
   encapsulation: ViewEncapsulation.None
@@ -30,6 +31,16 @@ export class AllSpaces implements OnInit, AfterViewInit {
   isPriceFilterOpen: boolean = false;
   // 💡 新增：儲存目前由子組件回傳的價格區間（預設為 0 ~ 100000）
   currentPriceRange = { min: 0, max: 100000 };
+   // ------------------------------------------
+  // 🗺️ 區域篩選相關變數（✨ 新增）
+  // ------------------------------------------
+  isRegionFilterOpen: boolean = false; // 控制地區彈窗開關
+  // 儲存目前由地區子組件回傳的勾選結果
+  currentRegionRange = {
+    city: '',
+    districts: [] as string[],
+    stations: [] as string[]
+  };
 
   // 💡 當頂端有成功 import 後，這裡的紅線就會自動消失了！
   constructor(private locationService: LocationService) { }
@@ -168,8 +179,34 @@ export class AllSpaces implements OnInit, AfterViewInit {
     // 收工關閉彈窗
     this.isPriceFilterOpen = false;
   }
+   // ------------------------------------------
+  // 🗺️ 區域篩選事件方法（✨ 新增）
+  // ------------------------------------------
 
-  // 💡 新增：純前端的複合式價格過濾演算法
+  // 當點擊「地區篩選」按鈕時打開彈窗
+  openRegionFilter(): void {
+    // 如果本來是開的就變關，本來是關的就變開
+    this.isRegionFilterOpen = !this.isRegionFilterOpen;
+
+    // 貼心防呆：如果打開了地區篩選，就把價格篩選主動關掉，避免兩個彈窗疊在一起
+    if (this.isRegionFilterOpen) {
+      this.isPriceFilterOpen = false;
+    }
+    console.log('🔮 地區彈窗開關已觸發，當前狀態為：', this.isRegionFilterOpen);
+  }
+
+  // 當使用者在地區子組件按下「套用篩選」時觸發
+  onRegionFilterApplied(regionData: { city: string; districts: string[]; stations: string[] }): void {
+    this.currentRegionRange = regionData;
+    console.log('📥 父組件收到子組件回傳的地區數據：', regionData);
+
+   // 🌟 這裡統一呼叫前端過濾中心
+    this.applyFrontendFilters();
+    this.isRegionFilterOpen = false;
+  }
+
+
+   // 💡 新增：純前端的複合式價格過濾演算法
   private applyFrontendFilters(): void {
     // 🔍 檢查快照是否有安全載入，避免對空陣列過濾
     if (!this.allSpacesData || this.allSpacesData.length === 0) {
@@ -187,7 +224,17 @@ export class AllSpaces implements OnInit, AfterViewInit {
 
       // 檢查空間的 price 是否落在使用者選定的最下限與最上限之間
       const matchesPrice = spacePrice >= filterMin && spacePrice <= filterMax;
-      return matchesPrice;
+      // 條件 2：縣市篩選（如果子組件沒傳城市，代表不限）
+      const matchesCity = !this.currentRegionRange.city || space.city === this.currentRegionRange.city;
+
+      // 條件 3：行政區篩選（若是空陣列代表全區不限；有勾選則空間的行政區必須包含在內）
+      const matchesDistrict = this.currentRegionRange.districts.length === 0 ||
+        this.currentRegionRange.districts.includes(space.district);
+
+      // 條件 4：捷運站篩選（利用 .some 檢查空間的交通敘述字串裡，有沒有包含任何一個使用者勾選的車站名稱）
+      const matchesMrt = this.currentRegionRange.stations.length === 0 ||
+        (space.location && this.currentRegionRange.stations.some(station => space.location.includes(station)));
+      return matchesPrice && matchesCity && matchesDistrict && matchesMrt;
     });
 
     console.log(`🎯 前端價格過濾完成！在目前的資料中，有 ${this.spaces.length} 個空間符合預算。`);

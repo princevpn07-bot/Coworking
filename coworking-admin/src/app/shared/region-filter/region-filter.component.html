@@ -1,0 +1,76 @@
+ <!-- 主篩選面板 -->
+  <div class="loc-filter-body">
+    <!-- 按地區搜尋區塊 -->
+    <section class="loc-section">
+      <div class="loc-section-title-row">
+        <h3 class="loc-section-title">按地區搜尋</h3>
+        <div class="loc-chevron-group">
+          <button class="loc-btn-chevron" (click)="shiftCity('left')">
+            <span class="material-symbols-outlined">chevron_left</span>
+          </button>
+          <button class="loc-btn-chevron" (click)="shiftCity('right')">
+            <span class="material-symbols-outlined">chevron_right</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="loc-region-grid">
+        <button *ngFor="let city of cities"
+                class="loc-region-card"
+                [class.active]="selectedCityId === city.id"
+                (click)="selectCity(city.id)">
+          <div class="loc-region-img-wrapper">
+            <img [src]="city.imgUrl" [alt]="city.alt" class="loc-region-img">
+          </div>
+          <span class="loc-region-name">{{ city.name }}</span>
+        </button>
+      </div>
+    </section>
+
+    <!-- 行政區選擇區塊 -->
+    <section class="loc-section">
+      <div class="loc-tabs-row">
+        <button *ngFor="let city of cities"
+                class="loc-tab-btn"
+                [class.active]="selectedCityId === city.id"
+                (click)="selectCity(city.id)">
+          {{ city.name }}
+        </button>
+      </div>
+
+      <div class="loc-district-grid">
+        <button *ngFor="let dist of districts[selectedCityId]"
+                class="loc-btn-option"
+                [class.selected]="isDistrictSelected(dist)"
+                (click)="toggleDistrict(dist)">
+          {{ dist }}
+        </button>
+      </div>
+    </section>
+
+    <!-- 捷運沿線選擇區塊 -->
+    <section class="loc-section">
+      <div class="loc-tabs-row" style="display: flex; justify-content: space-between; align-items: center;">
+        <div style="display: flex; gap: 24px;">
+          <button *ngFor="let line of mrtLines"
+                  class="loc-tab-btn"
+                  [class.active]="activeMrtLineId === line.id"
+                  (click)="selectMrtLine(line.id)">
+            {{ line.name }}
+          </button>
+        </div>
+        <button class="loc-btn-chevron">
+          <span class="material-symbols-outlined">chevron_right</span>
+        </button>
+      </div>
+
+      <div class="loc-mrt-grid">
+        <button *ngFor="let station of mrtStations[activeMrtLineId]"
+                class="loc-btn-option"
+                [class.selected]="isStationSelected(station)"
+                (click)="toggleStation(station)">
+          {{ station }}
+        </button>
+      </div>
+    </section>
+  </div>

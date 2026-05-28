@@ -26,20 +26,40 @@
         <button class="search-group__submit" (click)="onSearch()">搜尋</button>
       </div>
 
-      <div class="filters">
-        <button class="filters__btn" (click)="openFilter()">
-          價格 <span class="material-symbols-outlined">expand_more</span>
-        </button>
+        <div class="filter-container-row" style="display: block; margin-top: 16px; clear: both;">
 
-        <app-price-filter [isOpen]="isPriceFilterOpen" (closeMarquee)="isPriceFilterOpen = false"
-          (priceApplied)="onPriceFilterApplied($event)">
-        </app-price-filter>
+        <div class="price-box-wrapper" style="display: inline-block; position: relative; vertical-align: top; margin-right: 12px;">
+          <button class="filters__btn" type="button" (click)="openFilter()">
+            價格 <span class="material-symbols-outlined">expand_more</span>
+          </button>
 
-        <button class="filters__btn">
-          <span class="material-symbols-outlined">tune</span> 地區篩選
-        </button>
+          <div *ngIf="isPriceFilterOpen"
+               style="position: absolute; top: 45px; left: -30px; width: 420px; z-index: 99999; background: #ffffff; border: 1px solid #e3dac9; border-radius: 12px; box-shadow: 0 12px 30px rgba(0,0,0,0.15);">
+            <app-price-filter
+              [isOpen]="isPriceFilterOpen"
+              (closeMarquee)="isPriceFilterOpen = false"
+              (priceApplied)="onPriceFilterApplied($event)">
+            </app-price-filter>
+          </div>
+        </div>
+
+        <div class="region-box-wrapper" style="display: inline-block; position: relative; vertical-align: top;">
+          <button class="filters__btn" type="button" (click)="openRegionFilter()">
+            <span class="material-symbols-outlined">tune</span> 地區篩選
+          </button>
+
+          <div *ngIf="isRegionFilterOpen"
+               style="position: absolute; top: 45px; left: 0; width: 560px; z-index: 99999; background: #ffffff; border: 1px solid #e3dac9; border-radius: 12px; box-shadow: 0 12px 30px rgba(0,0,0,0.15); padding: 15px; box-sizing: border-box;">
+            <app-region-filter
+              [isOpen]="isRegionFilterOpen"
+              (closeMarquee)="isRegionFilterOpen = false"
+              (regionApplied)="onRegionFilterApplied($event)">
+            </app-region-filter>
+          </div>
+        </div>
+
       </div>
-    </div>
+      </div>
 
     <div class="listing-section__feed">
       <p class="listing-info">已顯示可租用空間 總共 {{ spaces.length || 0 }} 個空間</p>

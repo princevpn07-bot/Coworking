@@ -1,0 +1,232 @@
+/* location-filter.component.css */
+
+.loc-filter-card {
+  font-family: 'Noto Serif TC', serif;
+  background-color: #fef8f6;
+  border: 1px solid #cfc5bb;
+  border-radius: 12px;
+  width: 100%;
+  max-width: 680px;
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.03);
+  overflow: hidden;
+  margin: 0 auto;
+}
+
+
+
+/* 內容主區塊 */
+.loc-filter-body {
+  padding: 32px;
+}
+
+.loc-section {
+  margin-bottom: 36px;
+}
+
+.loc-section:last-child {
+  margin-bottom: 0;
+}
+
+.loc-section-title-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.loc-section-title {
+  font-size: 20px;
+  font-weight: 500;
+  color: #1d1b1a;
+  margin: 0;
+}
+
+/* 控制轉盤與按紐 */
+.loc-chevron-group {
+  display: flex;
+  gap: 8px;
+}
+
+.loc-btn-chevron {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: none;
+  background: transparent;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: #7e766d;
+  transition: all 0.2s ease;
+}
+
+.loc-btn-chevron:hover {
+  background-color: #e7e1df;
+  color: #1d1b1a;
+}
+
+/* 地區選單卡片 */
+.loc-region-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+}
+
+.loc-region-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 12px;
+  border-radius: 8px;
+  border: 1px solid #cfc5bb;
+  background-color: transparent;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  width: 100%;
+  text-align: center;
+}
+
+.loc-region-card:hover {
+  border-color: #695c4e;
+  background-color: #f8f2f0;
+  transform: translateY(-2px);
+}
+
+.loc-region-card.active {
+  border-color: #695c4e;
+  background-color: #e6d5c3;
+  box-shadow: 0 4px 12px rgba(105, 92, 78, 0.08);
+}
+
+.loc-region-img-wrapper {
+  width: 100%;
+  height: 50px;
+  background-color: #e7e1df;
+  border-radius: 4px;
+  margin-bottom: 12px;
+  overflow: hidden;
+  position: relative;
+}
+
+.loc-region-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0.6;
+  filter: grayscale(100%);
+  transition: all 0.25s ease;
+}
+
+.loc-region-card:hover .loc-region-img {
+  opacity: 0.8;
+  filter: grayscale(0%);
+}
+
+.loc-region-card.active .loc-region-img {
+  opacity: 0.9;
+  filter: grayscale(0%);
+}
+
+.loc-region-name {
+  font-size: 15px;
+  color: #1d1b1a;
+  font-weight: 400;
+}
+
+/* 頁籤清單 */
+.loc-tabs-row {
+  display: flex;
+  gap: 24px;
+  border-b: 1px solid #cfc5bb;
+  margin-bottom: 24px;
+  padding-bottom: 0;
+}
+
+.loc-tab-btn {
+  font-size: 15px;
+  color: #7e766d;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding-bottom: 10px;
+  position: relative;
+  transition: color 0.2s ease;
+}
+
+.loc-tab-btn:hover {
+  color: #1d1b1a;
+}
+
+.loc-tab-btn.active {
+  color: #1d1b1a;
+  font-weight: 500;
+}
+
+.loc-tab-btn.active::after {
+  content: '';
+  position: absolute;
+  bottom: -1px;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background-color: #1d1b1a;
+}
+
+/* 網格選項 */
+.loc-district-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+}
+
+.loc-btn-option {
+  background-color: #f2edea;
+  color: #1d1b1a;
+  border: none;
+  border-radius: 6px;
+  padding: 10px 16px;
+  font-size: 15px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.loc-btn-option:hover {
+  background-color: #e6d5c3;
+}
+
+.loc-btn-option.selected {
+  background-color: #695c4e;
+  color: #ffffff;
+}
+
+/* 捷運網格專屬 */
+.loc-mrt-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+}
+
+@media (max-width: 580px) {
+  .loc-region-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .loc-district-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .loc-mrt-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .loc-filter-header {
+    flex-direction: column;
+    gap: 16px;
+  }
+  .loc-header-divider {
+    width: 100%;
+    height: 1px;
+  }
+}
