@@ -18,7 +18,30 @@
       <p>請填寫您的付款資訊以完成專屬固定辦公桌預訂。</p>
     </div>
 
-    <!-- Payment Method -->
+    <section class="contact-section form-group">
+      <h2>日期資訊</h2>
+      <div class="inputs">
+        <div class="date-picker">
+          <div class="date-field">
+            <label for="startDate">開始日期</label>
+            <div class="input-wrapper date-input">
+              <input id="startDate" name="startDate" type="date" aria-label="開始日期" [min]="today"
+                (change)="onStartDateChange($event)">
+            </div>
+          </div>
+          <span class="date-separator">～</span>
+          <div class="date-field">
+            <label for="endDate">結束日期</label>
+            <div class="input-wrapper date-input">
+              <input id="endDate" name="endDate" type="date" aria-label="結束日期" [min]="startDate || today"
+                (change)="onEndDateChange($event)">
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+<!--
+
     <section class="payment-method-section">
       <div class="section-title">
         <i data-lucide="credit-card"></i>
@@ -42,8 +65,8 @@
         </div>
       </div>
     </section>
-
-    <!-- Credit Card Details -->
+-->
+<!--
     <div class="card-info-form">
       <div class="form-header">
         <h2>信用卡資訊</h2>
@@ -83,7 +106,7 @@
         </div>
       </div>
     </div>
-
+  -->
     <!-- Invoice Info -->
     <section class="invoice-section">
       <h2>發票資訊</h2>
@@ -91,18 +114,28 @@
         <div>
           <label>發票類型</label>
           <div class="input-wrapper">
-            <select>
-              <option>二聯式 (個人)</option>
-              <option>三聯式 (公司戶)</option>
+            <select [value]="invoiceType" (change)="onInvoiceTypeChange($event)">
+              <option value="personal">二聯式 (個人)</option>
+              <option value="company">三聯式 (公司戶)</option>
             </select>
           </div>
         </div>
-        <div>
-          <label>公司名稱</label>
-          <div class="input-wrapper">
-            <input type="text" placeholder="請輸入公司名稱" />
+        @if (invoiceType === 'company') {
+          <div class="company-invoice-fields">
+            <div>
+              <label>公司名稱</label>
+              <div class="input-wrapper">
+                <input type="text" placeholder="請輸入公司名稱" />
+              </div>
+            </div>
+            <div>
+              <label>統一編號</label>
+              <div class="input-wrapper">
+                <input type="text" placeholder="請輸入統一編號" />
+              </div>
+            </div>
           </div>
-        </div>
+        }
       </div>
     </section>
 

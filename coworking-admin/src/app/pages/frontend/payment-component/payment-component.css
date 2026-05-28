@@ -108,6 +108,52 @@ body {
   color: #64748B;
   font-size: 16px;
 }
+.form-section .contact-section {
+  margin-bottom: 48px;
+}
+.form-section .contact-section h2 {
+  font-size: 20px;
+  font-weight: 700;
+  margin-bottom: 24px;
+}
+.form-section .contact-section .date-picker {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.form-section .contact-section .date-separator {
+  color: #64748B;
+  font-weight: 600;
+  padding-top: 28px;
+}
+.form-section .contact-section .date-field {
+  flex: 1;
+}
+.form-section .contact-section .date-input {
+  flex: 1;
+}
+.form-section .contact-section .date-input .material-symbols-outlined {
+  position: absolute;
+  left: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #64748B;
+  font-size: 20px;
+  pointer-events: none;
+}
+.form-section .contact-section .date-input input {
+  padding-left: 44px;
+}
+@media (max-width: 640px) {
+  .form-section .contact-section .date-picker {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .form-section .contact-section .date-separator {
+    display: none;
+  }
+}
 .form-section .payment-method-section {
   margin-bottom: 48px;
 }
@@ -253,6 +299,10 @@ body {
 .form-group.row {
   display: grid;
   grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+.form-group .company-invoice-fields {
+  display: grid;
   gap: 16px;
 }
 
