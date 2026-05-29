@@ -164,8 +164,12 @@ export class AllSpaces implements OnInit, AfterViewInit {
 
   // 💡 新增：當使用者點選 HTML 上的「價格 ▽」按鈕時執行的開關控制
   openFilter(): void {
-    this.isPriceFilterOpen = true;
-    console.log('🔮 價格彈窗開關已觸發，當前狀態為：', this.isPriceFilterOpen);
+   // 🌟 關鍵：如果要打開價格選單，就先強制關閉地區選單
+    if (!this.isPriceFilterOpen) {
+      this.isRegionFilterOpen = false;
+    }
+    // 切換自己的狀態 (原本是 false 就變 true，原本是 true 就變 false)
+    this.isPriceFilterOpen = !this.isPriceFilterOpen;
   }
 
   // 把原本的 budget: { min: number; max: number } 改成 any
@@ -192,6 +196,7 @@ export class AllSpaces implements OnInit, AfterViewInit {
     if (this.isRegionFilterOpen) {
       this.isPriceFilterOpen = false;
     }
+
     console.log('🔮 地區彈窗開關已觸發，當前狀態為：', this.isRegionFilterOpen);
   }
 

@@ -38,22 +38,24 @@ body {
   background-color: var(--bg-color-main);
   color: var(--text-primary);
   font-family: var(--font-body);
-    /* 📍 定位與層級（精準黏在價格按鈕下方 8px，不影響全域 body） */
-  position: absolute !important;
-  top: calc(27% + 8px) !important;     /* 精準黏在價格按鈕下方 8px */
-  left: 34px !important;                  /* 靠左對齊價格按鈕 */
-  width: 420px !;             /* 限制選單卡片寬度 */
-  z-index: 9999 !important;            /* 層級全開，確保壓在卡片與地圖上方 */
-
-  /* 🎨 完美對齊右圖：大地色調外貌 */
-  background-color:#ffff; /* 👈 高質感不透明奶茶色背景 */
-  border-radius: 8px !important;
-  border: 1px solid #e3dac9 !important;  /* 細緻暖調邊框 */
-  box-shadow: 0 12px 30px rgba(74, 60, 49, 0.12) !important; /* 擴散陰影 */
   overflow: hidden;                     /* 確保底座圓角不*/
 }
 
+/* 🌟 2. 把剛才寫錯地方的選單定位與邊框，正式交還給價格下拉選單組件 */
+.airbnb-price-dropdown {
+     /* 📍 定位與層級（精準黏在價格按鈕下方 8px，不影響全域 body） */
 
+  top: calc(27% + 8px) !important;     /* 精準黏在價格按鈕下方 8px */
+  left: 36px !important;                  /* 靠左對齊價格按鈕 */
+  width: 420px !;             /* 限制選單卡片寬度 */
+  z-index: 9999 !important;            /* 層級全開，確保壓在卡片與地圖上方 */
+ /* 🎨 完美對齊右圖：大地色調外貌 */
+  background-color:#ffff; /* 👈 高質感不透明奶茶色背景 */
+  border-radius: 8px !important;
+  /*border: 1px solid #e3dac9 !important;  /* 細緻暖調邊框 */
+  box-shadow: 0 12px 30px rgba(74, 60, 49, 0.12) !important; /* 擴散陰影 */
+
+}
 
 /* Fullscreen app layout backdrop with contextual inspiration */
 .app-viewport {
