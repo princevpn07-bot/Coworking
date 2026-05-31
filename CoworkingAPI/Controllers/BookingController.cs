@@ -13,11 +13,13 @@ namespace CoworkingAPI.Controllers
     {
         private readonly AppDbContext _context;
         private readonly ILineService _lineService;
+        private readonly IConfiguration _configuration;
 
-        public BookingsController(AppDbContext context, ILineService lineService)
+        public BookingsController(AppDbContext context, ILineService lineService, IConfiguration configuration)
         {
             _context = context;
             _lineService = lineService;
+            _configuration = configuration;
         }
 
         [HttpGet("GetAll")]
@@ -40,9 +42,11 @@ namespace CoworkingAPI.Controllers
         {
             _context.Bookings.Add(Booking);
             await _context.SaveChangesAsync();
+            string ChannelSecret = _configuration["Line:ChannelSecret"] ?? throw new Exception("can't find Line:ChannelSecret");
 
             // 預約成功後發 LINE 通知
-            if (Booking.user_id.HasValue)
+            if (ChannelSecret != "YOUR_LINE_CHANNEL_SECRET" // 確保 Line:ChannelSecret 已設定且不是預設值
+                && Booking.user_id.HasValue)
             {
                 var user = await _context.Users.FindAsync(Booking.user_id.Value);
                 if (user?.line_id != null)
