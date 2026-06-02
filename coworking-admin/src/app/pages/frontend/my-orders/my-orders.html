@@ -22,9 +22,14 @@
           <div class="order-card">
             <div class="order-card__header">
               <span class="order-id"># {{ order.contract_id }}</span>
-              <span class="order-status" [class]="'status-' + order.status">
-                {{ getStatusLabel(order.status) }}
-              </span>
+              <div class="order-status">
+                @if (order.status === 0) {
+                  <button class="order-status status-2" (click)="payment(order)">付款</button>
+                }
+                <span class="order-status" [class]="'status-' + order.status">
+                  {{ getStatusLabel(order.status) }}
+                </span>
+              </div>
             </div>
             <div class="order-card__body">
               <div class="order-info">
@@ -33,9 +38,10 @@
                 <p class="price-type">{{ getPriceTypeLabel(order.price_type) }} · NT$ {{ order.price }} / 單位</p>
               </div>
               <div class="order-dates">
+                <p><span class="label">建立</span>{{ order.created_date | date:'yyyy/MM/dd HH:mm' }}</p>
+                <br>
                 <p><span class="label">開始</span>{{ order.start_date | date:'yyyy/MM/dd HH:mm' }}</p>
                 <p><span class="label">結束</span>{{ order.end_date | date:'yyyy/MM/dd HH:mm' }}</p>
-                <p><span class="label">建立</span>{{ order.created_date | date:'yyyy/MM/dd' }}</p>
               </div>
             </div>
             <div class="order-card__footer">

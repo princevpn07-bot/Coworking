@@ -112,8 +112,7 @@ namespace CoworkingAPI.Controllers
 
                     _logger.LogInformation($"Payment successful - MerchantTradeNo: {merchantTradeNo}, TradeNo: {tradeNo}, Amount: {tradeAmt}");
 
-                    // TODO: 更新預約狀態為已付款
-                    // 在這裡可以存儲交易紀錄到資料庫
+                    // 更新付款狀態由前端 post 修改訂單
 
                     return Content("1|OK");
                 }

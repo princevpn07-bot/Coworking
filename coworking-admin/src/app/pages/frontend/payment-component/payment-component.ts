@@ -88,7 +88,7 @@ export class PaymentComponent {
       status: 0,
       pay_deadline: deadline.toISOString(),
       cancelled_daedline: deadline.toISOString(),
-      total_price: 17925,
+      total_price: 1,
     };
 
     this.submitting = true;
