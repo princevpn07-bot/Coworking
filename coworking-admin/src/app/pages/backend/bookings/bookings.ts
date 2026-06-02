@@ -190,10 +190,54 @@ export class Bookings implements OnInit {
     });
   }
 
+  cancelBooking(contractId: number) {
+    if (this.updatingId !== null) return;
+    this.updatingId = contractId;
+    this.bookingService.cancelBooking(contractId).subscribe({
+      next: () => {
+        const detail = this.selectedDayDetails.find(d => d.contract_id === contractId);
+        if (detail) detail.status = 2;
+        const calKey = this.selectedDay ? this.toKey(this.selectedDay.date) : null;
+        if (calKey) {
+          const list = this.bookingsMap.get(calKey);
+          if (list) {
+            const b = list.find(b => b.contract_id === contractId);
+            if (b) b.status = 2;
+          }
+        }
+        this.updatingId = null;
+        this.cdr.detectChanges();
+      },
+      error: (err) => {
+        console.error('Failed to cancel booking', err);
+        this.updatingId = null;
+        this.cdr.detectChanges();
+      },
+    });
+  }
+
   submitCreateBooking() {
     if (this.submitting) return;
-    this.submitting = true;
     this.submitError = '';
+
+    const now = new Date();
+    const start = this.newBooking.start_date ? new Date(this.newBooking.start_date) : null;
+    const end = this.newBooking.end_date ? new Date(this.newBooking.end_date) : null;
+
+    if (!this.newBooking.user_id || !this.newBooking.rent_id || !this.newBooking.employees_id || !start || !end) {
+      this.submitError = '請填寫所有必填欄位';
+      return;
+    }
+    if (start <= now) {
+      this.submitError = '開始時間不能是過去的時間';
+      return;
+    }
+    if (end <= start) {
+      this.submitError = '結束時間不能早於或等於開始時間';
+      return;
+    }
+
+    this.submitting = true;
     this.bookingService.createBooking(this.newBooking).subscribe({
       next: () => {
         this.submitting = false;

@@ -41,8 +41,9 @@ namespace CoworkingAPI.Controllers
                 .Where(a => a.space_id == space_id)
                 .Select(a => new AdminSpaceAssertsDto
                 {
+                    asserts_id = a.asserts_id,
                     equipment_id = a.equipment_id ?? 0,
-                    equipmentname = a.equipment != null ? a.equipment.category : null,
+                    equipmentname = a.equipment != null ? a.equipment.full_name : null,
                     amount = a.amount
                 }).ToListAsync();
             return Ok(asset);

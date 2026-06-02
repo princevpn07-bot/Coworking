@@ -33,6 +33,7 @@ export interface SpaceImageItem {
 export type SpaceStatus = '可用' | '使用中' | '停用中' | '清潔中';
 
 export interface SpaceAsset {
+  assertsId: number;
   id: number;
   name: string;
   icon: string;
@@ -40,6 +41,7 @@ export interface SpaceAsset {
 }
 
 export interface AdminSpaceAssertsDto {
+  asserts_id: number;
   equipment_id: number;
   equipmentname: string | null;
   amount: number | null;

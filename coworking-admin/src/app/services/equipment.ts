@@ -31,4 +31,12 @@ export class EquipmentService {
   createEquipment(payload: CreateEquipmentPayload): Observable<unknown> {
     return this.http.post(`${this.equipmentApiUrl}/Add`, payload);
   }
+
+  transferAllocation(asserts_id: number, to_space_id: number, amount: number): Observable<unknown> {
+    return this.http.post(`${this.spaceAssertsApiUrl}/Transfer`, { asserts_id, to_space_id, amount });
+  }
+
+  scrapAsset(asserts_id: number, amount: number, reason: string): Observable<unknown> {
+    return this.http.post('http://localhost:5193/api/ScrapList/Scrap', { asserts_id, amount, reason });
+  }
 }

@@ -99,7 +99,6 @@
               </div>
             <div class="details">
               <div class="name">{{ space.name }}</div>
-              <div class="id">ID: {{ space.id }}</div>
             </div>
           </div>
         </td>
@@ -126,6 +125,92 @@
 </section>
 
 <!-- Create Space Modal -->
+@if (scrapTarget()) {
+  <div class="modal-backdrop" (click)="closeScrapModal()"></div>
+  <div class="modal-dialog scrap-modal" role="dialog">
+    <div class="modal-header">
+      <h4 class="scrap-title">
+        <span class="material-symbols-outlined">delete_forever</span>
+        確認報廢
+      </h4>
+      <button type="button" class="panel-close-btn" (click)="closeScrapModal()">
+        <span class="material-symbols-outlined">close</span>
+      </button>
+    </div>
+    <div class="modal-body">
+      <p class="scrap-warning">此操作不可復原，資產數量將永久扣除。</p>
+      <p style="margin-bottom:16px">
+        <strong>{{ scrapTarget()!.name }}</strong>（現有 {{ scrapTarget()!.amount }} 件）
+      </p>
+      <div class="form-group">
+        <label>報廢數量 <span class="required">*</span></label>
+        <input type="number" min="1" [max]="scrapTarget()!.amount"
+               [ngModel]="scrapAmount()" (ngModelChange)="scrapAmount.set(+$event)" />
+      </div>
+      <div class="form-group">
+        <label>報廢原因</label>
+        <input type="text" placeholder="例：損壞、老化、遺失"
+               [ngModel]="scrapReason()" (ngModelChange)="scrapReason.set($event)" />
+      </div>
+    </div>
+    @if (scrapError()) {
+      <p class="submit-error">
+        <span class="material-symbols-outlined">error</span>
+        {{ scrapError() }}
+      </p>
+    }
+    <div class="modal-footer">
+      <button type="button" class="btn-cancel" (click)="closeScrapModal()">取消</button>
+      <button type="button" class="btn-scrap-confirm" [disabled]="scrapping()" (click)="submitScrap()">
+        {{ scrapping() ? '報廢中...' : '確認報廢' }}
+      </button>
+    </div>
+  </div>
+}
+
+@if (transferAsset()) {
+  <div class="modal-backdrop" (click)="closeTransferModal()"></div>
+  <div class="modal-dialog" role="dialog">
+    <div class="modal-header">
+      <h4>轉移資產</h4>
+      <button type="button" class="panel-close-btn" (click)="closeTransferModal()">
+        <span class="material-symbols-outlined">close</span>
+      </button>
+    </div>
+    <div class="modal-body">
+      <p style="margin-bottom:12px">
+        <strong>{{ transferAsset()!.name }}</strong>（現有 {{ transferAsset()!.amount }} 件）
+      </p>
+      <div class="form-group">
+        <label>目標空間 <span class="required">*</span></label>
+        <select [ngModel]="transferTargetSpaceId()" (ngModelChange)="transferTargetSpaceId.set(+$event)">
+          <option [ngValue]="0" disabled>請選擇空間</option>
+          @for (s of transferTargetSpaces; track s.id) {
+            <option [ngValue]="s.id">{{ s.name }}（{{ s.location }}）</option>
+          }
+        </select>
+      </div>
+      <div class="form-group">
+        <label>轉移數量 <span class="required">*</span></label>
+        <input type="number" min="1" [max]="transferAsset()!.amount"
+               [ngModel]="transferAmount()" (ngModelChange)="transferAmount.set(+$event)" />
+      </div>
+    </div>
+    @if (transferError()) {
+      <p class="submit-error">
+        <span class="material-symbols-outlined">error</span>
+        {{ transferError() }}
+      </p>
+    }
+    <div class="modal-footer">
+      <button type="button" class="btn-cancel" (click)="closeTransferModal()">取消</button>
+      <button type="button" class="btn-submit" [disabled]="transferring()" (click)="submitTransfer()">
+        {{ transferring() ? '轉移中...' : '確認轉移' }}
+      </button>
+    </div>
+  </div>
+}
+
 @if (showCreateModal()) {
   <div class="modal-backdrop" (click)="closeCreateModal()"></div>
   <div class="modal-dialog" role="dialog">
@@ -202,7 +287,6 @@
     <div class="panel-header">
       <div>
         <div class="panel-space-name">{{ space.name }}</div>
-        <div class="panel-space-id">ID: {{ space.id }}</div>
       </div>
       <div class="panel-header-actions">
         @if (!panelEditMode()) {
@@ -333,11 +417,31 @@
       <div class="assets-loading">載入資產中...</div>
     } @else {
       <div class="asset-list">
+        @if (scrapModeAssetId() !== null) {
+          <div class="scrap-mode-banner">
+            <span class="material-symbols-outlined">warning</span>
+            長按解鎖：點擊 <span class="material-symbols-outlined" style="font-size:15px;vertical-align:middle">delete_forever</span> 以報廢
+            <button class="scrap-mode-exit" (click)="exitScrapMode()">離開</button>
+          </div>
+        }
         @for (asset of panelAssets(); track asset.id) {
-        <div class="asset-item">
-          <span class="material-symbols-outlined asset-icon">{{ asset.icon }}</span>
+        <div class="asset-item"
+             [class.scrap-unlocked]="scrapModeAssetId() === asset.assertsId"
+             (mousedown)="onAssetMouseDown(asset)"
+             (mouseup)="onAssetMouseUp()"
+             (mouseleave)="onAssetMouseUp()">
+          @if (scrapModeAssetId() === asset.assertsId) {
+            <button class="btn-scrap" (mousedown)="$event.stopPropagation()" (click)="openScrapModal(asset)">
+              <span class="material-symbols-outlined">delete_forever</span>
+            </button>
+          } @else {
+            <span class="material-symbols-outlined asset-icon">{{ asset.icon }}</span>
+          }
           <span class="asset-name">{{ asset.name }}</span>
           <span class="asset-amount">× {{ asset.amount }}</span>
+          <button class="btn-transfer" (mousedown)="$event.stopPropagation()" (click)="openTransferModal(asset)" title="轉移至其他空間">
+            <span class="material-symbols-outlined">swap_horiz</span>
+          </button>
         </div>
         }
       </div>

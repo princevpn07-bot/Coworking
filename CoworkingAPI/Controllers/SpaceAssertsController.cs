@@ -73,6 +73,36 @@ namespace CoworkingAPI.Controllers
             return NoContent();
         }
 
+        [HttpPost("Transfer")]
+        public async Task<IActionResult> Transfer([FromBody] TransferAssertDto dto)
+        {
+            var source = await _context.spaceasserts.FirstOrDefaultAsync(a => a.asserts_id == dto.asserts_id);
+            if (source == null) return NotFound("找不到來源資產");
+            if (dto.amount <= 0 || dto.amount > source.amount) return BadRequest("轉移數量不合法");
+            if (source.space_id == dto.to_space_id) return BadRequest("目標空間與來源相同");
+
+            // 減少來源數量
+            source.amount -= dto.amount;
+            if (source.amount == 0)
+                _context.spaceasserts.Remove(source);
+
+            // 增加目標空間數量
+            var target = await _context.spaceasserts.FirstOrDefaultAsync(
+                a => a.space_id == dto.to_space_id && a.equipment_id == source.equipment_id);
+            if (target != null)
+                target.amount = (target.amount ?? 0) + dto.amount;
+            else
+                _context.spaceasserts.Add(new SpaceAsserts
+                {
+                    space_id = dto.to_space_id,
+                    equipment_id = source.equipment_id,
+                    amount = dto.amount
+                });
+
+            await _context.SaveChangesAsync();
+            return NoContent();
+        }
+
         [HttpDelete("Delete/{id}")]
         public async Task<IActionResult>Delete(int id)
         {

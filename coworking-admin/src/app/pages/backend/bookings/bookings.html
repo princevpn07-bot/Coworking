@@ -121,6 +121,16 @@
                     </button>
                   </div>
                 }
+                @if (detail.status === 1) {
+                  <div class="review-actions">
+                    <button class="btn-reject"
+                            [disabled]="updatingId === detail.contract_id"
+                            (click)="cancelBooking(detail.contract_id)">
+                      <span class="material-symbols-outlined">cancel</span>
+                      取消預約
+                    </button>
+                  </div>
+                }
               </div>
             }
           }

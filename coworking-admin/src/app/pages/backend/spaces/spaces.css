@@ -456,6 +456,118 @@
   color: #3D5A35;
 }
 
+.asset-amount {
+  margin-left: auto;
+}
+
+.btn-transfer {
+  background: none;
+  border: 1px solid #C4C7C5;
+  border-radius: 6px;
+  padding: 4px 6px;
+  cursor: pointer;
+  color: #44474E;
+  display: flex;
+  align-items: center;
+}
+
+.btn-transfer:hover {
+  background: #F3F3F3;
+  color: #3D5A35;
+}
+
+.asset-item {
+  user-select: none;
+  transition: background 0.2s, border-color 0.2s;
+}
+
+.asset-item.scrap-unlocked {
+  background: #fff5f5;
+  border-color: #e53e3e;
+  animation: shake 0.4s ease;
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  20%       { transform: translateX(-4px); }
+  40%       { transform: translateX(4px); }
+  60%       { transform: translateX(-3px); }
+  80%       { transform: translateX(3px); }
+}
+
+.btn-scrap {
+  background: #e53e3e;
+  border: none;
+  border-radius: 6px;
+  padding: 4px 6px;
+  cursor: pointer;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  animation: pulse-red 1s infinite;
+}
+
+@keyframes pulse-red {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(229,62,62,0.4); }
+  50%       { box-shadow: 0 0 0 6px rgba(229,62,62,0); }
+}
+
+.scrap-mode-banner {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: #fff5f5;
+  border: 1px solid #feb2b2;
+  border-radius: 8px;
+  padding: 8px 12px;
+  font-size: 13px;
+  color: #c53030;
+  margin-bottom: 8px;
+}
+
+.scrap-mode-exit {
+  margin-left: auto;
+  background: none;
+  border: 1px solid #c53030;
+  border-radius: 4px;
+  padding: 2px 8px;
+  font-size: 12px;
+  color: #c53030;
+  cursor: pointer;
+}
+
+.scrap-modal .modal-header { border-bottom: 2px solid #feb2b2; }
+
+.scrap-title {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: #c53030;
+}
+
+.scrap-warning {
+  background: #fff5f5;
+  border-left: 3px solid #e53e3e;
+  padding: 8px 12px;
+  font-size: 13px;
+  color: #c53030;
+  border-radius: 4px;
+  margin-bottom: 16px;
+}
+
+.btn-scrap-confirm {
+  background: #e53e3e;
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.btn-scrap-confirm:hover:not(:disabled) { background: #c53030; }
+.btn-scrap-confirm:disabled { opacity: 0.6; cursor: not-allowed; }
+
 .asset-name {
   flex: 1;
   font-size: 14px;

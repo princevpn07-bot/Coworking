@@ -3,6 +3,7 @@ import { NgClass } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { AdminSpaceAssertsDto, AdminSpaceInfoDto, CreateSpace, Location, SpaceAsset, SpaceImageItem, SpaceStatus, SpaceView } from '../../../models/space.model';
 import { SpaceService } from '../../../services/space';
+import { EquipmentService } from '../../../services/equipment';
 
 const STATUS_MAP: Record<number, SpaceStatus> = {
   0: '可用',
@@ -19,6 +20,7 @@ const STATUS_MAP: Record<number, SpaceStatus> = {
 })
 export class Spaces implements OnInit {
   private spaceService = inject(SpaceService);
+  private equipmentService = inject(EquipmentService);
 
   // --- list state ---
   readonly loading = signal(true);
@@ -81,6 +83,111 @@ export class Spaces implements OnInit {
   readonly panelImages = signal<SpaceImageItem[]>([]);
   readonly imagesLoading = signal(false);
   readonly uploadingImage = signal(false);
+
+  // --- scrap state ---
+  readonly scrapModeAssetId = signal<number | null>(null);
+  readonly scrapTarget = signal<SpaceAsset | null>(null);
+  readonly scrapAmount = signal(1);
+  readonly scrapReason = signal('');
+  readonly scrapping = signal(false);
+  readonly scrapError = signal('');
+  private longPressTimer: ReturnType<typeof setTimeout> | null = null;
+
+  onAssetMouseDown(asset: SpaceAsset): void {
+    this.longPressTimer = setTimeout(() => this.scrapModeAssetId.set(asset.assertsId), 700);
+  }
+
+  onAssetMouseUp(): void {
+    if (this.longPressTimer) { clearTimeout(this.longPressTimer); this.longPressTimer = null; }
+  }
+
+  exitScrapMode(): void { this.scrapModeAssetId.set(null); }
+
+  openScrapModal(asset: SpaceAsset): void {
+    this.scrapTarget.set(asset);
+    this.scrapAmount.set(1);
+    this.scrapReason.set('');
+    this.scrapError.set('');
+  }
+
+  closeScrapModal(): void {
+    this.scrapTarget.set(null);
+    this.scrapModeAssetId.set(null);
+  }
+
+  submitScrap(): void {
+    const asset = this.scrapTarget();
+    const space = this.selectedSpace();
+    if (!asset || !space) return;
+    if (this.scrapAmount() < 1 || this.scrapAmount() > asset.amount) {
+      this.scrapError.set(`報廢數量需介於 1 ~ ${asset.amount}`); return;
+    }
+    this.scrapping.set(true);
+    this.scrapError.set('');
+    this.equipmentService.scrapAsset(asset.assertsId, this.scrapAmount(), this.scrapReason()).subscribe({
+      next: () => {
+        this.scrapping.set(false);
+        this.closeScrapModal();
+        this.loadSpaces();
+        this.spaceService.getSpaceAssets(space.id).subscribe({
+          next: (data) => this.panelAssets.set(data.map(d => this.toSpaceAsset(d))),
+        });
+      },
+      error: (err) => {
+        this.scrapError.set(err?.error?.message ?? '報廢失敗，請稍後再試');
+        this.scrapping.set(false);
+      },
+    });
+  }
+
+  // --- transfer state ---
+  readonly transferAsset = signal<SpaceAsset | null>(null);
+  readonly transferTargetSpaceId = signal(0);
+  readonly transferAmount = signal(1);
+  readonly transferring = signal(false);
+  readonly transferError = signal('');
+
+  get transferTargetSpaces(): SpaceView[] {
+    const current = this.selectedSpace();
+    return this.spaces().filter(s => s.id !== current?.id && s.locationId === current?.locationId);
+  }
+
+  openTransferModal(asset: SpaceAsset): void {
+    this.transferAsset.set(asset);
+    this.transferTargetSpaceId.set(0);
+    this.transferAmount.set(1);
+    this.transferError.set('');
+  }
+
+  closeTransferModal(): void {
+    this.transferAsset.set(null);
+  }
+
+  submitTransfer(): void {
+    const asset = this.transferAsset();
+    const space = this.selectedSpace();
+    if (!asset || !space) return;
+    if (!this.transferTargetSpaceId()) { this.transferError.set('請選擇目標空間'); return; }
+    if (this.transferAmount() < 1 || this.transferAmount() > asset.amount) {
+      this.transferError.set(`轉移數量需介於 1 ~ ${asset.amount}`); return;
+    }
+    this.transferring.set(true);
+    this.transferError.set('');
+    this.equipmentService.transferAllocation(asset.assertsId, this.transferTargetSpaceId(), this.transferAmount()).subscribe({
+      next: () => {
+        this.transferring.set(false);
+        this.closeTransferModal();
+        this.loadSpaces();
+        this.spaceService.getSpaceAssets(space.id).subscribe({
+          next: (data) => this.panelAssets.set(data.map(d => this.toSpaceAsset(d))),
+        });
+      },
+      error: (err) => {
+        this.transferError.set(err?.error?.message ?? '轉移失敗，請稍後再試');
+        this.transferring.set(false);
+      },
+    });
+  }
 
   // --- modal state ---
   readonly showCreateModal = signal(false);
@@ -351,6 +458,7 @@ export class Spaces implements OnInit {
   // --- asset helpers ---
   private toSpaceAsset(d: AdminSpaceAssertsDto): SpaceAsset {
     return {
+      assertsId: d.asserts_id,
       id: d.equipment_id,
       name: d.equipmentname ?? '未知設備',
       icon: this.getAssetIcon(d.equipmentname ?? ''),

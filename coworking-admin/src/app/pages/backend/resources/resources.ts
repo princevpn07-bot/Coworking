@@ -130,6 +130,12 @@ export class Resources implements OnInit {
     this.detailCard.set(null);
   }
 
+  get allocatableSpaces(): Space[] {
+    const card = this.allocatingCard();
+    if (!card?.location_id) return this.spaces;
+    return this.spaces.filter(s => s.location_id === card.location_id);
+  }
+
   openAllocateModal(card: AdminEquipmentCardDto): void {
     this.newAllocation = { space_id: 0, amount: 1 };
     this.submitError.set('');

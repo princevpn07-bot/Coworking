@@ -30,6 +30,17 @@ namespace CoworkingAPI.Controllers
             return NoContent();
         }
 
+        [HttpPatch("{id}/cancel")]
+        public async Task<IActionResult> CancelBooking(int id)
+        {
+            var booking = await _context.Bookings.FindAsync(id);
+            if (booking == null) return NotFound($"找不到預約 #{id}");
+            if (booking.status == 2) return BadRequest("此預約已是取消狀態");
+            booking.status = 2;
+            await _context.SaveChangesAsync();
+            return NoContent();
+        }
+
         [HttpGet("calendar")]
         public async Task<IActionResult> calendar()
         {

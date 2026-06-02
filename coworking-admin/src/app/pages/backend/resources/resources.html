@@ -130,7 +130,7 @@
         <label class="form-label">選擇空間</label>
         <select class="form-select" [(ngModel)]="newAllocation.space_id">
           <option [ngValue]="0" disabled>請選擇空間...</option>
-          @for (space of spaces; track space.space_id) {
+          @for (space of allocatableSpaces; track space.space_id) {
             <option [ngValue]="space.space_id">{{ space.space_number }}</option>
           }
         </select>

@@ -42,6 +42,7 @@ namespace CoworkingAPI.Controllers
                 full_name   = e.full_name,
                 create_date = e.create_date,
                 total_amount = e.total_amount,
+                location_id   = e.location_id,
                 location_name = e.Location?.city,
                 is_precious = e.cost > 10000,
                 allocations = spaceAsserts

@@ -14,7 +14,7 @@ namespace CoworkingAPI.Data
         public DbSet<User> Users { get; set; }
         public DbSet<Employee> Employees { get; set; }
         public DbSet<Equipment> Equipments { get; set; }
-        public DbSet<FixList> FixLists { get; set; }
+        public DbSet<ScrapList> ScrapLists { get; set; }
         public DbSet<SpaceAsserts> spaceasserts {get; set;}
         public DbSet<SpaceImage> SpaceImages { get; set; }
     }

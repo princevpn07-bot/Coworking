@@ -7,6 +7,7 @@ namespace CoworkingAPI.Dto
         public string? full_name { get; set; }
         public DateTime? create_date { get; set; }
         public int? total_amount { get; set; }
+        public int? location_id { get; set; }
         public string? location_name { get; set; }
         public bool is_precious { get; set; }
         public List<AdminSpaceAllocationDto> allocations { get; set; } = new();

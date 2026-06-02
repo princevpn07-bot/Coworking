@@ -20,6 +20,7 @@ export interface AdminEquipmentCardDto {
   full_name: string | null;
   create_date: string | null;
   total_amount: number | null;
+  location_id: number | null;
   location_name: string | null;
   is_precious: boolean;
   allocations: AdminSpaceAllocationDto[];

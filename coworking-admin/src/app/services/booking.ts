@@ -40,4 +40,8 @@ export class BookingService {
   createBooking(payload: CreateBookingPayload): Observable<unknown> {
     return this.http.post(`${this.apiUrl}/add`, payload);
   }
+
+  cancelBooking(contractId: number): Observable<unknown> {
+    return this.http.patch(`${this.apiUrl}/${contractId}/cancel`, {});
+  }
 }
