@@ -21,4 +21,5 @@ export class Home implements OnInit, OnDestroy {
   ngOnDestroy() {
     if (this.slideInterval) clearInterval(this.slideInterval);
   }
+
 }

@@ -1,4 +1,4 @@
-<div class="container">
+<div class="container" >
   <!-- Breadcrumb -->
   <nav class="breadcrumb" aria-label="Breadcrumb">
     <ol>
@@ -9,7 +9,7 @@
       </li>
       <li>
         <span class="material-symbols-outlined">chevron_right</span>
-        <span class="active">信義旗艦館 - 獨立辦公室</span>
+        <span class="active">{{ space?.spaceNumber }}</span>
       </li>
     </ol>
   </nav>
@@ -18,31 +18,22 @@
   <div class="hero">
     <div class="hero__gallery">
       <div class="hero__main-img">
-        <img src="https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&q=80&w=1200"
-          alt="信義旗艦館主圖">
+        <img [src]="imgBaseUrl+space?.images?.[0]?.imagePath" [alt]="space?.spaceNumber">
       </div>
       <div class="hero__thumbs">
-        <div class="thumb">
-          <img src="https://images.unsplash.com/photo-1531973576160-7125cd663d86?auto=format&fit=crop&q=80&w=400"
-            alt="辦公室一角">
-        </div>
-        <div class="thumb">
-          <img src="https://images.unsplash.com/photo-1497366811353-6870744d04b2?auto=format&fit=crop&q=80&w=400"
-            alt="會議室">
-        </div>
-        <div class="thumb">
-          <img src="https://images.unsplash.com/photo-1524758631624-e2822e304c36?auto=format&fit=crop&q=80&w=400"
-            alt="休息區">
+        <div class="thumb" *ngFor="let image of galleryImages.slice(1)">
+          <img [src]="imgBaseUrl + image.imagePath">
         </div>
       </div>
     </div>
 
+
     <div class="hero__info">
       <div class="hero__header">
-        <h1>信義旗艦館 - 獨立辦公室</h1>
+        <h1>{{ space?.spaceNumber }}</h1>
         <div class="location">
           <span class="material-symbols-outlined">location_on</span>
-          <span>台北市信義區信義路五段79號</span>
+          <span>{{ space?.location?.address }}</span>
         </div>
         <div class="rating">
           <div class="stars">
@@ -56,20 +47,31 @@
         </div>
       </div>
 
+
       <div class="hero__amenities-bar">
-        <div class="item"><span class="material-symbols-outlined">meeting_room</span><span>獨立辦公室</span></div>
-        <div class="item"><span class="material-symbols-outlined">chair_alt</span><span>人體工學椅</span></div>
-        <div class="item"><span class="material-symbols-outlined">schedule</span><span>24 小時開放</span></div>
-        <div class="item"><span class="material-symbols-outlined">wifi</span><span>高速 Wi-Fi</span></div>
+        <div class="item" *ngFor="let equipment of (space?.equipments ?? [])">
+          <span class="material-symbols-outlined">
+            check_circle
+          </span>
+          <span>
+            {{ equipment.fullName }}
+          </span>
+        </div>
       </div>
 
       <div class="hero__booking-card">
         <div class="price-row">
-          <span class="price">NT$ 18,000</span>
-          <span class="unit">/ 月起</span>
+          <span class="price">NT$ {{ lowestPrice | number }}</span>
+          <span class="unit">/ 起</span>
           <div class="discount">
             <span class="old-price">NT$ 20,000</span>
             <span class="badge">8 折優惠</span>
+          </div>
+          <div class="price-types">
+            <div *ngFor="let rent of (space?.rents ?? [])">
+              {{ priceTypeMap[rent.priceType]}}
+              NT$ {{ rent.price | number }}
+            </div>
           </div>
         </div>
         <div class="inputs">
@@ -96,6 +98,7 @@
     </div>
   </div>
 
+
   <!-- Content Tabs -->
   <div class="content-tabs">
     <div class="content-tabs__nav">
@@ -108,20 +111,17 @@
       <div class="content-tabs__main">
         <section>
           <h2>空間介紹</h2>
-          <p>簡約俐落風格的獨立辦公室，適合團隊長期進駐。大面積玻璃窗引入自然光線，提供舒適明亮的辦公環境，提升團隊工作效率，激發創意。WorkspaceCollective
-            致力於打造一個能讓人靜下心來專注的避風港，摒棄多餘的裝飾，以溫潤的木質調與沉穩的色彩，構築出專業且溫暖的空間氛圍。</p>
+          <p>本空間可容納 {{ space?.capacity }} 人使用， 適合會議討論、專案協作及商務簡報。</p>
         </section>
         <section>
           <div class="map-card">
-            <iframe
-              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d903.7568940234385!2d121.57065098866853!3d25.03313821294278!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3442abb028656e17%3A0xb714cf464a20241e!2z5a-25b6g6Iqx5ZyS5buj5aC0!5e0!3m2!1szh-TW!2stw!4v1779247423720!5m2!1szh-TW!2stw"
-              class="map-frame" loading="lazy" referrerpolicy="no-referrer-when-downgrade" allowfullscreen></iframe>
+            <iframe class="map-frame" *ngIf="mapUrl" [src]="mapUrl"></iframe>
             <div class="map-info">
               <div class="address">
                 <span class="material-symbols-outlined icon">location_on</span>
                 <div class="text">
-                  <p class="main">臺北市信義區安康里信義路五段91巷6號</p>
-                  <p class="sub">捷運台北101/世貿站 3 號出口步行 5 分鐘</p>
+                  <p class="main">{{ space?.location?.address }}</p>
+                  <p class="sub">{{ space?.location?.mrtInfo }}</p>
                 </div>
               </div>
             </div>
@@ -132,13 +132,10 @@
         <div class="amenities-card">
           <h3>設備服務</h3>
           <ul>
-            <li><span class="material-symbols-outlined">android_wifi_3_bar</span> 高速 Wi-Fi</li>
-            <li><span class="material-symbols-outlined">group_work</span> 會議空間</li>
-            <li><span class="material-symbols-outlined">aod_tablet</span> 投影設備</li>
-            <li><span class="material-symbols-outlined">jamboard_kiosk</span> 白板設備</li>
-            <li><span class="material-symbols-outlined">print</span> 事務機</li>
-            <li><span class="material-symbols-outlined">coffee_maker</span> 咖啡/茶水間</li>
-            <li><span class="material-symbols-outlined">history_toggle_off</span> 24H 門禁</li>
+            <li *ngFor="let equipment of space?.equipments">
+              <span class="material-symbols-outlined">check_circle </span>
+              {{ equipment.category }}
+            </li>
           </ul>
         </div>
       </div>
