@@ -10,17 +10,35 @@
   box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.03);
   overflow: hidden;
   margin: 0 auto;
+
+  
 }
 
 
 
 /* 內容主區塊 */
 .loc-filter-body {
-  padding: 32px;
+  width: 100%;
+  max-width: 500px; /* 👈 把原本可能設定的 600px~700px 縮小到 520px 左右 */
+  max-height: 80vh; /* 限制最高只佔螢幕高度的 80%，防呆 */
+  padding: 16px;
+  margin: 0 auto;
+overflow: hidden; /* 防止內容溢出邊角 */
+  
+  
 }
+.loc-section-title-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  width: 100%;
+}
+
 
 .loc-section {
   margin-bottom: 36px;
+  
 }
 
 .loc-section:last-child {
@@ -45,6 +63,12 @@
 .loc-chevron-group {
   display: flex;
   gap: 8px;
+  
+  /* 🌟 核心修正：強制把左邊所有剩餘空間當作外距，將按鈕推至最右側 */
+  margin-left: auto; 
+  
+  /* 🌟 防擠壓：確保在台北線路很多時，箭頭本身絕對不會被擠扁變形 */
+  flex-shrink: 0;
 }
 
 .loc-btn-chevron {
@@ -66,11 +90,23 @@
   color: #1d1b1a;
 }
 
+
 /* 地區選單卡片 */
 .loc-region-grid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  display: flex;            /* 🌟 從 grid 改成 flex 才能強制排成單行 */
   gap: 16px;
+  overflow-x: auto;         /* 🌟 允許橫向捲動 */
+
+  /*grid-template-columns: repeat(4, 1fr);*/
+  gap: 16px;
+  scroll-behavior: smooth;  /* 🌟 讓點擊按鈕滑動時有平滑動畫效果 */
+  padding: 4px;             /* 留一點外距給 hover 時的陰影或位移 */
+  
+  /* 隱藏原生粗糙的橫向捲軸，保持純淨外觀 */
+  -webkit-overflow-scrolling: touch;
+}
+.loc-region-grid::-webkit-scrollbar {
+  display: none;            /* 🌟 隱藏 Chrome/Safari 的橫向捲軸 */
 }
 
 .loc-region-card {
@@ -83,7 +119,9 @@
   background-color: transparent;
   cursor: pointer;
   transition: all 0.25s ease;
-  width: 100%;
+ /* 🌟 核心修正：扣掉 gap 之後，精確讓它一排只呈現 4 個的寬度，並且不準縮水 */
+  width: calc((100% - (16px * 3)) / 4); 
+  flex-shrink: 0;           /* 🌟 強制不縮水，第5個才會被推到右邊隱藏 */
   text-align: center;
 }
 
@@ -141,6 +179,7 @@
   border-b: 1px solid #cfc5bb;
   margin-bottom: 24px;
   padding-bottom: 0;
+  width: 100%; /* 確保橫列撐滿卡片寬度 */
 }
 
 .loc-tab-btn {
@@ -172,12 +211,35 @@
   height: 2px;
   background-color: #1d1b1a;
 }
+/* ==========================================
+   🌟 新增：滾動外殼修復（最關鍵的一步）
+   ========================================== */
+.loc-district-scroll-container,
+.loc-mrt-scroll-container {
+  width: 100% !important;
+  overflow-x: auto !important; /* 💡 允許橫向滾動 */
+  overflow-y: hidden;
+  scroll-behavior: smooth;     /* 💡 讓 JS 控制滑動時呈現絲滑動畫 */
+  
+  /* 隱藏原生粗糙的滾動條 */
+  -ms-overflow-style: none;    /* IE and Edge */
+  scrollbar-width: none;       /* Firefox */
+}
 
+.loc-district-scroll-container::-webkit-scrollbar,
+.loc-mrt-scroll-container::-webkit-scrollbar {
+  display: none;               /* Chrome, Safari, Opera */
+}
 /* 網格選項 */
 .loc-district-grid {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 12px;
+ 
+
+  grid-template-rows: repeat(2, 34px); /* 🌟 強制固定剛好 2 行按鈕的高度 */
+  grid-auto-flow: column;              /* 🌟 關鍵：當按鈕變多時，不往下掉，而是自動往右邊橫向排下去 */
+  grid-auto-columns: calc((100% - 36px) / 4); /* 🌟 確保一畫面剛好呈現 4 欄 (扣除 gap) */
+  gap: 13px;
+  padding: 2px 0;
 }
 
 .loc-btn-option {
@@ -185,8 +247,8 @@
   color: #1d1b1a;
   border: none;
   border-radius: 6px;
-  padding: 10px 16px;
-  font-size: 15px;
+  padding: 6px 12px;
+  font-size: 12px;
   cursor: pointer;
   transition: all 0.2s ease;
   text-align: center;
@@ -207,11 +269,18 @@
 /* 捷運網格專屬 */
 .loc-mrt-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 12px;
+ grid-template-rows: repeat(2, 34px); /* 🌟 強制固定剛好 2 行按鈕的高度 */
+  grid-auto-flow: column;              /* 🌟 關鍵：往右橫向排列 */
+  grid-auto-columns: calc((100% - 34px) / 4); /* 🌟 確保一畫面剛好呈現 4 欄 */
+  gap: 13px;
+  padding: 2px 0;
 }
 
 @media (max-width: 580px) {
+  /* 🌟 手機板時，讓每頁呈現 2 個半（2.5個），提示使用者後面還可以滑動 */
+  .loc-region-card {
+    width: calc((100% - (12px * 2)) / 2.5); 
+  }
   .loc-region-grid {
     grid-template-columns: repeat(2, 1fr);
   }

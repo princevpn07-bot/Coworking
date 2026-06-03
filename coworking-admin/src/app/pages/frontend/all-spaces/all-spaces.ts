@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit,AfterViewInit, ViewEncapsulation } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { LocationService } from '../../../services/location';
 import { FormsModule } from '@angular/forms';
@@ -6,7 +6,7 @@ import { PriceFilter } from '../../../shared/price-filter/price-filter';
 import { RegionFilterComponent } from '../../../shared/region-filter/region-filter.component';
 import * as L from 'leaflet';
 import 'leaflet.markercluster';
-import { AfterViewInit,ViewEncapsulation} from '@angular/core';
+
 
 @Component({
   selector: 'app-all-spaces',
@@ -44,6 +44,10 @@ export class AllSpaces implements OnInit, AfterViewInit {
 
   // 💡 當頂端有成功 import 後，這裡的紅線就會自動消失了！
   constructor(private locationService: LocationService) { }
+
+    ngOnInit(): void {
+    //this.loadSpacesFromDb(); //初始載入空間資料
+  }
 
   map!: L.Map;
   markerLayer!: L.LayerGroup;
@@ -91,6 +95,8 @@ export class AllSpaces implements OnInit, AfterViewInit {
         this.map.invalidateSize(true);
         requestAnimationFrame(() => {
           this.renderMarkers();
+
+          this.loadSpacesFromDb();
         });
 
       });
@@ -102,9 +108,7 @@ export class AllSpaces implements OnInit, AfterViewInit {
 
 
 
-  ngOnInit(): void {
-    this.loadSpacesFromDb(); //初始載入空間資料
-  }
+
 
 
   loadSpacesFromDb(keyword?: string, capacity?: number): void {
@@ -135,7 +139,11 @@ export class AllSpaces implements OnInit, AfterViewInit {
             // 卡片圖片：依據 space_id 輪流指派 assets 裡的精美空間圖，解決 undefined 破圖問題
             //img: `assets/Featured_space_0${(item.space_id % 4) || 1}.png`
             latitude: item.latitude,
-            longitude: item.longitude
+            longitude: item.longitude,
+
+            // 🌟 多補這一行，把資料庫真正的 address 欄位也接給前端，方便上面進行關鍵字比對！
+            city: item.city || '',
+            dbAddress: item.address || ''
 
           };
         });
@@ -229,19 +237,28 @@ export class AllSpaces implements OnInit, AfterViewInit {
 
       // 檢查空間的 price 是否落在使用者選定的最下限與最上限之間
       const matchesPrice = spacePrice >= filterMin && spacePrice <= filterMax;
-      // 條件 2：縣市篩選（如果子組件沒傳城市，代表不限）
-      const matchesCity = !this.currentRegionRange.city || space.city === this.currentRegionRange.city;
+      // 🌟 為了安全模糊比對，把所有可能用到的欄位轉成字串並整合
+      // 把空間名稱、資料庫地址、交通資訊全部融合成一個「大文字儲存桶」
+      const spaceName = space.name ? String(space.name) : '';
+      const spaceLocationDesc = space.location ? String(space.location) : ''; // 這裝的是資料庫的 mrt_info
+   const realAddress = space.dbAddress ? String(space.dbAddress) : '';      // 資料庫 address 欄位
+      // 💡 這裡很關鍵：我們拿原本後端傳過來的原始 item.address (剛才對接時需要順便接出來，或直接比對 space.name 與 spaceLocationDesc)
+      // 為了防呆，我們建立一個專門用來比對地址的字串：
+     const fullAddressText = spaceName + spaceLocationDesc + realAddress;
+    // 條件 2：縣市篩選（直接從大字串桶子比對）
+const matchesCity = !this.currentRegionRange.city || fullAddressText.includes(this.currentRegionRange.city);
 
       // 條件 3：行政區篩選（若是空陣列代表全區不限；有勾選則空間的行政區必須包含在內）
       const matchesDistrict = this.currentRegionRange.districts.length === 0 ||
-        this.currentRegionRange.districts.includes(space.district);
+       this.currentRegionRange.districts.some(dist => fullAddressText.includes(dist));
 
       // 條件 4：捷運站篩選（利用 .some 檢查空間的交通敘述字串裡，有沒有包含任何一個使用者勾選的車站名稱）
       const matchesMrt = this.currentRegionRange.stations.length === 0 ||
-        (space.location && this.currentRegionRange.stations.some(station => space.location.includes(station)));
+      this.currentRegionRange.stations.some(station => spaceLocationDesc.includes(station));
       return matchesPrice && matchesCity && matchesDistrict && matchesMrt;
     });
-
+// 🌟 核心關鍵：篩選完陣列後，必須通知 Leaflet 地圖重新繪製圖標，畫面的地圖才會同步更新！
+    this.renderMarkers();
     console.log(`🎯 前端價格過濾完成！在目前的資料中，有 ${this.spaces.length} 個空間符合預算。`);
 
   }

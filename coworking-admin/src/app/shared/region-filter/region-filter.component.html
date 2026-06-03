@@ -1,76 +1,132 @@
  <!-- 主篩選面板 -->
+ 
   <div class="loc-filter-body">
+   
     <!-- 按地區搜尋區塊 -->
-    <section class="loc-section">
-      <div class="loc-section-title-row">
-        <h3 class="loc-section-title">按地區搜尋</h3>
-        <div class="loc-chevron-group">
-          <button class="loc-btn-chevron" (click)="shiftCity('left')">
-            <span class="material-symbols-outlined">chevron_left</span>
-          </button>
-          <button class="loc-btn-chevron" (click)="shiftCity('right')">
-            <span class="material-symbols-outlined">chevron_right</span>
-          </button>
-        </div>
-      </div>
-
-      <div class="loc-region-grid">
-        <button *ngFor="let city of cities"
-                class="loc-region-card"
-                [class.active]="selectedCityId === city.id"
-                (click)="selectCity(city.id)">
-          <div class="loc-region-img-wrapper">
-            <img [src]="city.imgUrl" [alt]="city.alt" class="loc-region-img">
-          </div>
-          <span class="loc-region-name">{{ city.name }}</span>
+   <section class="loc-section">
+    <div class="loc-section-title-row">
+      <h3 class="loc-section-title">按地區搜尋</h3>
+      <div class="loc-chevron-group">
+        <button class="loc-btn-chevron" (click)="shiftCity('left')">
+          <span class="material-symbols-outlined">chevron_left</span>
+        </button>
+        <button class="loc-btn-chevron" (click)="shiftCity('right')">
+          <span class="material-symbols-outlined">chevron_right</span>
         </button>
       </div>
-    </section>
+    </div>
+
+    <div class="loc-tabs-row" style="display: flex; gap: 12px; margin-bottom: 16px;">
+      <button *ngFor="let region of regions"
+              class="loc-tab-btn"
+              [class.active]="selectedRegion === region"
+              (click)="selectRegion(region)"
+              style="flex: 1;">
+        {{ region }}
+      </button>
+    </div>
+  </section>
 
     <!-- 行政區選擇區塊 -->
+<section class="loc-section">
+    <div class="loc-region-grid" id="regionScrollContainer" #regionGrid>
+      <button *ngFor="let city of currentCities"
+              class="loc-region-card"
+              [class.active]="selectedCityId === city.id"
+              (click)="selectCity(city.id)">
+        <div class="loc-region-img-wrapper">
+          <img [src]="city.imgUrl" [alt]="city.alt" class="loc-region-img">
+        </div>
+        <span class="loc-region-name">{{ city.name }}</span>
+      </button>
+    </div>
+  </section>
+  
+
+  <ng-container *ngIf="selectedCityId && currentCityDetails">
+    
     <section class="loc-section">
-      <div class="loc-tabs-row">
-        <button *ngFor="let city of cities"
-                class="loc-tab-btn"
-                [class.active]="selectedCityId === city.id"
-                (click)="selectCity(city.id)">
-          {{ city.name }}
-        </button>
+      <div class="loc-section-title-row" style="margin-bottom: 12px;">
+        <h4 style="margin: 0; font-size: 16px; color: #222222;">行政區區劃</h4>
+        <div class="loc-chevron-group">
+      <button class="loc-btn-chevron" (click)="scrollContainer(districtScrollBody, 'left')">
+        <span class="material-symbols-outlined">chevron_left</span>
+      </button>
+      <button class="loc-btn-chevron" (click)="scrollContainer(districtScrollBody, 'right')">
+        <span class="material-symbols-outlined">chevron_right</span>
+      </button>
+    </div>
       </div>
 
+      <div class="loc-district-scroll-container" id="districtScrollContainer" #districtScrollBody>
       <div class="loc-district-grid">
-        <button *ngFor="let dist of districts[selectedCityId]"
+        <button *ngFor="let dist of currentCityDetails.districts"
                 class="loc-btn-option"
                 [class.selected]="isDistrictSelected(dist)"
                 (click)="toggleDistrict(dist)">
           {{ dist }}
         </button>
       </div>
+      </div>
     </section>
+    
 
     <!-- 捷運沿線選擇區塊 -->
-    <section class="loc-section">
+  <section class="loc-section" *ngIf="currentCityDetails.mrtLines && currentCityDetails.mrtLines.length > 0">
+    <div class="loc-section-title-row">
       <div class="loc-tabs-row" style="display: flex; justify-content: space-between; align-items: center;">
         <div style="display: flex; gap: 24px;">
-          <button *ngFor="let line of mrtLines"
+       
+          <button *ngFor="let line of currentCityDetails.mrtLines"
                   class="loc-tab-btn"
                   [class.active]="activeMrtLineId === line.id"
                   (click)="selectMrtLine(line.id)">
             {{ line.name }}
           </button>
         </div>
-        <button class="loc-btn-chevron">
+ 
+    
+     <div class="loc-chevron-group">
+         <button class="loc-btn-chevron" (click)="scrollContainer(mrtScrollBody, 'left')">
+          <span class="material-symbols-outlined">chevron_left</span>
+        </button>
+        <button class="loc-btn-chevron" (click)="scrollContainer(mrtScrollBody,'right')">
           <span class="material-symbols-outlined">chevron_right</span>
         </button>
       </div>
-
+  </div>
+  </div>
+  <div class="loc-mrt-scroll-container" id="mrtScrollContainer" #mrtScrollBody>
       <div class="loc-mrt-grid">
-        <button *ngFor="let station of mrtStations[activeMrtLineId]"
+        <button *ngFor="let station of currentMrtStations"
                 class="loc-btn-option"
                 [class.selected]="isStationSelected(station)"
                 (click)="toggleStation(station)">
           {{ station }}
         </button>
       </div>
+        </div>
     </section>
+   
+  </ng-container>
+    <footer class="loc-filter-footer" style="display: flex; justify-content: space-between; align-items: center; margin-top: 24px; padding-top: 16px; border-top: 1px solid #f0f0f0;">
+    <button class="loc-btn-clear" 
+            (click)="clearAllFilters()" 
+            style="background: none; border: none; font-size: 14px; font-weight: 600; text-decoration: underline; cursor: pointer; color: #222222;">
+      清除全部
+    </button>
+    
+    <div style="display: flex; gap: 12px;">
+      <button class="loc-btn-cancel" 
+              (click)="closeModal()" 
+              style="background: #f7f7f7; border: 1px solid #dddddd; padding: 8px 16px; border-radius: 8px; font-size: 14px; cursor: pointer;">
+        取消
+      </button>
+      <button class="loc-btn-submit" 
+              (click)="submitFilter()" 
+              style="background: #222222; color: #ffffff; border: none; padding: 8px 24px; border-radius: 8px; font-size: 14px; font-weight: 600; cursor: pointer;">
+        套用篩選
+      </button>
+    </div>
+  </footer>
   </div>
