@@ -98,7 +98,7 @@ export class MyOrders implements OnInit {
   }
 
   private submitForm(fields: Record<string, string>): void {
-    const action = fields['PaymentUrl'] || fields['paymentUrl'] || fields['paymenturl'] || this.defaultPaymentUrl;
+    const action = this.defaultPaymentUrl;
     if (!action) {
       console.error('Missing payment URL in fields', fields);
       alert('收不到金流網址，請稍後再試。');

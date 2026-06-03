@@ -41,12 +41,13 @@ namespace CoworkingAPI.Services
                     { "TotalAmount", amount.ToString() },
                     { "TradeDesc", description },
                     { "ItemName", description },
-                    { "ReturnURL", _configuration["ECPay:ReturnUrl"] ?? "http://localhost:5000/api/payment/return" },
+                    { "ReturnURL", _configuration["ECPay:ReturnUrl"] ?? "http://localhost:5193/api/Payment/Return" },
                     { "ChoosePayment", "ALL" },
-                    { "ClientBackURL", _configuration["ECPay:ClientBackUrl"] ?? "" },
-                    { "OrderResultURL", "" },
+                    { "ClientBackURL", _configuration["ECPay:ClientBackUrl"] ?? "http://localhost:4200/my-orders" },
+                    { "OrderResultURL", _configuration["ECPay:OrderResultUrl"] ?? "" },
                     { "EncryptType", "1" },
-                    { "Remark", $"ContractId:{contractId},UserId:{userId}" }
+                    { "CustomField1", contractId.ToString() },
+                    { "CustomField2", userId.ToString() },
                 };
 
                 // 產生 CheckMacValue

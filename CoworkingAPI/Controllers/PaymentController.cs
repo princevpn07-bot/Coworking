@@ -112,8 +112,16 @@ namespace CoworkingAPI.Controllers
 
                     _logger.LogInformation($"Payment successful - MerchantTradeNo: {merchantTradeNo}, TradeNo: {tradeNo}, Amount: {tradeAmt}");
 
-                    // 更新付款狀態由前端 post 修改訂單
-
+                    // 更新訂單狀態為已付款 (status = 1)
+                    int contractId = parameters.ContainsKey("CustomField1") ? int.Parse(parameters["CustomField1"]) : 0;
+                    var booking = await _context.Bookings.FirstOrDefaultAsync(b => b.contract_id == contractId);
+                    if (booking != null)
+                    {
+                        booking.status = 1;
+                        _context.Bookings.Update(booking);
+                        await _context.SaveChangesAsync();
+                    }
+                    //
                     return Content("1|OK");
                 }
                 else
