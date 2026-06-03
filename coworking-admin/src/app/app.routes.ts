@@ -25,7 +25,9 @@ export const routes: Routes = [
       { path: 'all-spaces', component: AllSpaces },
       { path: 'space/:id', component: SpaceDetail },
       { path: 'my-orders', component: MyOrders },
-      { path: 'payment', component: PaymentComponent }
+      { path: 'payment', component: PaymentComponent },
+      { path: 'space-detail/:id', component:  SpaceDetail }
+      
     ]
   },
   { path: 'login', component: Login },

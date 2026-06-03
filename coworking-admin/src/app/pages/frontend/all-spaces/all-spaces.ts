@@ -4,6 +4,8 @@ import { LocationService } from '../../../services/location';
 import { FormsModule } from '@angular/forms';
 import { PriceFilter } from '../../../shared/price-filter/price-filter';
 import { RegionFilterComponent } from '../../../shared/region-filter/region-filter.component';
+import { ActivatedRoute, Router } from '@angular/router'; // 🌟 補上 Router
+import { HttpClient } from '@angular/common/http';
 import * as L from 'leaflet';
 import 'leaflet.markercluster';
 
@@ -18,6 +20,7 @@ import 'leaflet.markercluster';
 })
 export class AllSpaces implements OnInit, AfterViewInit {
 
+  
   // 宣告空間陣列
   spaces: any[] = [];
 
@@ -42,12 +45,26 @@ export class AllSpaces implements OnInit, AfterViewInit {
     stations: [] as string[]
   };
 
+
+
   // 💡 當頂端有成功 import 後，這裡的紅線就會自動消失了！
-  constructor(private locationService: LocationService) { }
+  constructor(private locationService: LocationService, private router: Router) { }
 
     ngOnInit(): void {
     //this.loadSpacesFromDb(); //初始載入空間資料
   }
+
+  // 🌟 新增：點擊卡片跳轉到詳細頁面
+goToSpaceDetail(spaceId: any): void {
+  if (!spaceId) {
+    console.warn('⚠️ 該空間沒有對應的資料庫 ID，無法跳轉！');
+    return;
+  }
+  console.log('🚀 準備跳轉到空間詳細頁，ID 為:', spaceId);
+
+  // 導向路由： /space-detail/A001 或 /space-detail/1
+  this.router.navigate(['/space-detail', spaceId]);
+}
 
   map!: L.Map;
   markerLayer!: L.LayerGroup;
@@ -124,6 +141,9 @@ export class AllSpaces implements OnInit, AfterViewInit {
           // 空間名稱：用資料庫撈出來的城市 + 空間編號組合（例如：黃金的時刻 · 專屬空間 101）
 
           return {
+
+            // 把資料庫的主鍵 ID（或是 space_id，依你後端傳出的 Property 名稱為準）完整保留給前端導頁
+            id: item.space_id || item.id,
             name: `${item.city || '共享空間'} ·  ${item.space_number || ''}`,
 
             // 方案價格：精準抓取自 dbo.rents 的真實租金方案價格！
