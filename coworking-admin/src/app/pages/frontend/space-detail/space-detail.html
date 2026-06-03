@@ -1,4 +1,11 @@
-<div class="container" >
+<div class="loading-overlay" *ngIf="loading">
+  <div class="loading-box">
+    <div class="spinner"></div>
+    <p>正在載入空間資訊...</p>
+  </div>
+</div>
+
+<div class="container">
   <!-- Breadcrumb -->
   <nav class="breadcrumb" aria-label="Breadcrumb">
     <ol>
@@ -18,11 +25,11 @@
   <div class="hero">
     <div class="hero__gallery">
       <div class="hero__main-img">
-        <img [src]="imgBaseUrl+space?.images?.[0]?.imagePath" [alt]="space?.spaceNumber">
+        <img [src]="mainImage" [alt]="space?.spaceNumber">
       </div>
       <div class="hero__thumbs">
-        <div class="thumb" *ngFor="let image of galleryImages.slice(1)">
-          <img [src]="imgBaseUrl + image.imagePath">
+        <div class="thumb" *ngFor="let image of galleryThumbs">
+          <img [src]="image.fullUrl">
         </div>
       </div>
     </div>
@@ -37,19 +44,21 @@
         </div>
         <div class="rating">
           <div class="stars">
-            <span class="material-symbols-outlined filled">star</span>
-            <span class="material-symbols-outlined filled">star</span>
-            <span class="material-symbols-outlined filled">star</span>
-            <span class="material-symbols-outlined filled">star</span>
-            <span class="material-symbols-outlined">star_half</span>
+            <!--<span class="material-symbols-outlined filled">star</span>-->
+            <!--<span class="material-symbols-outlined">star_half</span>-->
+            <span class="material-symbols-outlined">star</span>
+            <span class="material-symbols-outlined">star</span>
+            <span class="material-symbols-outlined">star</span>
+            <span class="material-symbols-outlined">star</span>
+            <span class="material-symbols-outlined">star</span>
           </div>
-          <span class="count">4.8 (128 則評價)</span>
+          <span class="count">0.0 (0 則評價)</span>
         </div>
       </div>
 
 
       <div class="hero__amenities-bar">
-        <div class="item" *ngFor="let equipment of (space?.equipments ?? [])">
+        <div class="item" *ngFor="let equipment of equipments">
           <span class="material-symbols-outlined">
             check_circle
           </span>
@@ -63,28 +72,14 @@
         <div class="price-row">
           <span class="price">NT$ {{ lowestPrice | number }}</span>
           <span class="unit">/ 起</span>
-          <div class="discount">
+          <!--<div class="discount">
             <span class="old-price">NT$ 20,000</span>
             <span class="badge">8 折優惠</span>
-          </div>
+          </div>-->
           <div class="price-types">
             <div *ngFor="let rent of (space?.rents ?? [])">
-              {{ priceTypeMap[rent.priceType]}}
-              NT$ {{ rent.price | number }}
-            </div>
-          </div>
-        </div>
-        <div class="inputs">
-          <label>選擇時間</label>
-          <div class="date-picker">
-            <div class="input-wrap">
-              <span class="material-symbols-outlined">calendar_today</span>
-              <input type="text" placeholder="開始日期">
-            </div>
-            <span>～</span>
-            <div class="input-wrap">
-              <span class="material-symbols-outlined">calendar_today</span>
-              <input type="text" placeholder="結束日期">
+              <span>{{ priceTypeMap[rent.priceType]}}</span>
+              <span>NT$ {{ rent.price | number }}</span>
             </div>
           </div>
         </div>
@@ -102,20 +97,41 @@
   <!-- Content Tabs -->
   <div class="content-tabs">
     <div class="content-tabs__nav">
-      <button class="active">空間介紹</button>
-      <button>設備設施</button>
-      <button>位置交通</button>
-      <button>評價 (128)</button>
+      <button [class.active]="activeTab === 'intro'" (click)="setTab('intro')">
+        空間介紹
+      </button>
+
+      <button [class.active]="activeTab === 'amenities'" (click)="setTab('amenities')">
+        設備設施
+      </button>
+
+      <button [class.active]="activeTab === 'location'" (click)="setTab('location')">
+        位置交通
+      </button>
+
+      <button [class.active]="activeTab === 'review'" (click)="setTab('review')">
+        評價 (0)
+      </button>
     </div>
-    <div class="content-tabs__grid">
+    <div class="content-tabs__grid" [ngSwitch]="activeTab">
+
+      <!-- =========================MAIN AREA========================== -->
       <div class="content-tabs__main">
-        <section>
+
+        <!-- intro -->
+        <section *ngSwitchCase="'intro'">
           <h2>空間介紹</h2>
-          <p>本空間可容納 {{ space?.capacity }} 人使用， 適合會議討論、專案協作及商務簡報。</p>
+          <p>
+            本空間可容納 {{ space?.capacity }} 人使用，
+            適合會議討論、專案協作及商務簡報。
+          </p>
         </section>
-        <section>
+
+        <!-- location -->
+        <section *ngSwitchCase="'location'">
           <div class="map-card">
             <iframe class="map-frame" *ngIf="mapUrl" [src]="mapUrl"></iframe>
+
             <div class="map-info">
               <div class="address">
                 <span class="material-symbols-outlined icon">location_on</span>
@@ -125,20 +141,36 @@
                 </div>
               </div>
             </div>
+
           </div>
         </section>
+
+        <!-- review -->
+        <section *ngSwitchCase="'review'">
+          <h2>評價</h2>
+          <p>尚無評價</p>
+        </section>
+
       </div>
+
+      <!-- =========================SIDE AREA ========================== -->
       <div class="content-tabs__side">
-        <div class="amenities-card">
+        <section *ngSwitchCase="'amenities'">
           <h3>設備服務</h3>
-          <ul>
-            <li *ngFor="let equipment of space?.equipments">
-              <span class="material-symbols-outlined">check_circle </span>
-              {{ equipment.category }}
-            </li>
-          </ul>
-        </div>
+          <div class="amenities-card">
+
+            <ul>
+              <li *ngFor="let equipment of equipments">
+                <span class="material-symbols-outlined">check_circle</span>
+                {{ equipment.category }}
+              </li>
+            </ul>
+
+          </div>
+        </section>
+
       </div>
+
     </div>
   </div>
 </div>
