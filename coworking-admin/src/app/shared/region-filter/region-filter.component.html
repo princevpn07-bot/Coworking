@@ -1,5 +1,9 @@
- <!-- 主篩選面板 -->
- 
+<div class="airbnb-price-dropdown" 
+     [class.is-open]="isOpen" 
+     (click)="$event.stopPropagation()">
+
+<div class="picker-container" >
+ <div class="loc-filter-body popup-animation">
   <div class="loc-filter-body">
    
     <!-- 按地區搜尋區塊 -->
@@ -16,7 +20,7 @@
       </div>
     </div>
 
-    <div class="loc-tabs-row" style="display: flex; gap: 12px; margin-bottom: 16px;">
+    <div class="loc-tabs-row" >
       <button *ngFor="let region of regions"
               class="loc-tab-btn"
               [class.active]="selectedRegion === region"
@@ -47,7 +51,7 @@
     
     <section class="loc-section">
       <div class="loc-section-title-row" style="margin-bottom: 12px;">
-        <h4 style="margin: 0; font-size: 16px; color: #222222;">行政區區劃</h4>
+        <h4 class="loc-section-title">行政區區劃</h4>
         <div class="loc-chevron-group">
       <button class="loc-btn-chevron" (click)="scrollContainer(districtScrollBody, 'left')">
         <span class="material-symbols-outlined">chevron_left</span>
@@ -130,3 +134,4 @@
     </div>
   </footer>
   </div>
+</div>

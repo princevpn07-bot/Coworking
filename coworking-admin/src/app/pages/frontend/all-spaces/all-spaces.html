@@ -3,16 +3,34 @@
   <section class="listing-section">
     <div class="listing-section__search-bar">
       <div class="search-group">
+        
         <div class="search-group__item">
           <span class="material-symbols-outlined">search</span>
-          <input type="text" class="search-group__item" [(ngModel)]="searchKeyword" (keyup.enter)="onSearch()"
-            placeholder="地點" />
+          <input type="text" [(ngModel)]="searchKeyword" (keyup.enter)="onSearch()" placeholder="地點" />
+        </div>
 
+        <div class="search-group__item" (click)="openDateTimeFilter()" style="position: relative; cursor: pointer;">
+         <span class="material-symbols-outlined">calendar_today</span>
+         <span style="color: #666; font-size: 14px; margin-left: 8px; flex: 1;">
+         {{ searchDate ? (searchDate + ' ' + (searchStartTime | slice:0:5) + ' ~ ' + (searchEndTime | slice:0:5)) : '時間' }}
+          </span>
+<span *ngIf="searchDate" class="material-symbols-outlined" 
+        (click)="searchDate=''; searchStartTime=''; searchEndTime=''; onSearch(); $event.stopPropagation()" 
+        style="font-size: 16px; color: #999; margin-left: 4px; cursor: pointer; display: flex; align-items: center; justify-content: center; width: 22px; height: 22px; border-radius: 50%; transition: background 0.2s;"
+        onmouseover="this.style.backgroundColor='#f0f0f0'" 
+        onmouseout="this.style.backgroundColor='transparent'">
+    close
+  </span>
+         <div (click)="$event.stopPropagation()"
+         [style.pointer-events]="isDateTimeFilterOpen ? 'auto' : 'none'"
+          style="position: absolute; top: calc(100% + 8px); left: -30px; z-index: 99999; cursor: default;">
+            <app-datetime-filter
+             [isOpen]="isDateTimeFilterOpen"
+            (closeMarquee)="isDateTimeFilterOpen = false"
+            (datetimeApplied)="onDateTimeFilterApplied($event)"> </app-datetime-filter>
+          </div>
         </div>
-        <div class="search-group__item">
-          <span class="material-symbols-outlined">calendar_today</span>
-          <input type="text" placeholder="時間" />
-        </div>
+
         <div class="search-group__item" style="max-width: 120px;">
           <span class="material-symbols-outlined">person</span>
           <select [(ngModel)]="selectedCapacity" (change)="onSearch()">
@@ -23,18 +41,19 @@
             <option [value]="30">30 人以上</option>
           </select>
         </div>
+
         <button class="search-group__submit" (click)="onSearch()">搜尋</button>
+
       </div>
 
         <div class="filter-container-row" style="display: block; margin-top: 16px; clear: both;">
 
-        <div class="price-box-wrapper" style="display: inline-block; position: relative; vertical-align: top; margin-right: 12px;">
-          <button class="filters__btn" type="button" (click)="openFilter()">
+       <div class="price-box-wrapper" style="display: inline-block; position: relative; vertical-align: top; margin-right: 12px;">
+  <button class="filters__btn" type="button" (click)="openFilter()">
             價格 <span class="material-symbols-outlined">expand_more</span>
           </button>
 
-          <div *ngIf="isPriceFilterOpen"
-               style="position: absolute; top: 45px; left: 0px; width: 420px; z-index: 99999; background: #ffffff; border: 1px solid #e3dac9; border-radius: 12px; box-shadow: 0 12px 30px rgba(0,0,0,0.15);">
+        <div class="price-dropdown-container" [class.is-open]="isPriceFilterOpen">
             <app-price-filter
               [isOpen]="isPriceFilterOpen"
               (closeMarquee)="isPriceFilterOpen = false"
@@ -43,13 +62,12 @@
           </div>
         </div>
 
-        <div class="region-box-wrapper" style="display: inline-block; position: relative; vertical-align: top;">
-          <button class="filters__btn" type="button" (click)="openRegionFilter()">
-            <span class="material-symbols-outlined">tune</span> 地區篩選
-          </button>
+      <div class="region-box-wrapper" style="display: inline-block; position: relative; vertical-align: top;">
+  <button class="filters__btn" type="button" (click)="openRegionFilter()">
+    <span class="material-symbols-outlined">tune</span> 地區篩選
+  </button>
 
-          <div *ngIf="isRegionFilterOpen"
-               style="position: absolute; top: 45px; left: 0; width: 560px; z-index: 99999; background: #ffffff; border: 1px solid #e3dac9; border-radius: 12px; box-shadow: 0 12px 30px rgba(0,0,0,0.15); padding: 15px; box-sizing: border-box;">
+          <div class="region-dropdown-container" [class.is-open]="isRegionFilterOpen">
             <app-region-filter
               [isOpen]="isRegionFilterOpen"
               (closeMarquee)="isRegionFilterOpen = false"

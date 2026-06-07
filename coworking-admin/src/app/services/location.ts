@@ -17,7 +17,7 @@ export class LocationService {
    /**
     * 🌟 呼叫後端全新三表聯查 DTO 的 API
     */
-  getFrontendSpaces(keyword?: string, capacity?: number): Observable<any[]> {
+  getFrontendSpaces(keyword?: string, capacity?: number, date?: string, startTime?: string, endTime?: string): Observable<any[]> {
     const url = keyword
       ? `${this.apiurl}/GetFrontendSpaces?keyword=${encodeURIComponent(keyword)}`
       : `${this.apiurl}/GetFrontendSpaces`;
@@ -31,6 +31,12 @@ export class LocationService {
     if (capacity !== undefined) {
       params = params.set('capacity', capacity.toString());
     }
+
+    // 🌟 將時間參數加入 API 請求中
+  if (date) params = params.set('date', date);
+  // 後端 C# 的 TimeSpan 預設需要秒數，所以我們補上 ':00'
+  if (startTime) params = params.set('startTime', startTime + ':00'); 
+  if (endTime) params = params.set('endTime', endTime + ':00');
     return this.http.get<any[]>(`${this.apiurl}/GetFrontendSpaces`, { params });
   }
   // 🔹 新增：根據價格區間向後端撈取空間資料

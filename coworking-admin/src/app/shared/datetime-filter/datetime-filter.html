@@ -1,0 +1,112 @@
+<div class="airbnb-price-dropdown" 
+     [class.is-open]="isOpen" 
+     (click)="$event.stopPropagation()">
+
+<div class="picker-container" (click)="$event.stopPropagation()">
+  
+  <div class="rent-mode-toggle">
+    <button class="toggle-btn" [class.active]="rentMode === 'hourly'" (click)="setRentMode('hourly')">時租</button>
+    <button class="toggle-btn" [class.active]="rentMode === 'daily'" (click)="setRentMode('daily')">日租</button>
+    <button class="toggle-btn" [class.active]="rentMode === 'monthly'" (click)="setRentMode('monthly')">月租</button>
+  </div>
+
+  <div class="picker-main-grid">
+    
+    <div class="calendar-panel">
+      <div class="calendar-header">
+        <button class="cal-nav-btn" (click)="shiftMonth(-1)"><span class="material-symbols-outlined">chevron_left</span></button>
+        <h3 class="cal-title">{{ year }} 年 {{ month + 1 }} 月</h3>
+        <button class="cal-nav-btn" (click)="shiftMonth(1)"><span class="material-symbols-outlined">chevron_right</span></button>
+      </div>
+
+      <div class="calendar-weekdays">
+        <div class="weekday-col" *ngFor="let day of weekdays">{{ day }}</div>
+      </div>
+
+     <div class="calendar-days-grid">
+        <div *ngFor="let cell of calendarCells" 
+             class="day-cell-wrapper"
+             [ngClass]="cell.isCurrentMonth ? getWrapperClasses(cell.date) : ''"
+             (click)="onDayClick(cell)"
+             (mouseenter)="onDayHover(cell)"
+             (mouseleave)="hoveredDate = null">
+          
+          <div class="day-cell" [ngClass]="getCellClasses(cell)">
+            {{ cell.day }}
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <div class="time-config-panel">
+      <div>
+        <p class="time-setting-title">預訂時間設定</p>
+        
+        <div *ngIf="rentMode === 'hourly'; else nonHourlyBlock" class="time-range-row">
+          
+         <div class="time-select-group" (click)="$event.stopPropagation()">
+            <span class="time-select-label">開始時間</span>
+            <div class="custom-select-trigger" [class.active]="startOpen" (click)="startOpen = !startOpen; endOpen = false">
+              <span>{{ startTime }}</span>
+              <span class="material-symbols-outlined dropdown-icon" [class.rotated]="startOpen">expand_more</span>
+            </div>
+            <div class="custom-dropdown-list" *ngIf="startOpen">
+              <div class="custom-dropdown-item" *ngFor="let t of timeOptions" 
+                   [class.selected]="t === startTime"
+                   (click)="selectStartTime(t)">
+                {{ t }}
+              </div>
+            </div>
+          </div>
+
+          <div class="time-flow-arrow">
+            <span class="material-symbols-outlined">arrow_right_alt</span>
+          </div>
+
+         <div class="time-select-group" (click)="$event.stopPropagation()">
+            <span class="time-select-label">結束時間</span>
+            <div class="custom-select-trigger" [class.active]="endOpen" (click)="endOpen = !endOpen; startOpen = false">
+              <span>{{ endTime }}</span>
+              <span class="material-symbols-outlined dropdown-icon" [class.rotated]="endOpen">expand_more</span>
+            </div>
+            <div class="custom-dropdown-list" *ngIf="endOpen">
+              <div class="custom-dropdown-item" *ngFor="let t of timeOptions" 
+                   [class.disabled]="t <= startTime"
+                   [class.selected]="t === endTime"
+                   (click)="t > startTime ? selectEndTime(t) : null">
+                {{ t }}
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <ng-template #nonHourlyBlock>
+          <div class="non-hourly-notice">
+            <span class="material-symbols-outlined notice-icon">schedule</span>
+            <div>
+              <div class="notice-title">{{ rentModeName }}全日租賃方案</div>
+              <div class="notice-desc">租賃時間為當日 08:00 至 20:00，包含完整的 Sanctuary 社群頂級茶點與設施服務。</div>
+            </div>
+          </div>
+        </ng-template>
+
+      </div>
+
+      <div class="selection-summary-container">
+        <div class="summary-left-group">
+            
+            <div class="selection-summary-desc">已選擇 {{ daysCount }} 天</div>
+            <div class="selection-mode-badge">({{ rentModeName }}模式)</div>
+        </div>
+        <div class="summary-right-group">
+          <span class="selection-summary-price" *ngIf="daysCount > 0">{{ priceDisplay }}</span>
+          <button class="btn-apply" (click)="applyFilter()">套用</button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+</div>

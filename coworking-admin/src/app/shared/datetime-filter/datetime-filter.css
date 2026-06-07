@@ -1,0 +1,426 @@
+/* 🌟 彈跳動畫定義 */
+@keyframes menuPopUp {
+  0% {
+   opacity: 0;
+    transform: scaleY(0.85) translateY(-20px); /* 從上方縮小、偏移開始 */
+    transform-origin: top center;            /* 🌟 關鍵：原點在頂部，確保只往下展開 */
+  }
+  100% {
+    opacity: 1;
+    transform: scaleY(1) translateY(0);      /* 恢復原狀 */
+    transform-origin: top center;
+  }
+}
+
+
+/* 🌟 這是預設(關閉)狀態：隱藏、透明、位置偏上 */
+.airbnb-price-dropdown {
+position: absolute;
+  top: calc(100% + 8px);   
+  left: -220px;            /* 左右對齊你可視需求微調這個數字 */
+  z-index: 99999;          
+  
+  opacity: 0;
+  pointer-events: none;    /* 關閉時滑鼠可直接穿透 */
+  
+  /* 🌟 核心動畫魔法：從上方縮短 (scaleY) 並往上偏移 */
+  transform: translateY(-20px) scaleY(0.85);
+  transform-origin: top center; /* 關鍵：綁定最頂部，確保只往下長 */
+  
+  /* 設定滑出滑回的流暢曲線 */
+  transition: opacity 0.3s ease, 
+              transform 0.35s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+/* 🌟 這是開啟狀態：顯示、不透明、位置歸位 */
+.airbnb-price-dropdown.is-open {
+ opacity: 1;
+  pointer-events: auto;    /* 展開時恢復點擊 */
+  
+  /* 🌟 恢復原本的尺寸與位置 */
+  transform: translateY(0) scaleY(1);
+}
+.picker-container {
+width: 640px; /* 從 720px 縮小 */
+  background-color: #ffffff;
+  border-radius: 14px;
+  padding: 24px 32px; /* 縮小 Padding */
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+  font-family: inherit;
+  cursor: default;
+}
+
+/* 頂部時租/日租切換 */
+.rent-mode-toggle {
+display: inline-flex;
+  background-color: #f7f5f2;
+  border: 1px solid #eadecf;
+  padding: 3px;
+  border-radius: 999px;
+  margin-bottom: 24px;
+}
+.toggle-btn {
+ padding: 6px 20px;
+  font-size: 13px; /* 字體微調 */
+  font-weight: 600;
+  border-radius: 999px;
+  color: #8c827a;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+.toggle-btn.active {
+  background-color: #ffffff;
+  color: #3d352d;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+}
+
+/* 雙欄排版 */
+.picker-main-grid {
+  display: flex;
+  gap: 32px;
+}
+
+/* === 左側日曆 === */
+.calendar-panel {
+  flex: 1.1;
+}
+.calendar-header {
+ display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+.cal-title {
+  font-size: 18px; 
+  font-weight: 500;
+  color: #3d352d;
+  margin: 0;
+  font-family: 'Noto Serif', serif;
+}
+.cal-nav-btn {
+  background: none;
+  border: none;
+  color: #8c827a;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+}
+.cal-nav-btn:hover { color: #3d352d; }
+
+.calendar-weekdays {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  text-align: center;
+  margin-bottom: 8px;
+}
+.weekday-col {
+ font-size: 12px;
+  color: #b0a79f;
+  padding-bottom: 8px;
+  border-bottom: 1px solid #f0ebe6;
+}
+
+.calendar-days-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+ row-gap: 6px;
+  column-gap: 2px; /* 🌟 加上白色縫隙，產生區間斷開的精緻感 */
+  text-align: center;
+}
+/* 🌟 底層：負責繪製淺褐色連線 */
+.day-cell-wrapper {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+ height: 32px;
+}
+
+/* 完全被包圍的日期：整格都是淺色 */
+.day-cell-wrapper.in-range {
+  background-color:#FCECE7; /* 淡淡的溫暖紅褐色 */
+}
+
+/* 起點日期：淺色只從中間往「右邊」長，去牽下一個日期的手 */
+.day-cell-wrapper.range-start::before {
+  content: '';
+  position: absolute;
+  top: 0; bottom: 0; right: 0; left: 50%;
+  background-color: #c78b78;
+  z-index: 1;
+}
+
+/* 終點日期：淺色只從中間往「左邊」長，去接上一個日期的手 */
+.day-cell-wrapper.range-end::before {
+  content: '';
+  position: absolute;
+  top: 0; bottom: 0; left: 0; right: 50%;
+  background-color: #c78b78;
+  z-index: 1;
+}
+
+.day-cell {
+  position: relative;
+  z-index: 2; /* 浮在淺色連線上面 */
+  width: 100%;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  font-weight: 500;
+  color: #3d352d;
+  cursor: pointer;
+  max-width: 36px; /* 預設是一顆圓形 */
+  border-radius: 50%;
+  transition: all 0.2s;
+  margin: 0 auto;
+}
+.day-cell:hover:not(.other-month):not(.selected-day) {
+  background-color: #f7f5f2;
+}
+.day-cell.other-month {
+  color: #dcd7d2;
+  background: transparent !important;
+  cursor: default;
+}
+.day-cell.selected-day {
+  background-color:#924b30; /* 圖片中深邃的紅褐色 */
+  color: #ffffff;
+  box-shadow: 0 4px 10px rgba(146, 75, 48, 0.3);
+  max-width: 100%; /* 讓底色可以填滿整格 */
+}
+
+/* 起點：左邊圓角，右邊平整對齊連線 */
+.day-cell.start-date {
+  border-radius: 50px 0 0 50px;
+}
+
+/* 終點：左邊平整對齊連線，右邊圓角收尾 */
+.day-cell.end-date {
+  border-radius: 0 50px 50px 0;
+}
+/* 單獨選取一天：維持完美圓形 */
+.day-cell.single-select {
+  border-radius: 50%;
+  max-width: 36px;
+}
+
+/* 在區間內的日子：完全填滿不留白，無圓角 */
+.day-cell-wrapper.in-range .day-cell {
+  max-width: 100%;
+  border-radius: 0;
+}
+
+/* === 右側時間設定 === */
+.time-config-panel {
+  flex: 0.9;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding-top: 10px;
+}
+.time-setting-title {
+  font-size: 12px;
+  font-weight: 600;
+  color: #9e6451; /* 標題的紅褐色 */
+  margin-bottom: 16px;
+}
+.time-range-row {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+.time-select-group {
+  flex: 1;
+  position: relative; /* 🌟 確保下拉清單相對於它定位 */
+}
+.time-select-label {
+  display: block;
+  font-size: 12px;
+  color: #7e766d;
+  margin-bottom: 6px;
+  font-weight: 500;
+}
+
+/* 🌟 下拉選單觸發器 (外框) */
+.custom-select-trigger {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 16px;
+  font-weight: 600;
+  color: #3d352d;
+  background-color: #ffffff;
+  border: 1px solid #cfc5bb;
+  border-radius: 5px;
+  padding: 8px 10px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-sizing: border-box; 
+}
+.custom-select-trigger:hover {
+  border-color: #9e6451;
+}
+/* 🌟 點開時的黑色粗框狀態 */
+.custom-select-trigger.active {
+  border: 2px solid #1a1a1a;
+  padding: 7px 9px; /* 抵銷邊框增加的1px，防止畫面抖動 */
+  border-radius: 6px;
+}
+
+.dropdown-icon { 
+  transition: transform 0.2s; 
+  color: #3d352d; 
+}
+.dropdown-icon.rotated { 
+  transform: rotate(180deg); 
+}
+
+/* 🌟 下拉清單本體 */
+.custom-dropdown-list {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 0; right: 0;
+  max-height: 180px;
+  overflow-y: auto;
+  background: #ffffff;
+  border: 1px solid #eadecf;
+  border-radius: 8px;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+  z-index: 50;
+  padding: 8px 0;
+}
+
+/* 🌟 自訂捲軸 (Scrollbar) 樣式 */
+.custom-dropdown-list::-webkit-scrollbar {
+  width: 6px;
+}
+.custom-dropdown-list::-webkit-scrollbar-track {
+  background: transparent;
+  margin: 8px 0;
+}
+.custom-dropdown-list::-webkit-scrollbar-thumb {
+  background: #d8c9bc;
+  border-radius: 10px;
+}
+.custom-dropdown-list::-webkit-scrollbar-thumb:hover {
+  background: #c2b1a3;
+}
+
+/* 🌟 清單項目 */
+.custom-dropdown-item {
+  padding: 8px 12px;
+  font-size: 14px;
+  font-weight: 500;
+  color: #3d352d;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+.custom-dropdown-item:hover { 
+  background-color: #f7f5f2; 
+}
+
+/* 選中狀態高亮 */
+.custom-dropdown-item.selected {
+  background-color: #f7f5f2;
+  color: #924b30;
+  font-weight: 600;
+}
+
+/* 停用狀態 (例如結束時間小於開始時間) */
+.custom-dropdown-item.disabled { 
+  color: #dcd7d2; 
+  cursor: not-allowed; 
+  background: transparent; 
+}
+
+.time-flow-arrow {
+  color: #cfc5bb;
+  margin-top: 24px;
+}
+
+/* === 日/月租說明區塊 === */
+.non-hourly-notice {
+  display: flex;
+  gap: 12px;
+  background-color: #f7f5f2;
+  border: 1px solid rgba(207, 196, 189, 0.4);
+  padding: 16px;
+  border-radius: 8px;
+  margin-top: 8px;
+}
+.notice-icon { color: #d88f7b; }
+.notice-title { font-size: 13px; font-weight: 600; color: #3d352d; margin-bottom: 4px; }
+.notice-desc { font-size: 12px; color: #8c827a; line-height: 1.5; }
+
+/* === 底部摘要 === */
+.selection-summary-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-top: 1px solid #f0ebe6;
+  padding-top: 16px;
+}
+.selection-summary-desc {
+  font-size: 14px;
+  color: #3d352d;
+  font-weight: 500;
+}
+.summary-right-group {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.selection-summary-price {
+  background-color: #f7f5f2;
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #3d352d;
+}
+.btn-apply {
+    /* 🌟 核心調整：強制水平與置中 */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  white-space: nowrap; /* 強制文字不換行 */
+
+  background-color: #3d352d;
+  color: #ffffff;
+  border: none;
+  padding: 10px 32px;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 600; /* 加粗字體，更像按鈕 */
+  cursor: pointer;
+  transition: 0.2s;
+}
+.btn-apply:hover { 
+  background-color: #5c534a; /* Hover 時變淺一點點，質感更好 */
+  box-shadow: 0 4px 8px rgba(61, 53, 45, 0.2);
+}
+.btn-apply:active {
+  transform: translateY(1px); /* 點擊時有一點點按壓效果 */
+}
+/* 🌟 新增：讓摘要區塊變成直式排列 */
+.summary-left-group {
+  display: flex;
+  flex-direction: column; /* 讓文字垂直堆疊 */
+  justify-content: center;
+}
+
+.selection-summary-desc {
+  font-size: 14px;
+  color: #3d352d;
+  font-weight: 600;
+}
+
+.selection-mode-badge {
+  font-size: 12px;
+  color: #8c827a; /* 用較淺的顏色區隔，讓視覺更輕盈 */
+  margin-top: 2px;
+}

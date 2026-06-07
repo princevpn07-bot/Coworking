@@ -1,3 +1,29 @@
+/* 🌟 1. 最外層定位與絲滑動畫 */
+.airbnb-price-dropdown {
+ position: absolute;
+  top: 45px;
+  left: 0;            /* 🌟 靠左對齊，防止被左邊切掉 */
+  width: 420px;       /* 鎖定總寬度 */
+  z-index: 99999;
+  
+  opacity: 0;
+  pointer-events: none;
+  /* 🌟 垂直置中，從左上角往下長 */
+  transform: translateY(-15px) scaleY(0.85);
+  transform-origin: top left;
+  transition: opacity 0.3s ease, transform 0.35s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.airbnb-price-dropdown.is-open {
+  opacity: 1;
+  pointer-events: auto;
+  transform:  translateY(0) scaleY(1);
+}
+/* 🌟 2. 解決 Padding 撐破版面的核心魔法 */
+.airbnb-price-dropdown *, .notification-banner * {
+  box-sizing: border-box;
+  font-family: inherit;
+}
 /* src/index.css - Custom Pure CSS Styling matching 'Natural Sanctuary v2' */
 
 @import url('https://fonts.googleapis.com/css2?family=Noto+Serif:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap');
@@ -32,21 +58,14 @@
   padding: 0;
 }
 
-body {
-  margin: 0;
-  padding: 0;
-  background-color: var(--bg-color-main);
-  color: var(--text-primary);
-  font-family: var(--font-body);
-  overflow: hidden;                     /* 確保底座圓角不*/
-}
+
 
 /* 🌟 2. 把剛才寫錯地方的選單定位與邊框，正式交還給價格下拉選單組件 */
 .airbnb-price-dropdown {
      /* 📍 定位與層級（精準黏在價格按鈕下方 8px，不影響全域 body） */
-
-  top: calc(27% + 8px) !important;     /* 精準黏在價格按鈕下方 8px */
-  left: 36px !important;                  /* 靠左對齊價格按鈕 */
+box-sizing: border-box;
+  font-family: inherit;
+ 
   width: 420px !;             /* 限制選單卡片寬度 */
   z-index: 9999 !important;            /* 層級全開，確保壓在卡片與地圖上方 */
  /* 🎨 完美對齊右圖：大地色調外貌 */
@@ -114,7 +133,7 @@ body {
   width: 100%;
   max-width: 420px;
   background-color: var(--surface-low);
-  border: 1px solid var(--surface-border);
+ 
   border-radius: 16px;
   box-shadow: 0 10px 30px rgba(80, 69, 56, 0.08);
   display: flex;
@@ -291,7 +310,7 @@ body {
   height: 20px;
   width: 20px;
   border-radius: 50%;
-  background-color: var(--primary-color-actual);
+ background-color: #504538 !important; /* 確保把手變成你的深咖啡色 */
   cursor: pointer;
   border: 4px solid var(--bg-color-main);
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
@@ -305,7 +324,8 @@ body {
 
 .native-range-input::-webkit-slider-thumb:active {
   box-shadow: 0 0 0 8px rgba(80, 69, 56, 0.15);
-  background-color: var(--primary-color-actual);
+  background-color: #695c4e !important;
+  transform: scale(1.1);
 }
 
 /* Styles for Firefox handles */
@@ -315,7 +335,7 @@ body {
   height: 20px;
   width: 20px;
   border-radius: 50%;
-  background-color: var(--primary-color-actual);
+background-color: #504538 !important;
   cursor: pointer;
   border: 4px solid var(--bg-color-main);
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
@@ -512,12 +532,13 @@ body {
 }
 
 .apply-submit-btn:hover {
-  background-color: var(--primary-color-hover-actual);
+ background-color: #695c4e; 
   box-shadow: 0 6px 16px rgba(80, 69, 56, 0.15);
 }
 
 .apply-submit-btn:active {
   transform: translateY(1px);
+  background-color: #3d352d; /* 按下去變深 */
 }
 
 /* Notification Dialog standard toast */

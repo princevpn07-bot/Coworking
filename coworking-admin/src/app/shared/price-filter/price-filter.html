@@ -1,23 +1,5 @@
-<!doctype html>
-<html lang="zh-Hant">
 
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Price Filter Menu - Natural Sanctuary</title>
 
-  <!-- Google Fonts for custom refined display typography -->
-  <link
-    href="https://fonts.googleapis.com/css2?family=Noto+Serif:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap"
-    rel="stylesheet" />
-
-  <!-- Beautiful custom external stylesheet separated -->
-  <link rel="stylesheet" href="/src/index.css" />
-</head>
-
-<body>
-  <!-- App Main Context Box -->
-  <div class="airbnb-price-dropdown" [style.display]="isOpen ? 'block' : 'none'">
 
   <div class="notification-banner" [class.visible]="toastVisible">
     <div class="ban-icon">
@@ -30,7 +12,12 @@
       <span class="banner-desc">{{ toastDesc }}</span>
     </div>
   </div>
+  
+<div class="airbnb-price-dropdown" 
+     [class.is-open]="isOpen" 
+     (click)="$event.stopPropagation()">
 
+  <div class="picker-container">
   <div class="filter-card" id="pricing-filter-modal" >
 
     <div class="card-header">

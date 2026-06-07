@@ -24,6 +24,8 @@
 .listing-section__search-bar {
   padding: 1.5rem 2rem;
   border-bottom: 1px solid #cfc5bb;
+  z-index: 9999 !important;     /* 確保層級高於右側地圖與下方列表 */
+  overflow: visible !important;  /* 絕對不能是 hidden，否則彈窗會被切斷看不見 */
 }
 
 .listing-section__feed {
@@ -46,7 +48,7 @@
   display: flex;
   border: 1px solid #cfc5bb;
   border-radius: 4px;
-  overflow: hidden;
+ overflow: visible !important;
   margin-bottom: 1rem;
 }
 
@@ -54,7 +56,7 @@
   flex: 1;
   display: flex;
   align-items: center;
-  padding: 0.75rem 1rem;
+  padding:0.98rem 1rem; /*搜尋的框比例*/
   border-right: 1px solid #cfc5bb;
   background: #ffffff;
 }

@@ -1,13 +1,67 @@
+/* 🌟 彈跳動畫定義 */
+@keyframes menuPopUp {
+  0% {
+   opacity: 0;
+    transform: scaleY(0.85) translateY(-20px); /* 從上方縮小、偏移開始 */
+    transform-origin: top center;            /* 🌟 關鍵：原點在頂部，確保只往下展開 */
+  }
+  100% {
+    opacity: 1;
+    transform: scaleY(1) translateY(0);      /* 恢復原狀 */
+    transform-origin: top center;
+  }
+}
+
+
+/* 🌟 這是預設(關閉)狀態：隱藏、透明、位置偏上 */
+.airbnb-price-dropdown {
+position: absolute;
+  top: 45px;
+  left: 0;
+  width: 560px;
+  z-index: 99999;
+  
+  /* 動畫設定 */
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(-15px) scaleY(0.85);
+  transform-origin: top center;
+  transition: opacity 0.3s ease, transform 0.35s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+/* 🌟 這是開啟狀態：顯示、不透明、位置歸位 */
+.airbnb-price-dropdown.is-open {
+ opacity: 1;
+  pointer-events: auto;    /* 展開時恢復點擊 */
+  
+  /* 🌟 恢復原本的尺寸與位置 */
+  transform: translateY(0) scaleY(1);
+}
+
+/* 🌟 這是補上的卡片白底與邊框設定 */
+.picker-container {
+width: 560px; /* 外層白色卡片的總寬度 */
+  background: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 12px 30px rgba(0,0,0,0.15);
+  padding: 16px;
+  cursor: default;
+  
+  /* 👇 這是讓內容水平置中的關鍵 */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
 /* location-filter.component.css */
 
 .loc-filter-card {
   font-family: 'Noto Serif TC', serif;
   background-color: #fef8f6;
   border: 1px solid #cfc5bb;
-  border-radius: 12px;
+  border-radius: 10px;
   width: 100%;
-  max-width: 680px;
-  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.03);
+  max-width: 600px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
   overflow: hidden;
   margin: 0 auto;
 
@@ -21,24 +75,47 @@
   width: 100%;
   max-width: 500px; /* 👈 把原本可能設定的 600px~700px 縮小到 520px 左右 */
   max-height: 80vh; /* 限制最高只佔螢幕高度的 80%，防呆 */
-  padding: 16px;
+  padding:  8px;
   margin: 0 auto;
 overflow: hidden; /* 防止內容溢出邊角 */
   
   
 }
+
+
 .loc-section-title-row {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 20px;
+  margin-bottom: 12px;
   width: 100%;
+ 
 }
 
 
 .loc-section {
-  margin-bottom: 36px;
+  width: 100%;
+  max-width: 520px;
   
+  margin-bottom: 18px;
+  
+}
+.loc-filter-footer {
+  width: 100%;
+  max-width: 520px !important; /* 限制內容的完美寬度 */
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
+/* 🌟 (選擇性) 如果你希望地區卡片也置中對齊，可以補上這行 */
+.loc-region-grid {
+ display: flex;
+  gap: 16px;
+  overflow-x: auto;
+  scroll-behavior: smooth;
+  padding: 10px 4px;  /* 🌟 將 padding 增加，避免卡片貼邊被切到 */
+  
+  
+  -webkit-overflow-scrolling: touch;
 }
 
 .loc-section:last-child {
@@ -50,10 +127,11 @@ overflow: hidden; /* 防止內容溢出邊角 */
   justify-content: space-between;
   align-items: center;
   margin-bottom: 20px;
+  
 }
 
 .loc-section-title {
-  font-size: 20px;
+  font-size: 16px;
   font-weight: 500;
   color: #1d1b1a;
   margin: 0;
@@ -61,14 +139,10 @@ overflow: hidden; /* 防止內容溢出邊角 */
 
 /* 控制轉盤與按紐 */
 .loc-chevron-group {
-  display: flex;
-  gap: 8px;
-  
-  /* 🌟 核心修正：強制把左邊所有剩餘空間當作外距，將按鈕推至最右側 */
-  margin-left: auto; 
-  
-  /* 🌟 防擠壓：確保在台北線路很多時，箭頭本身絕對不會被擠扁變形 */
-  flex-shrink: 0;
+ display: flex;
+  gap: 4px;
+  margin-left: 12px; /* 給標題與箭頭一點距離 */
+  flex-shrink: 0;   /* 關鍵：強制這群按鈕不準被標題壓縮 */
 }
 
 .loc-btn-chevron {
@@ -167,28 +241,30 @@ overflow: hidden; /* 防止內容溢出邊角 */
 }
 
 .loc-region-name {
-  font-size: 15px;
+  font-size: 13px;
   color: #1d1b1a;
   font-weight: 400;
+  
 }
 
 /* 頁籤清單 */
 .loc-tabs-row {
   display: flex;
+  
   gap: 24px;
   border-b: 1px solid #cfc5bb;
-  margin-bottom: 24px;
+  margin-bottom: 4px;
   padding-bottom: 0;
   width: 100%; /* 確保橫列撐滿卡片寬度 */
 }
 
 .loc-tab-btn {
-  font-size: 15px;
+  font-size: 13px;
   color: #7e766d;
   background: transparent;
   border: none;
   cursor: pointer;
-  padding-bottom: 10px;
+  padding-bottom: 8px;
   position: relative;
   transition: color 0.2s ease;
 }
@@ -205,7 +281,7 @@ overflow: hidden; /* 防止內容溢出邊角 */
 .loc-tab-btn.active::after {
   content: '';
   position: absolute;
-  bottom: -1px;
+  bottom: 0px;
   left: 0;
   right: 0;
   height: 2px;
@@ -231,14 +307,14 @@ overflow: hidden; /* 防止內容溢出邊角 */
   display: none;               /* Chrome, Safari, Opera */
 }
 /* 網格選項 */
-.loc-district-grid {
+.loc-district-grid,.loc-mrt-grid {
   display: grid;
  
 
-  grid-template-rows: repeat(2, 34px); /* 🌟 強制固定剛好 2 行按鈕的高度 */
+  grid-template-rows: repeat(2, 32px); /* 🌟 強制固定剛好 2 行按鈕的高度 */
   grid-auto-flow: column;              /* 🌟 關鍵：當按鈕變多時，不往下掉，而是自動往右邊橫向排下去 */
-  grid-auto-columns: calc((100% - 36px) / 4); /* 🌟 確保一畫面剛好呈現 4 欄 (扣除 gap) */
-  gap: 13px;
+  grid-auto-columns: calc((100% - 43px) / 4); /* 🌟 確保一畫面剛好呈現 4 欄 (扣除 gap) */
+  gap: 12px;
   padding: 2px 0;
 }
 
@@ -246,15 +322,22 @@ overflow: hidden; /* 防止內容溢出邊角 */
   background-color: #f2edea;
   color: #1d1b1a;
   border: none;
-  border-radius: 6px;
-  padding: 6px 12px;
-  font-size: 12px;
+  border-radius: 4px;
+  padding: 6px 8px; /* 稍微增加一點上下內距 */
+  font-size: 12.5px;
   cursor: pointer;
   transition: all 0.2s ease;
-  text-align: center;
+  
+  /* 🌟 新增：讓按鈕內的文字達成水平與垂直的絕對置中 */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  width: 100%;
+  margin: 0;
 }
 
 .loc-btn-option:hover {
@@ -266,30 +349,26 @@ overflow: hidden; /* 防止內容溢出邊角 */
   color: #ffffff;
 }
 
-/* 捷運網格專屬 */
-.loc-mrt-grid {
-  display: grid;
- grid-template-rows: repeat(2, 34px); /* 🌟 強制固定剛好 2 行按鈕的高度 */
-  grid-auto-flow: column;              /* 🌟 關鍵：往右橫向排列 */
-  grid-auto-columns: calc((100% - 34px) / 4); /* 🌟 確保一畫面剛好呈現 4 欄 */
-  gap: 13px;
-  padding: 2px 0;
-}
+
 
 @media (max-width: 580px) {
   /* 🌟 手機板時，讓每頁呈現 2 個半（2.5個），提示使用者後面還可以滑動 */
   .loc-region-card {
-    width: calc((100% - (12px * 2)) / 2.5); 
+    padding: 8px; /* 縮小 padding */
+  width: calc((100% - 36px) / 4);
   }
   .loc-region-grid {
     grid-template-columns: repeat(2, 1fr);
   }
-  .loc-district-grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-  .loc-mrt-grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
+.loc-district-grid, .loc-mrt-grid {
+  display: grid;
+  grid-template-rows: repeat(2, 32px); /* 固定 2 行，高度 30px */
+  grid-auto-flow: column;              /* 橫向排列 */
+  grid-auto-columns: 100px;            /* 🌟 關鍵修正：給每個欄位固定 110px 寬度 */
+  row-gap: 12px;     /* 加大垂直間距，讓兩排不會擠在一起 */
+  gap: 6px;                            /* 間距縮小 */
+  padding: 4px 0;
+}
   .loc-filter-header {
     flex-direction: column;
     gap: 16px;
