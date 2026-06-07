@@ -73,11 +73,8 @@
   background: #3D5A35;
 }
 
-/* Dashboard Layout */
-.dashboard-layout {
-  display: grid;
-  grid-template-columns: 1.8fr 1fr;
-  gap: 24px;
+.expiring-section,
+.pending-section {
   margin-bottom: 24px;
 }
 
@@ -152,83 +149,62 @@
   padding-top: 12px;
 }
 
-/* Activity List */
-.activity-list {
-  list-style: none;
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-}
-
-.activity-item {
-  display: flex;
-  align-items: flex-start;
-  gap: 16px;
-}
-
-.activity-icon {
-  width: 40px;
-  height: 40px;
-  border-radius: 10px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-}
-
-.activity-icon .material-symbols-outlined { font-size: 20px; }
-.activity-icon.bg-green-soft { background: #E8F5E9; color: #2E7D32; }
-.activity-icon.bg-red-soft { background: #FFEBEE; color: #C62828; }
-.activity-icon.bg-blue-soft { background: #E3F2FD; color: #1565C0; }
-
-.activity-content { flex: 1; }
-.activity-text { font-size: 14px; margin-bottom: 2px; }
-.activity-meta { font-size: 12px; color: #5C5E61; }
-
-.activity-time {
-  font-size: 12px;
+/* Expiring Contracts Table */
+.section-hint {
+  font-size: 13px;
   color: #5C5E61;
-  white-space: nowrap;
 }
 
-/* Team Notes */
-.notes-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 20px;
-  margin-top: 24px;
+.expiring-table {
+  width: 100%;
+  border-collapse: collapse;
 }
 
-.note-card {
-  padding: 20px;
-  border-radius: 12px;
-  border-left: 6px solid transparent;
+.expiring-table th {
+  text-align: left;
+  font-size: 13px;
+  font-weight: 600;
+  color: #5C5E61;
+  padding: 10px 16px;
+  border-bottom: 1px solid #dadada;
 }
 
-.note-card.note-priority {
-  background-color: #FFFDE7;
-  border-left-color: #FBC02D;
-}
-
-.note-card.note-priority .note-tag { color: #F57F17; }
-
-.note-card.note-client {
-  background-color: #E3F2FD;
-  border-left-color: #2196F3;
-}
-
-.note-card.note-client .note-tag { color: #1565C0; }
-
-.note-header {
-  display: flex;
-  justify-content: space-between;
-  margin-bottom: 12px;
-  font-size: 12px;
-  font-weight: 700;
-}
-
-.note-body {
+.expiring-table td {
   font-size: 14px;
-  line-height: 1.5;
+  padding: 14px 16px;
+  border-bottom: 1px solid #f0f0f0;
   color: #1A1C1E;
+}
+
+.expiring-table tbody tr:last-child td { border-bottom: none; }
+.expiring-table tbody tr:hover { background: #f9f9f9; }
+
+.days-badge {
+  display: inline-block;
+  padding: 3px 10px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.days-badge.urgent { background: #F9DEDC; color: #B3261E; }
+.days-badge.warning { background: #FFFDE7; color: #F57F17; }
+.days-badge.normal { background: #E8F5E9; color: #2E7D32; }
+
+.status-badge {
+  display: inline-block;
+  padding: 3px 10px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.status-badge.paid { background: #D1E1FF; color: #004A77; }
+.status-badge.pending { background: #E0E2EC; color: #44474E; }
+
+.empty-row {
+  text-align: center;
+  color: #5C5E61;
+  padding: 32px 0;
+  font-size: 14px;
 }

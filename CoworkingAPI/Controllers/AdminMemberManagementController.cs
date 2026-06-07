@@ -63,12 +63,52 @@ namespace CoworkingAPI.Controllers
             return Ok(memberpage);
         }
 
+        [HttpGet("locations")]
+        public async Task<IActionResult> GetLocations()
+        {
+            var locations = await _context.Locations
+                .Select(l => new { l.location_id, l.city, l.address })
+                .ToListAsync();
+            return Ok(locations);
+        }
+
         [HttpPatch("updaterole/{id}/{role}")]
-        public async Task<IActionResult> UpdateRole(int id, int role)
+        public async Task<IActionResult> UpdateRole(int id, int role, [FromBody] UpdateRoleDto? dto)
         {
             var user = await _context.Users.FindAsync(id);
             if (user == null) return NotFound("找不到該會員");
             user.role = role;
+
+            if (role == 80 || role == 99)
+            {
+                var employee = await _context.Employees.FirstOrDefaultAsync(e => e.user_id == id);
+                if (employee == null)
+                {
+                    _context.Employees.Add(new Employee
+                    {
+                        user_id = id,
+                        department = dto?.Department,
+                        job_title = dto?.JobTitle,
+                        location_id = dto?.LocationId,
+                        birth = dto?.Birth,
+                        is_active = true
+                    });
+                }
+                else
+                {
+                    if (dto?.Department != null) employee.department = dto.Department;
+                    if (dto?.JobTitle != null) employee.job_title = dto.JobTitle;
+                    if (dto?.LocationId != null) employee.location_id = dto.LocationId;
+                    if (dto?.Birth != null) employee.birth = dto.Birth;
+                    employee.is_active = true;
+                }
+            }
+            else if (role == 20)
+            {
+                var employee = await _context.Employees.FirstOrDefaultAsync(e => e.user_id == id);
+                if (employee != null) employee.is_active = false;
+            }
+
             await _context.SaveChangesAsync();
             return NoContent();
         }
@@ -122,6 +162,21 @@ namespace CoworkingAPI.Controllers
             };
             _context.Users.Add(newUser);
             await _context.SaveChangesAsync();
+
+            if (dto.Role == 80 || dto.Role == 99)
+            {
+                _context.Employees.Add(new Employee
+                {
+                    user_id = newUser.user_id,
+                    department = dto.Department,
+                    job_title = dto.JobTitle,
+                    location_id = dto.LocationId,
+                    birth = dto.Birth,
+                    is_active = true
+                });
+                await _context.SaveChangesAsync();
+            }
+
             return CreatedAtAction(nameof(memberpage), newUser);
         }
     }

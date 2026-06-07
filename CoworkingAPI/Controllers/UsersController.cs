@@ -93,12 +93,22 @@ namespace CoworkingAPI.Controllers
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretkey!));
             var crypt = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
+            string? locationIdClaim = null;
+            if (user.role == 80 || user.role == 99)
+            {
+                var employee = await _context.Employees
+                    .FirstOrDefaultAsync(e => e.user_id == user.user_id && e.is_active == true);
+                if (employee?.location_id != null)
+                    locationIdClaim = employee.location_id.ToString();
+            }
+
             var claims = new[]
             {
                 new Claim(JwtRegisteredClaimNames.Sub, user.email!),
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
                 new Claim(ClaimTypes.Role, user.role.ToString()!),
-                new Claim("user_id", user.user_id.ToString())
+                new Claim("user_id", user.user_id.ToString()),
+                new Claim("location_id", locationIdClaim ?? "")
             };
 
             var token = new JwtSecurityToken(

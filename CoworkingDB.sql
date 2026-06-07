@@ -98,15 +98,15 @@ CREATE TABLE [dbo].[rents] (
 );
 GO
 
--- 8. 建立報修清單 (fix_list)
-CREATE TABLE [dbo].[fix_list] (
-    [fix_id]          INT           IDENTITY (1, 1) NOT NULL,
-    [space_id]        INT           NULL,
-    [category]        NVARCHAR (50) NULL,
-    [create_date]     DATETIME      NULL,
-    [completion_date] DATETIME      NULL,
-    [is_active]       BIT           NULL,
-    CONSTRAINT [PK_fix_list] PRIMARY KEY CLUSTERED ([fix_id] ASC)
+-- 8. 建立報廢清單 (scrap_list)
+CREATE TABLE [dbo].[scrap_list] (
+    [scrap_id]     INT           IDENTITY (1, 1) NOT NULL,
+    [space_id]     INT           NULL,
+    [equipment_id] INT           NULL,
+    [amount]       INT           NULL,
+    [reason]       NVARCHAR (50) NULL,
+    [create_date]  DATETIME      NULL,
+    CONSTRAINT [PK_fix_list] PRIMARY KEY CLUSTERED ([scrap_id] ASC)
 );
 GO
 

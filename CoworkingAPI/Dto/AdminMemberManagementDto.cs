@@ -32,6 +32,14 @@ namespace CoworkingAPI.Dto
         public string? LineId { get; set; }
     }
 
+    public class UpdateRoleDto
+    {
+        public string? Department { get; set; }
+        public string? JobTitle { get; set; }
+        public int? LocationId { get; set; }
+        public DateOnly? Birth { get; set; }
+    }
+
     public class CreateMemberDto
     {
         public string? Name { get; set; }
@@ -41,5 +49,9 @@ namespace CoworkingAPI.Dto
             ErrorMessage = "密碼至少 6 位，需包含大寫、小寫字母及特殊符號")]
         public string? Password { get; set; }
         public int? Role { get; set; }
+        public string? Department { get; set; }
+        public string? JobTitle { get; set; }
+        public int? LocationId { get; set; }
+        public DateOnly? Birth { get; set; }
     }
 }

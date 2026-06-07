@@ -73,6 +73,15 @@ export class AuthService
     return id ? parseInt(id) : null;
   }
 
+  getLocationId(): number | null
+  {
+    const token = this.gettoken();
+    if (!token) return null;
+    const payload = JSON.parse(atob(token.split('.')[1]));
+    const id = payload['location_id'];
+    return id ? parseInt(id) : null;
+  }
+
   isLoggedIn(): boolean
   {
     return !!this.gettoken();

@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { CreateUserPayload, MemberPageData } from '../models/member.model';
+import { CreateUserPayload, LocationOption, MemberPageData, UpdateRolePayload } from '../models/member.model';
 
 @Injectable({
   providedIn: 'root',
@@ -19,8 +19,12 @@ export class MemberService {
     return this.http.post(`${this.apiUrl}/createuser`, payload);
   }
 
-  updateRole(userId: number, role: number): Observable<unknown> {
-    return this.http.patch(`${this.apiUrl}/updaterole/${userId}/${role}`, {});
+  updateRole(userId: number, role: number, employeeData?: UpdateRolePayload): Observable<unknown> {
+    return this.http.patch(`${this.apiUrl}/updaterole/${userId}/${role}`, employeeData ?? {});
+  }
+
+  getLocations(): Observable<LocationOption[]> {
+    return this.http.get<LocationOption[]>(`${this.apiUrl}/locations`);
   }
 
   resetPassword(userId: number): Observable<unknown> {

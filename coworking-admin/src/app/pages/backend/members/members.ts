@@ -2,7 +2,7 @@ import { Component, OnInit, inject, signal, ChangeDetectorRef } from '@angular/c
 import { FormsModule } from '@angular/forms';
 import { MemberService } from '../../../services/member';
 import { AuthService } from '../../../services/auth';
-import { CreateUserPayload, MemberItem, MemberPageData } from '../../../models/member.model';
+import { CreateUserPayload, LocationOption, MemberItem, MemberPageData } from '../../../models/member.model';
 
 @Component({
   selector: 'app-members',
@@ -45,6 +45,8 @@ export class Members implements OnInit {
     return { name: '', email: '', password: '', phone: '', role: 20 };
   }
 
+  get isNewUserStaffRole(): boolean { return this.newUser.role === 80 || this.newUser.role === 99; }
+
   private avatarColorList = ['', 'bg-green', 'bg-blue', 'bg-purple', 'bg-orange', 'bg-red'];
 
   ngOnInit() {
@@ -84,6 +86,9 @@ export class Members implements OnInit {
     this.newUser = this.emptyUser();
     this.submitError.set('');
     this.showCreateModal.set(true);
+    if (this.locations.length === 0) {
+      this.memberService.getLocations().subscribe({ next: (locs) => { this.locations = locs; } });
+    }
   }
 
   closeCreateModal(): void {
@@ -106,12 +111,20 @@ export class Members implements OnInit {
   // ── Change Role ──────────────────────────────────────────────────────────────
   readonly showRoleModal = signal(false);
   pendingRole = 20;
+  locations: LocationOption[] = [];
+  employeeForm = { department: '', jobTitle: '', locationId: null as number | null, birth: '' };
+
+  get isStaffRole(): boolean { return this.pendingRole === 80 || this.pendingRole === 99; }
 
   openRoleModal(member: MemberItem): void {
     this.selectedMember = member;
     this.pendingRole = this.roleValue(member.role);
+    this.employeeForm = { department: '', jobTitle: '', locationId: null, birth: '' };
     this.actionError.set('');
     this.showRoleModal.set(true);
+    if (this.locations.length === 0) {
+      this.memberService.getLocations().subscribe({ next: (locs) => { this.locations = locs; } });
+    }
   }
 
   closeRoleModal(): void { this.showRoleModal.set(false); }
@@ -119,7 +132,13 @@ export class Members implements OnInit {
   submitRoleChange(): void {
     if (!this.selectedMember?.userId) return;
     this.actionSubmitting.set(true);
-    this.memberService.updateRole(this.selectedMember.userId, this.pendingRole).subscribe({
+    const employeeData = this.isStaffRole ? {
+      department: this.employeeForm.department || undefined,
+      jobTitle: this.employeeForm.jobTitle || undefined,
+      locationId: this.employeeForm.locationId ?? undefined,
+      birth: this.employeeForm.birth || undefined,
+    } : undefined;
+    this.memberService.updateRole(this.selectedMember.userId, this.pendingRole, employeeData).subscribe({
       next: () => { this.actionSubmitting.set(false); this.closeRoleModal(); this.loadMemberPage(); },
       error: (err) => { this.actionError.set(err?.error ?? '更新失敗'); this.actionSubmitting.set(false); },
     });
