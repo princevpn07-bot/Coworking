@@ -2,6 +2,7 @@ import { Component, HostListener, OnInit } from '@angular/core';
 import { Router, RouterLink, RouterLinkActive } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { AuthService } from '../../services/auth';
+import { ProfileService } from '../../services/profile';
 
 @Component({
   selector: 'app-frontend-header',
@@ -13,13 +14,28 @@ export class FrontendHeader implements OnInit {
   isLoggedIn = false;
   username = '';
   showDropdown = false;
+  avatarUrl = '';
 
-  constructor(private auth: AuthService, private router: Router) {}
+  constructor(private auth: AuthService, private router: Router, private profileService: ProfileService) {}
 
   ngOnInit() {
     this.isLoggedIn = this.auth.isLoggedIn();
     if (this.isLoggedIn) {
       this.username = this.auth.getUsername();
+
+      this.profileService.avatar$.subscribe(url => {
+        this.avatarUrl = url;
+      });
+
+      // 🌟 2. 初始載入時主動撈取一次，確保還沒點進個人資料頁前也能在右上角顯示圖片
+      this.profileService.getProfile().subscribe({
+        next: (data: any) => {
+          if (data && data.image) {
+            this.profileService.updateAvatarStream(data.image);
+          }
+        },
+        error: (err) => console.error('導覽列自動獲取頭貼失敗', err)
+      });
     }
   }
 

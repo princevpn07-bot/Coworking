@@ -15,6 +15,8 @@ import { SpaceDetail } from './pages/frontend/space-detail/space-detail';
 import { Register } from './pages/auth/register/register';
 import { MyOrders } from './pages/frontend/my-orders/my-orders';
 import { PaymentComponent } from './pages/frontend/payment-component/payment-component';
+import { UserProfile } from './pages/frontend/user-profile/user-profile';
+
 
 export const routes: Routes = [
   {
@@ -26,7 +28,8 @@ export const routes: Routes = [
       { path: 'space/:id', component: SpaceDetail },
       { path: 'my-orders', component: MyOrders },
       { path: 'payment', component: PaymentComponent },
-      { path: 'space-detail/:id', component:  SpaceDetail }
+      { path: 'space-detail/:id', component:  SpaceDetail },
+      { path: 'user-profile', component: UserProfile }
       
     ]
   },

@@ -1,0 +1,278 @@
+<div class="profile-page-canvas">
+  
+  <div class="profile-sidebar-zone">
+    <div class="sidebar-header-block">
+      <h2 class="page-main-title">個人資料</h2>
+      <p class="page-description-text">
+        管理您的工作空間身份。更新您的專業資訊與聯絡方式，以確保在 WorkspaceCollective 社群中的最佳體驗。
+      </p>
+    </div>
+    
+    <nav class="sidebar-nav-container">
+      <a (click)="scrollToSection('basic', $event)" class="nav-anchor-link" [class.active]="activeSection === 'basic'">
+        <span class="material-symbols-outlined" [class.icon-filled]="activeSection === 'basic'">person</span>
+        <span>基本資料</span>
+      </a>
+      <a (click)="scrollToSection('contact', $event)" class="nav-anchor-link" [class.active]="activeSection === 'contact'">
+        <span class="material-symbols-outlined" [class.icon-filled]="activeSection === 'contact'">mail</span>
+        <span>聯絡資訊</span>
+      </a>
+      <a (click)="scrollToSection('professional', $event)" class="nav-anchor-link" [class.active]="activeSection === 'professional'">
+        <span class="material-symbols-outlined" [class.icon-filled]="activeSection === 'professional'">work</span>
+        <span>專業背景</span>
+      </a>
+      <a (click)="scrollToSection('security', $event)" class="nav-anchor-link" [class.active]="activeSection === 'security'">
+        <span class="material-symbols-outlined" [class.icon-filled]="activeSection === 'security'">shield</span>
+        <span>帳號安全</span>
+      </a>
+    </nav>
+  </div>
+
+  <form (ngSubmit)="onSubmit()" class="profile-form-canvas">
+    
+    <section class="form-content-section" id="basic">
+      <h2 class="section-serif-heading">基本資料</h2>
+      <div class="avatar-and-fields-row">
+        
+        <div class="profile-avatar-wrapper" (click)="isEditMode && !isImageLoading && fileInput.click()">
+          <div class="avatar-image-frame" style="position: relative;"> 
+            <img [src]="profile.avatarUrl" alt="Profile avatar" />
+            
+            <div class="avatar-loading-overlay" *ngIf="isImageLoading">
+              <div class="avatar-spinner"></div>
+              <span class="loading-text">讀取中</span>
+            </div>
+          </div>
+          
+          <div class="avatar-camera-badge" *ngIf="isEditMode && !isImageLoading">
+            <span class="material-symbols-outlined">photo_camera</span>
+          </div>
+        </div>
+
+        <div class="avatar-crop-controller" *ngIf="isEditMode && rawImageBase64">
+          <div class="slider-item">
+            <label class="crop-slider-label">
+              <span class="material-symbols-outlined">zoom_in</span>
+              圖片放大縮小
+            </label>
+            <input type="range" min="100" max="300" [(ngModel)]="avatarScale" (input)="bakeCroppedImage()" name="avatarScale" class="luxury-crop-slider" />
+          </div>
+
+          <div class="slider-item">
+            <label class="crop-slider-label">
+              <span class="material-symbols-outlined">swap_horiz</span>
+              左右位置調整
+            </label>
+            <input type="range" min="0" max="100" [(ngModel)]="avatarPositionX" (input)="bakeCroppedImage()" name="avatarPositionX" class="luxury-crop-slider" />
+          </div>
+
+          <div class="slider-item">
+            <label class="crop-slider-label">
+              <span class="material-symbols-outlined">unfold_more</span>
+              上下位置調整
+            </label>
+            <input type="range" min="0" max="100" [(ngModel)]="avatarPositionY" (input)="bakeCroppedImage()" name="avatarPositionY" class="luxury-crop-slider" />
+          </div>
+        </div>
+
+        <input 
+          type="file" 
+          #fileInput 
+          style="display: none;" 
+          accept="image/*" 
+          (change)="onFileSelected($event)" />
+  
+        <div class="fields-grid-container">
+          <div class="input-field-group">
+            <label class="field-uppercase-label">名字</label>
+            <input 
+              type="text" 
+              class="theme-text-input" 
+              name="firstName" 
+              [(ngModel)]="profile.firstName" 
+              required
+              [disabled]="!isEditMode" />
+          </div>
+
+          <div class="input-field-group">
+            <label class="field-uppercase-label">姓氏</label>
+            <input 
+              type="text" 
+              class="theme-text-input" 
+              name="lastName" 
+              [(ngModel)]="profile.lastName" 
+              required
+              [disabled]="!isEditMode" />
+          </div>
+
+          <div class="input-field-group span-two-columns">
+            <label class="field-uppercase-label">個人簡介</label>
+            <textarea 
+              class="theme-textarea-input" 
+              rows="4" 
+              name="bio"
+              [(ngModel)]="profile.bio"
+              [disabled]="!isEditMode"></textarea>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="form-content-section" id="contact">
+      <h2 class="section-serif-heading">聯絡資訊</h2>
+      <div class="fields-grid-container">
+        <div class="input-field-group">
+          <label class="field-uppercase-label">電子郵件</label>
+          <input 
+            type="email" 
+            class="theme-text-input" 
+            name="email"
+            [(ngModel)]="profile.email" 
+            required
+            [disabled]="!isEditMode" />
+        </div>
+
+        <div class="input-field-group">
+          <label class="field-uppercase-label">電話號碼</label>
+          <input 
+            type="tel" 
+            class="theme-text-input" 
+            name="phone"
+            [(ngModel)]="profile.phone"
+            [disabled]="!isEditMode" />
+        </div>
+        
+        <div class="input-field-group span-two-columns">
+          <label class="field-uppercase-label">地址</label>
+          <input 
+            type="text" 
+            class="theme-text-input" 
+            name="address"
+            [(ngModel)]="profile.address"
+            [disabled]="!isEditMode" />
+        </div>
+
+        <div class="input-field-group span-two-columns">
+          <label class="field-uppercase-label">LINE ID</label>
+          <div class="addon-input-row">
+            <span class="addon-prefix-box">LINE ID:</span>
+            <input 
+              type="text" 
+              class="addon-pure-input" 
+              name="lineId"
+              [(ngModel)]="profile.lineId"
+              [disabled]="!isEditMode" />
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="form-content-section" id="professional">
+      <h2 class="section-serif-heading">專業背景</h2>
+      <div class="fields-grid-container">
+        <div class="input-field-group span-two-columns">
+          <label class="field-uppercase-label">公司名稱</label>
+          <input 
+            type="text" 
+            class="theme-text-input" 
+            name="companyName"
+            [(ngModel)]="profile.companyName"
+            [disabled]="!isEditMode" />
+        </div>
+
+        <div class="input-field-group">
+          <label class="field-uppercase-label">職位</label>
+          <input 
+            type="text" 
+            class="theme-text-input" 
+            name="jobTitle"
+            [(ngModel)]="profile.jobTitle"
+            [disabled]="!isEditMode" />
+        </div>
+
+        <div class="input-field-group">
+          <label class="field-uppercase-label">產業</label>
+          <div class="custom-select-box" [class.open]="isDropdownOpen" [class.disabled]="!isEditMode">
+            
+            <div class="theme-select-input" (click)="isEditMode && toggleDropdown()">
+              {{ profile.industry || '建築與設計' }}
+            </div>
+            
+            <span class="material-symbols-outlined select-chevron-icon">expand_more</span>
+
+            <ul class="custom-dropdown-list" *ngIf="isEditMode && isDropdownOpen">
+              <li (click)="selectOption('建築與設計')">建築與設計</li>
+              <li (click)="selectOption('科技')">科技</li>
+              <li (click)="selectOption('藝術')">藝術</li>
+              <li (click)="selectOption('娛樂及休閒服務業')">娛樂及休閒服務業</li>
+              <li (click)="selectOption('教育業')">教育業</li>
+              <li (click)="selectOption('金融及保險業')">金融及保險業</li>
+              <li (click)="selectOption('批發及零售業')">批發及零售業</li>
+              <li (click)="selectOption('製造業')">製造業</li>
+              <li (click)="selectOption('其他')">其他</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="form-content-section" id="security">
+      <h2 class="section-serif-heading">帳號安全</h2>
+      <div class="security-card-panel">
+        <div class="security-row-item border-bottom-line">
+          <div class="security-info-meta">
+            <h3 class="security-item-title">密碼變更</h3>
+            <p class="security-item-subtitle">上次更新於 {{ profile.passwordLastUpdated || '3 個月前' }}</p>
+          </div>
+          <button type="button" class="btn-theme-outline">更新密碼</button>
+        </div>
+
+        <div class="security-row-item">
+          <div class="security-info-meta">
+            <h3 class="security-item-title">雙重認證 (2FA)</h3>
+            <p class="security-item-subtitle">為您的帳號增加額外的安全層級。</p>
+          </div>
+          <button type="button" class="ui-toggle-switch" [class.is-on]="profile.twoFactorEnabled" (click)="profile.twoFactorEnabled = !profile.twoFactorEnabled">
+            <span class="ui-toggle-handle"></span>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <div class="form-submit-actions">
+      <ng-container *ngIf="isEditMode">
+        <button type="button" class="btn-action-cancel" (click)="onCancel()">
+          取消
+        </button>
+        <button type="submit" class="btn-action-save">
+          儲存變更
+        </button>
+      </ng-container>
+      
+      <ng-container *ngIf="!isEditMode">
+        <button type="button" class="btn-action-save" (click)="enterEditMode()">
+          更改資料
+        </button>
+      </ng-container>
+    </div>
+
+    <div class="luxury-modal-overlay" [class.active]="showSuccessToast" (click)="showSuccessToast = false">
+      <div class="luxury-center-card" [class.active]="showSuccessToast" (click)="$event.stopPropagation()">
+        <div class="luxury-icon-wrapper">
+          <div class="luxury-icon-glow"></div>
+          <div class="luxury-icon-core">
+            <span class="material-symbols-outlined icon-filled">check</span>
+          </div>
+        </div>
+        <div class="luxury-text-package">
+          <h3 class="luxury-brand-title">儲存成功</h3>
+          <div class="luxury-divider-line"></div>
+          <p class="luxury-brand-subtitle">您的最新個人簡介與專業背景已完美同步。</p>
+        </div>
+        <button type="button" class="btn-luxury-action" (click)="showSuccessToast = false">
+          確認並返回
+        </button>
+      </div>
+    </div>
+  </form>
+</div>

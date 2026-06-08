@@ -1,0 +1,824 @@
+:host { display: block; background-color: #fef8f6; }
+::selection {
+  background: #695c4e; /* 你的品牌主色 */
+  color: #ffffff;
+}
+
+/* 🌟 最外層畫布：完美對齊 1440px 寬度與高階邊距 */
+.profile-page-canvas {
+  display: flex;
+  flex-direction: row;
+  gap: 6rem; /* gap-24 (96px) 確保呼吸空間 */
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 4rem 4rem 4rem 4rem;
+  width: 100%;
+}
+
+@media (max-width: 1024px) {
+  .profile-page-canvas {
+    gap: 3rem;
+    padding: 2rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .profile-page-canvas {
+    flex-direction: column;
+    gap: 3rem;
+  }
+}
+
+/* 🌟 左側邊欄佈局與經典文字 */
+.profile-sidebar-zone {
+  width: 16rem; /* w-64 (256px) */
+  flex-shrink: 0;
+
+  /* 🌟 核心修正：讓選單釘在畫面上 */
+  position: sticky;          /* 啟用圖層固定功能 */
+  top: 120px;                /* 釘住時距離瀏覽器頂部的距離（剛好避開 80px 的 Navbar） */
+  align-self: flex-start;    /* ⚠️ 超級關鍵：防止 Flex 容器把邊欄拉到跟右邊表單一樣高，否則固定會失效 */
+
+}
+
+.page-main-title {
+  font-family: "Libre Caslon Text", Georgia, serif;
+  font-size: 30px;
+  font-weight: 400;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  color: #1d1b1a;
+  margin: 0 0 1rem 0;
+}
+
+.page-description-text {
+  font-family: "Source Serif 4", Georgia, serif;
+  font-size: 14px;
+  line-height: 1.5;
+  color: #4c463e;
+  opacity: 0.8;
+  max-width: 20rem;
+  margin: 0 0 3rem 0;
+}
+
+/* 經典側邊導覽 */
+.sidebar-nav-container {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.nav-anchor-link {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+ padding: 1.25rem 0 1.25rem 1.25rem;
+  color: #4c463e;
+  text-transform: uppercase;
+  font-family: "Work Sans", sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  letter-spacing: 0.15em;
+  text-decoration: none;
+  transition: all 0.3s ease;
+
+  /* 🌟 核心修正：強制讓滑鼠移過去時變成點擊的手掌圖示 */
+  cursor: pointer;
+}
+/* 🌟 讓圖標也跟著變大，保持與文字的比例平衡 */
+.nav-anchor-link .material-symbols-outlined {
+  font-size: 24px !important;     /* 圖標從 20px 提升到 24px */
+}
+.nav-anchor-link:hover {
+  color: #695c4e;
+}
+
+.nav-anchor-link.active {
+  color: #695c4e;
+  font-weight: 700;
+  border-left: 3px solid #695c4e;
+}
+
+/* 🌟 右側主要表單區 */
+.profile-form-canvas {
+  flex: 1;
+  max-width: 800px;
+  width: 100%;
+}
+
+.form-content-section {
+  scroll-margin-top: 120px;
+  margin-bottom: 4rem;
+}
+
+.section-serif-heading {
+  font-family: "Libre Caslon Text", Georgia, serif;
+  font-size: 24px;
+  font-weight: 400;
+  line-height: 1.4;
+  color: #1d1b1a;
+  margin: 0 0 2rem 0;
+  border-bottom: 1px solid #cfc5bb;
+  padding-bottom: 1rem;
+}
+
+/* 大頭貼上傳外觀 */
+.avatar-and-fields-row {
+  display: flex;
+  flex-direction: row;
+  gap: 2rem;
+  align-items: flex-start;
+}
+
+@media (max-width: 640px) {
+  .avatar-and-fields-row {
+    flex-direction: column;
+    align-items: center;
+  }
+}
+
+.profile-avatar-wrapper {
+  position: relative;
+  flex-shrink: 0;
+  cursor: pointer;
+}
+
+.avatar-image-frame {
+  width: 8rem; /* w-32 (128px) */
+  height: 8rem;
+  border-radius: 0.75rem; /* rounded-xl (12px) */
+  overflow: hidden;
+  border: 1px solid #cfc5bb;
+}
+
+.avatar-image-frame img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.avatar-camera-badge {
+  position: absolute;
+  bottom: -0.75rem;
+  right: -0.75rem;
+  background-color: #fef8f6;
+  border: 1px solid #cfc5bb;
+  border-radius: 9999px;
+  padding: 0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #695c4e;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+  transition: background-color 0.2s ease;
+}
+
+.profile-avatar-wrapper:hover .avatar-camera-badge {
+  background-color: #e6d5c3;
+}
+
+/* 🌟 表單輸入欄位與網格（還原直角與薄框風格） */
+.fields-grid-container {
+ display: grid !important;
+  grid-template-columns: repeat(2, 1fr) !important;
+  gap: 1.5rem !important;          /* 🌟 核心修正：強制加上上下左右的間距 */
+  column-gap: 3rem !important;   /* 雙重保險：強制左右兩欄絕對要分開 24px */
+  width: 100%;
+}
+
+@media (max-width: 640px) {
+  .fields-grid-container {
+    grid-template-columns: 1fr;
+  }
+}
+
+.span-two-columns {
+  grid-column: span 2;
+}
+
+.input-field-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  width: 100%;
+}
+
+.field-uppercase-label {
+  font-family: "Work Sans", sans-serif;
+  font-size: 15px;
+  font-weight: 500;
+  color: #4c463e;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  line-height: 2;
+}
+.theme-text-input, 
+.theme-textarea-input,
+.addon-pure-input {
+ 
+  /* 🌟 核心修正：開啟 Tabular Lining Figures */
+  font-variant-numeric: tabular-nums lining-nums;
+}
+.theme-text-input, 
+.theme-textarea-input,
+.addon-pure-input,
+.theme-select-input {
+  appearance: none;       /* 隱藏原生箭頭 */
+  background: transparent;
+  border: 1px solid #cfc5bb;
+  border-radius: 4px; /* 2px 經典銳利角 */
+  padding: 0.75rem 1rem;
+
+  font-family: "Source Serif 4", Georgia, serif; /* 維持你的襯線風格 */
+  font-size: 14px; /* 略微調小，增加留白，更顯高級 */
+  letter-spacing: 0.03em; /* 🌟 增加字距，這會讓字看起來呼吸感更強，不擁擠 */
+  color: #3f3a37;
+  
+  /* 🌟 核心：將游標顏色改為你的品牌主色，消除不協調的藍色 */
+  caret-color: #695c4e; 
+  
+  width: 100%;
+  outline: none;
+  transition: all 0.3s ease;
+}
+
+.addon-pure-input {
+  border: none !important; /* 強制移除 input 邊框 */
+   
+}
+/* 🌟 優化 Placeholder：讓提示字更淺、更隱晦，避免視覺干擾 */
+::placeholder {
+  color: #bfae9e; /* 使用淺大地灰 */
+  font-family: "Work Sans", sans-serif; /* 提示字改用無襯線體，與輸入內容做出區隔 */
+  font-size: 13px;
+  letter-spacing: 0.05em;
+  opacity: 0.7;
+}
+
+/* 點擊聚焦時的微奢狀態 */
+.theme-text-input:focus, 
+.theme-textarea-input:focus,
+.addon-pure-input:focus,
+.theme-select-input:focus {
+  border-color: #695c4e; /* 聚焦時變成主色 */
+  background-color: #ffffff; /* 聚焦時變成純白，給予視覺焦點 */
+  box-shadow: 0 4px 12px rgba(105, 92, 78, 0.08); /* 輕微柔和的懸浮感 */
+}
+.theme-textarea-input {
+ line-height: 1.6; /* 增加行距，讓讀取簡介時更舒服 */
+}
+
+.theme-text-input:focus, 
+.theme-textarea-input:focus {
+  border-color: #695c4e;
+}
+/* 點擊時的互動回饋：背景變白，邊框加深 */
+.theme-text-input:focus {
+  background-color:  #f8f2f0;
+
+  outline: none;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05); /* 輕微的浮動感 */
+}
+/* LinkedIn 專屬群組 */
+.addon-input-row {
+  display: flex;
+  border: 1px solid #cfc5bb;
+  border-radius: 0.125rem;
+  
+  
+}
+
+.addon-prefix-box {
+  background-color: #f8f2f0; /* surface-container-low */
+  color: #4c463e;
+  padding: 0.75rem 1rem;
+  font-family: "Source Serif 4", serif;
+  font-size: 15px;
+  border-right: 1px solid #cfc5bb;
+  display: flex;
+  align-items: center;
+  white-space: nowrap;
+}
+/* 🌟 修正：當選單被點擊時，移除那層醜陋的藍色底色 */
+.theme-select-input:focus {
+  background-color: #ffffff; /* 點擊時變純白，提示可編輯狀態 */
+  border-color: #695c4e;     /* 邊框變為你的品牌大地色 */
+  outline: none;             /* 強制移除焦點藍光 */
+  box-shadow: 0 2px 8px rgba(105, 92, 78, 0.1);
+}
+
+
+
+/* 下拉選單風格 */
+.custom-select-box {
+
+
+  
+  position: relative;
+  width: 100%;
+}
+
+
+
+.select-chevron-icon {
+  position: absolute;
+  right: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #4c463e;
+  pointer-events: none;
+}
+
+/* 🌟 帳號安全控制面板 (完全依照圖2配色與細線) */
+.security-card-panel {
+  background-color: #f8f2f0; /* surface-container-low */
+  border: 1px solid #cfc5bb;
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+}
+
+.security-row-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.5rem 0;
+}
+
+.security-row-item:first-child { padding-top: 0; }
+.security-row-item:last-child { padding-bottom: 0; }
+
+.border-bottom-line {
+  border-bottom: 1px solid #cfc5bb;
+}
+
+.security-item-title {
+  font-family: "Source Serif 4", Georgia, serif;
+  font-size: 18px;
+  font-weight: 400;
+  color: #3b3735;
+  margin: 0 0 4px 0;
+  font-variant-numeric: tabular-nums lining-nums;
+}
+
+.security-item-subtitle {
+  font-family: "Source Serif 4", Georgia, serif;
+  font-size: 14px;
+  color: #4c463e;
+  opacity: 0.8;
+  margin: 0;
+  font-variant-numeric: tabular-nums lining-nums;
+}
+
+/* 更新密碼按鈕 */
+.btn-theme-outline {
+  background: transparent;
+  border: 1px solid #7e766d;
+  color: #1d1b1a;
+  padding: 0.5rem 1.5rem;
+  font-family: "Work Sans", sans-serif;
+  font-size: 12px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.btn-theme-outline:hover {
+  background-color: #e7e1df;
+}
+
+/* 雙重認證開關開關鈕 (Switch Switch) */
+.ui-toggle-switch {
+  width: 3rem; /* w-12 (48px) */
+  height: 1.5rem; /* h-6 (24px) */
+  background-color: #cfc5bb; /* outline-variant */
+  border-radius: 9999px;
+  position: relative;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.ui-toggle-switch.is-on {
+  background-color: #695c4e; /* primary */
+}
+
+.ui-toggle-switch .ui-toggle-handle {
+  position: absolute;
+  left: 4px;
+  top: 4px;
+  width: 1rem;
+  height: 1rem;
+  background-color: #ffffff; /* surface */
+  border-radius: 9999px;
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.ui-toggle-switch.is-on .ui-toggle-handle {
+  transform: translateX(1.5rem); /* translate-x-6 (24px) */
+}
+
+/* 🌟 底部取消與儲存列 */
+.form-submit-actions {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 1rem;
+  padding-top: 2rem;
+  border-top: 1px solid #cfc5bb;
+  margin-top: 3rem;
+}
+
+.btn-action-cancel {
+  background: transparent;
+ border: 1px solid #cfc5bb; /* 給予細緻的邊框 */
+  color: #4c463e; /* 文字使用系統的大地深色 */
+  padding: 0.75rem 2rem; /* 增加寬度，讓按鈕看起來更扎實 */
+  font-family: "Work Sans", sans-serif;
+  font-size: 12px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  cursor: pointer;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.btn-action-cancel:hover {
+  background: #f8f2f0; /* 顯示淡淡的大地底襯色 */
+  border-color: #695c4e; /* 邊框轉為深褐色 */
+  color: #1d1b1a;
+}
+
+.btn-action-save {
+  background-color: #695c4e; /* primary */
+  color: #ffffff;
+  border: none;
+  padding: 0.75rem 2rem;
+  font-family: "Work Sans", sans-serif;
+  font-size: 12px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.btn-action-save:hover {
+  background-color: #504538; /* on-primary-fixed-variant */
+}
+
+/* 全域圖標控制 */
+.material-symbols-outlined {
+  font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24;
+  /* 加上這行：讓 icon 的填滿與顏色轉換有柔和的過渡，徹底消除閃爍 */
+  transition: font-variation-settings 0.25s ease, color 0.25s ease !important;
+}
+.material-symbols-outlined.icon-filled {
+  font-variation-settings: 'FILL' 1, 'wght' 300, 'GRAD' 0, 'opsz' 24;
+}
+
+
+
+/* 🌟 1. 毛玻璃全螢幕網格遮罩 */
+/* ==========================================================================
+   🌟 彈窗 (Premium Center Modal - Align Brand Identity)
+   ========================================================================== */
+
+/* 1. 全螢幕毛玻璃柔和暗化遮罩 */
+.luxury-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(29, 27, 26, 0.25); /* 融入你系統的 #1d1b1a 文字深色調 */
+  backdrop-filter: blur(12px); /* 蘋果風高階毛玻璃效果 */
+  -webkit-backdrop-filter: blur(12px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100000; /* 確保不被任何元件擋住 */
+  
+  /* 初始隱藏狀態 */
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+/* 遮罩層啟動 */
+.luxury-modal-overlay.active {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* 🚀 2. 中央懸浮精品卡片本體 */
+.luxury-center-card {
+  background: #ffffff;
+  width: 90%;
+  max-width: 350px;
+  border-radius: 24px; /* 溫潤洗鍊的大圓角 */
+  padding: 44px 28px 32px 28px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  border: 1px solid rgba(255, 255, 255, 0.8); /* 高光細微邊框，增加立體層次 */
+  
+  /* 多層次擴存環境柔和弱陰影，讓卡片輕盈懸浮 */
+  box-shadow: 
+    0 4px 6px -1px rgba(0, 0, 0, 0.01),
+    0 10px 20px -3px rgba(105, 92, 78, 0.04),
+    0 25px 40px -5px rgba(105, 92, 78, 0.06),
+    0 0 1px 0 rgba(105, 92, 78, 0.08);
+
+  /* 仿 iOS 擬真回彈 Q 彈開合曲線 */
+  transform: scale(0.92) translateY(10px);
+  transition: transform 0.55s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* 當激活時，卡片精準放大歸位 */
+.luxury-modal-overlay.active .luxury-center-card {
+  transform: scale(1) translateY(0);
+}
+
+/* ✨ 3. 圖標周圍的大地色系動態暈光效果 */
+.luxury-icon-wrapper {
+  position: relative;
+  width: 64px;
+  height: 64px;
+  margin-bottom: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* 大地主色的環境微弱呼應光暈 */
+.luxury-icon-glow {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background: #695c4e; /* 你的品牌主色 */
+  filter: blur(14px);
+  opacity: 0.12;
+  border-radius: 50%;
+  transform: scale(0.8);
+  transition: transform 0.6s ease;
+}
+
+.luxury-modal-overlay.active .luxury-icon-glow {
+  transform: scale(1.2);
+}
+
+/* 圖標核心：校正回大地色系調色盤 */
+.luxury-icon-core {
+  position: relative;
+  width: 52px;
+  height: 52px;
+  background: #f8f2f0; /* 👈 使用你系統內建的極細微大地底襯色，非常溫潤 */
+  color: #695c4e; /* 👈 勾勾完美同步成你的 primary 品牌大地色 */
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.luxury-icon-core .material-symbols-outlined {
+  font-size: 26px;
+  font-weight: 600;
+}
+
+/* ✍️ 4. 雜誌風字體排版與微細分隔線 */
+.luxury-text-package {
+  text-align: center;
+  margin-bottom: 36px;
+}
+
+.luxury-brand-title {
+  margin: 0;
+  font-family: "Libre Caslon Text", Georgia, serif; /* 沿用你標題的高階襯線字體 */
+  font-size: 22px;
+  font-weight: 600;
+  color: #1d1b1a; /* 你的主文字深色 */
+  letter-spacing: 0.5px;
+}
+
+/* 🟢 設計圖核心：極簡低調的小分隔線 */
+.luxury-divider-line {
+  width: 24px;
+  height: 2px;
+  background: #695c4e; /* 分隔線同步改為你的品牌色，細節拉滿 */
+  margin: 12px auto;
+  border-radius: 1px;
+  opacity: 0.5;
+}
+
+.luxury-brand-subtitle {
+  margin: 0;
+  font-family: "Source Serif 4", Georgia, serif; /* 沿用你的經典內文字體 */
+  font-size: 13.5px;
+  color: #4c463e; /* 你的內文描述灰色 */
+  opacity: 0.85;
+  line-height: 1.6;
+  padding: 0 4px;
+}
+
+/* 🤎 5. 大地曜石黑緞面動作按鈕 (完全對齊你原本的顏色風格！) */
+.btn-luxury-action {
+  width: 100%;
+  padding: 14px;
+  background: #695c4e; /* 👈 完美改回你原本最愛的 primary 大地主色！ */
+  color: #ffffff;
+  border: none;
+  border-radius: 14px; /* 配合你系統原本的直角俐落剪裁，改為雅致微圓角 */
+  font-family: "Work Sans", sans-serif; /* 沿用你按鈕的字體 */
+  font-size: 13px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(105, 92, 78, 0.15);
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* 滑鼠移上去時，自動過渡到你系統的 on-primary-fixed-variant 色澤 */
+.btn-luxury-action:hover {
+  background: #504538; /* 👈 完美對齊你底部儲存按鈕的 hover 色澤！ */
+  transform: translateY(-1.5px);
+  box-shadow: 0 6px 20px rgba(105, 92, 78, 0.25);
+}
+
+.btn-luxury-action:active {
+  transform: translateY(0);
+  background: #695c4e;
+}
+
+/* ==========================================================================
+   🌟 完美的客製化大地色下拉選單清單 (Luxury Custom Dropdown)
+   ========================================================================== */
+/* 🌟 三合一控制器面板佈局優化 */
+.avatar-crop-controller {
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;       /* 拉大滑桿彼此間的垂直間距，防誤觸 */
+  margin-top: 1.5rem;
+  width: 160px;       /* 稍微拓寬，讓使用者更好微調像素 */
+  padding: 12px;
+  background: #f8f2f0; /* 給予溫潤的底襯框，更像一個獨立的控制面板 */
+  border-radius: 8px;
+  border: 1px solid #cfc5bb;
+  animation: fadeIn 0.3s ease;
+}
+
+.slider-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.crop-slider-label {
+  font-family: "Work Sans", sans-serif;
+  font-size: 11px;
+  color: #695c4e;
+  font-weight: 500;
+  letter-spacing: 0.03em;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.crop-slider-label .material-symbols-outlined {
+  font-size: 15px !important;
+  color: #695c4e;
+}
+
+/* 輕奢風進度滑條軌道 */
+.luxury-crop-slider {
+  -webkit-appearance: none;
+  width: 100%;
+  height: 3px;
+  background: #cfc5bb;
+  border-radius: 999px;
+  outline: none;
+  cursor: pointer;
+}
+
+/* 輕奢風滑塊紐 */
+.luxury-crop-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: #695c4e;
+  border: 2px solid #ffffff;
+  box-shadow: 0 2px 5px rgba(105, 92, 78, 0.25);
+  transition: transform 0.1s ease;
+}
+
+.luxury-crop-slider::-webkit-slider-thumb:hover {
+  transform: scale(1.25);
+}
+
+/* ==========================================================================
+   🌟 大頭貼讀取中遮罩與旋轉動畫 (Luxury Avatar Loading Mask)
+   ========================================================================== */
+
+.avatar-loading-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(254, 248, 246, 0.75); /* 使用系統內襯畫布粉米色，輕微透明 */
+  backdrop-filter: blur(4px); /* 輕微毛玻璃模糊，極具質感 */
+  -webkit-backdrop-filter: blur(4px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  border-radius: 0.75rem; /* 完美契合頭像框圓角 */
+  animation: fadeIn 0.2s ease;
+  z-index: 10;
+}
+
+/* 經典簡約線條 Spinner */
+.avatar-spinner {
+  width: 22px;
+  height: 22px;
+  border: 2px solid #cfc5bb; /* 線條淡色底圈 */
+  border-top: 2px solid #695c4e; /* 品牌主色旋轉頭 */
+  border-radius: 50%;
+  animation: avatarSpin 0.85s linear infinite;
+}
+
+.loading-text {
+  font-family: "Work Sans", sans-serif;
+  font-size: 11px;
+  color: #695c4e;
+  letter-spacing: 0.05em;
+  font-weight: 500;
+  text-transform: uppercase;
+}
+
+/* 旋轉動畫定義 */
+@keyframes avatarSpin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* ==========================================================================
+🌟 客製化選單防跑版優化 (防無限延伸與精緻滾動條)
+   ========================================================================== */
+.custom-dropdown-list {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  width: 100%;
+  background-color: #ffffff;
+  border: 1px solid #cfc5bb;
+  border-radius: 4px;
+  margin: 6px 0 0 0;
+  padding: 0;
+  list-style: none;
+  z-index: 1000;
+  box-shadow: 0 4px 20px rgba(105, 92, 78, 0.12);
+  max-height: 210px;       
+  overflow-y: auto;        
+}
+
+/* 🌟 核心補回：選項本體的內襯風格與字體 */
+.custom-dropdown-list li {
+  padding: 0.75rem 1rem;
+  font-family: "Source Serif 4", Georgia, serif;
+  font-size: 14px;
+  color: #3f3a37;
+  cursor: pointer;
+  text-align: left; /* 確保文字靠左對齊 */
+  transition: all 0.2s ease;
+}
+
+/* 🌟 核心補回：滑鼠移上去或選中時的曜石大地色高亮 */
+.custom-dropdown-list li:hover {
+  background-color: #695c4e;
+  color: #ffffff;
+}
+
+/* 客製化大地色極細滾動條 */
+.custom-dropdown-list::-webkit-scrollbar {
+  width: 6px;
+}
+
+.custom-dropdown-list::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.custom-dropdown-list::-webkit-scrollbar-thumb {
+  background-color: #cfc5bb;
+  border-radius: 999px;
+}
+
+.custom-dropdown-list::-webkit-scrollbar-thumb:hover {
+  background-color: #695c4e;
+}

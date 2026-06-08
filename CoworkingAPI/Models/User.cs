@@ -15,5 +15,9 @@ namespace CoworkingAPI.Models
         public int? role { get; set; }
         public string? line_id { get; set; }
         public bool? is_active { get; set; }
+        public string? address { get; set; }
+        public string? bio { get; set; }
+        public string? industry { get; set; }
+        public bool two_factor_enabled { get; set; } // 對應 bit 型態
     }
 }
