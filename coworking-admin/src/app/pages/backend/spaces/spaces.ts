@@ -198,7 +198,7 @@ export class Spaces implements OnInit {
   newSpace: CreateSpace = this.emptySpace();
 
   private emptySpace(): CreateSpace {
-    return { location_id: 0, space_number: '', capacity: 1, status: 0 };
+    return { location_id: 0, space_number: '', capacity: 1, status: 0, hourly_price: null, daily_price: null, monthly_price: null };
   }
 
   onFileSelected(event: Event): void {

@@ -35,8 +35,10 @@ namespace CoworkingAPI.Controllers
                 postData = await reader.ReadToEndAsync();
             }
 
+#pragma warning disable CS8604 // 可能有 Null 參考引數。
             if (!IsValidSignature(postData, Request.Headers["X-Line-Signature"]))
                 return Unauthorized();
+#pragma warning restore CS8604 // 可能有 Null 參考引數。
 
             var receivedMessage = Utility.Parsing(postData);
 

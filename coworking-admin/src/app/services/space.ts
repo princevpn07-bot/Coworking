@@ -32,7 +32,7 @@ export class SpaceService
 
   createspace(space: CreateSpace): Observable<Space>
   {
-    return this.http.post<Space>(this.apiurl + '/Add', space);
+    return this.http.post<Space>(`${this.adminApiUrl}/createspace`, space);
   }
 
   update(space: Space): Observable<void>

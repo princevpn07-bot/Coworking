@@ -38,8 +38,20 @@
               {{ formatTime(booking.start_date) }} {{ booking.spacename ?? '未知空間' }} · {{ booking.username ?? '未知會員' }}
             </div>
           }
-          @if (getBookingsForDay(day).length > 2) {
-            <button type="button" class="more-events">+{{ getBookingsForDay(day).length - 2 }} 更多</button>
+          @for (entry of getCoverageForDay(day).slice(0, 2); track entry.booking.contract_id) {
+            <div class="event-bar"
+                 [class.paid]="entry.booking.status === 1"
+                 [class.pending]="entry.booking.status === 0"
+                 [class.cancelled]="entry.booking.status !== 0 && entry.booking.status !== 1"
+                 [class.round-left]="entry.roundLeft"
+                 [class.round-right]="entry.roundRight">
+              {{ entry.booking.spacename ?? '未知空間' }}
+            </div>
+          }
+          @if (getBookingsForDay(day).length + getCoverageForDay(day).length > 2) {
+            <button type="button" class="more-events">
+              +{{ getBookingsForDay(day).length + getCoverageForDay(day).length - 2 }} 更多
+            </button>
           }
         </div>
       }
@@ -97,8 +109,8 @@
                 }
                 <div class="booking-item-meta">
                   <span class="material-symbols-outlined">schedule</span>
-                  @if (detail.start_date) { {{ formatTime(detail.start_date) }} }
-                  @if (detail.end_date) { – {{ formatTime(detail.end_date) }} }
+                  @if (detail.start_date) { {{ formatDateTime(detail.start_date) }} }
+                  @if (detail.end_date) { – {{ formatDateTime(detail.end_date) }} }
                 </div>
                 <div class="booking-item-meta">
                   <span class="material-symbols-outlined">sell</span>
@@ -163,16 +175,6 @@
       </div>
 
       <div class="form-group">
-        <label>租賃方案 <span class="required">*</span></label>
-        <select [(ngModel)]="newBooking.rent_id">
-          <option [ngValue]="null" disabled>請選擇租賃方案</option>
-          @for (r of rentOptions; track r.rent_id) {
-            <option [ngValue]="r.rent_id">{{ rentLabel(r) }}</option>
-          }
-        </select>
-      </div>
-
-      <div class="form-group">
         <label>負責員工 <span class="required">*</span></label>
         <select [(ngModel)]="newBooking.employees_id">
           <option [ngValue]="null" disabled>請選擇員工</option>
@@ -182,16 +184,47 @@
         </select>
       </div>
 
-      <div class="form-row">
-        <div class="form-group">
-          <label>開始時間 <span class="required">*</span></label>
-          <input type="datetime-local" [(ngModel)]="newBooking.start_date" />
-        </div>
-        <div class="form-group">
-          <label>結束時間 <span class="required">*</span></label>
-          <input type="datetime-local" [(ngModel)]="newBooking.end_date" />
-        </div>
+      <div class="form-group">
+        <label>開始時間 <span class="required">*</span></label>
+        <input type="datetime-local" [(ngModel)]="newBooking.start_date"
+               (ngModelChange)="loadAvailableRents(); recalcEndDate()" />
       </div>
+
+      <div class="form-group">
+        <label>租賃方案 <span class="required">*</span></label>
+        @if (!newBooking.start_date) {
+          <p class="field-hint">請先選擇開始時間，系統將顯示當時可用的空間方案</p>
+        } @else if (rentsLoading) {
+          <p class="field-hint">載入可用方案中...</p>
+        } @else {
+          <select [(ngModel)]="newBooking.rent_id" (ngModelChange)="recalcEndDate()">
+            <option [ngValue]="null" disabled>
+              {{ rentOptions.length === 0 ? '目前無可用空間方案' : '請選擇租賃方案' }}
+            </option>
+            @for (r of rentOptions; track r.rent_id) {
+              <option [ngValue]="r.rent_id">{{ rentLabel(r) }}</option>
+            }
+          </select>
+        }
+      </div>
+
+      <div class="form-group">
+        <label>
+          租用時長 <span class="required">*</span>
+          @if (durationUnit) { <span class="unit-hint">（{{ durationUnit }}）</span> }
+        </label>
+        <input type="number" min="1"
+               [attr.disabled]="selectedRentOption ? null : true"
+               [(ngModel)]="bookingDuration"
+               (ngModelChange)="recalcEndDate()"
+               placeholder="請先選擇租賃方案" />
+      </div>
+      @if (newBooking.end_date) {
+        <p class="price-note">
+          <span class="material-symbols-outlined">event</span>
+          結束時間：{{ newBooking.end_date | date:'yyyy/MM/dd HH:mm' }}
+        </p>
+      }
 
       <div class="form-row">
         <div class="form-group">

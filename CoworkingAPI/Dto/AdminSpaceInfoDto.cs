@@ -33,4 +33,15 @@ namespace CoworkingAPI.Dto
         public int amount { get; set; }
         public string? reason { get; set; }
     }
+
+    public class CreateSpaceDto
+    {
+        public int location_id { get; set; }
+        public string space_number { get; set; } = "";
+        public int capacity { get; set; }
+        public int status { get; set; }
+        public decimal? hourly_price { get; set; }
+        public decimal? daily_price { get; set; }
+        public decimal? monthly_price { get; set; }
+    }
 }

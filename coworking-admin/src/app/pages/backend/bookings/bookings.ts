@@ -20,20 +20,47 @@ export class Bookings implements OnInit {
   selectedDayDetails: BookingDetail[] = [];
   detailsLoading = false;
   private bookingsMap = new Map<string, Booking[]>();
+  private allBookings: Booking[] = [];
 
   showCreateModal = false;
   submitting = false;
   submitError = '';
+  rentsLoading = false;
   updatingId: number | null = null;
   userOptions: UserOption[] = [];
   rentOptions: RentOption[] = [];
   employeeOptions: EmployeeOption[] = [];
+  bookingDuration = 1;
   newBooking: CreateBookingPayload = {
     user_id: null, rent_id: null, employees_id: null,
     start_date: null, end_date: null,
     company_name: null, tax_id: null,
     status: 0,
   };
+
+  get selectedRentOption(): RentOption | null {
+    return this.rentOptions.find(r => r.rent_id === this.newBooking.rent_id) ?? null;
+  }
+
+  get durationUnit(): string {
+    const t = this.selectedRentOption?.price_type;
+    if (t === 1) return '小時';
+    if (t === 2) return '天';
+    if (t === 3) return '月';
+    return '';
+  }
+
+  recalcEndDate(): void {
+    const start = this.newBooking.start_date ? new Date(this.newBooking.start_date) : null;
+    const type = this.selectedRentOption?.price_type;
+    if (!start || !type || this.bookingDuration < 1) { this.newBooking.end_date = null; return; }
+    const end = new Date(start);
+    if (type === 1) end.setHours(end.getHours() + this.bookingDuration);
+    else if (type === 2) end.setDate(end.getDate() + this.bookingDuration);
+    else if (type === 3) end.setMonth(end.getMonth() + this.bookingDuration);
+    const pad = (n: number) => n.toString().padStart(2, '0');
+    this.newBooking.end_date = `${end.getFullYear()}-${pad(end.getMonth() + 1)}-${pad(end.getDate())}T${pad(end.getHours())}:${pad(end.getMinutes())}`;
+  }
 
   private readonly weekdays = ['週日', '週一', '週二', '週三', '週四', '週五', '週六'];
 
@@ -56,6 +83,29 @@ export class Bookings implements OnInit {
     return this.bookingsMap.get(this.toKey(day.date)) ?? [];
   }
 
+  getCoverageForDay(day: CalendarDay): { booking: Booking; roundLeft: boolean; roundRight: boolean }[] {
+    const d = day.date;
+    const dayTs = new Date(d.getFullYear(), d.getMonth(), d.getDate()).getTime();
+    const isWeekStart = d.getDay() === 0;
+    const isWeekEnd = d.getDay() === 6;
+    const result: { booking: Booking; roundLeft: boolean; roundRight: boolean }[] = [];
+    for (const b of this.allBookings) {
+      if (b.status === 2 || !b.end_date) continue;
+      const start = new Date(b.start_date);
+      const end = new Date(b.end_date);
+      const startTs = new Date(start.getFullYear(), start.getMonth(), start.getDate()).getTime();
+      const endTs = new Date(end.getFullYear(), end.getMonth(), end.getDate()).getTime();
+      if (dayTs > startTs && dayTs <= endTs) {
+        result.push({
+          booking: b,
+          roundLeft: isWeekStart,
+          roundRight: dayTs === endTs || isWeekEnd,
+        });
+      }
+    }
+    return result;
+  }
+
   statusClass(status: number): string {
     if (status === 1) return 'paid';
     if (status === 0) return 'pending';
@@ -75,14 +125,32 @@ export class Bookings implements OnInit {
     return `${h}:${m}`;
   }
 
+  formatDateTime(dateStr: string): string {
+    const d = new Date(dateStr);
+    const mo = (d.getMonth() + 1).toString().padStart(2, '0');
+    const dd = d.getDate().toString().padStart(2, '0');
+    const h = d.getHours().toString().padStart(2, '0');
+    const m = d.getMinutes().toString().padStart(2, '0');
+    return `${mo}/${dd} ${h}:${m}`;
+  }
+
   private toKey(date: Date): string {
     return `${date.getFullYear()}-${date.getMonth()}-${date.getDate()}`;
   }
 
   ngOnInit() {
     this.buildCalendar();
+    this.bookingService.getUsers().subscribe({
+      next: (data) => (this.userOptions = data.filter(u => u.role === 10 || u.role === 20)),
+      error: (err) => console.error('Failed to load users', err),
+    });
+    this.bookingService.getEmployees().subscribe({
+      next: (data) => (this.employeeOptions = data),
+      error: (err) => console.error('Failed to load employees', err),
+    });
     this.bookingService.getCalendar().subscribe({
       next: (data) => {
+        this.allBookings = data;
         this.bookingsMap.clear();
         for (const b of data) {
           const key = this.toKey(new Date(b.start_date));
@@ -124,12 +192,12 @@ export class Bookings implements OnInit {
   }
 
   rentLabel(rent: RentOption): string {
-    return `方案 #${rent.rent_id}｜${this.priceTypeLabel(rent.price_type)}｜NT$ ${rent.price ?? '-'}`;
+    return `${rent.spacename ?? '未知空間'}｜${this.priceTypeLabel(rent.price_type)}｜NT$ ${rent.price ?? '-'}`;
   }
 
   employeeLabel(emp: EmployeeOption): string {
     const parts = [emp.job_title, emp.department].filter(Boolean);
-    return `員工 #${emp.employees_id}｜${parts.join(' / ') || '無部門資訊'}`;
+    return `${emp.name ?? '未命名'}｜${parts.join(' / ') || '無部門資訊'}`;
   }
 
   openCreateModal() {
@@ -139,25 +207,21 @@ export class Bookings implements OnInit {
       company_name: null, tax_id: null,
       status: 0,
     };
+    this.bookingDuration = 1;
+    this.submitError = '';
+    this.rentOptions = [];
     this.showCreateModal = true;
-    if (this.userOptions.length === 0) {
-      this.bookingService.getUsers().subscribe({
-        next: (data) => (this.userOptions = data.filter(u => u.role === 10 || u.role === 20)),
-        error: (err) => console.error('Failed to load users', err),
-      });
-    }
-    if (this.rentOptions.length === 0) {
-      this.bookingService.getRents().subscribe({
-        next: (data) => (this.rentOptions = data),
-        error: (err) => console.error('Failed to load rents', err),
-      });
-    }
-    if (this.employeeOptions.length === 0) {
-      this.bookingService.getEmployees().subscribe({
-        next: (data) => (this.employeeOptions = data.filter(e => e.is_active)),
-        error: (err) => console.error('Failed to load employees', err),
-      });
-    }
+  }
+
+  loadAvailableRents() {
+    if (!this.newBooking.start_date) return;
+    this.rentsLoading = true;
+    this.newBooking.rent_id = null;
+    this.newBooking.end_date = null;
+    this.bookingService.getRents().subscribe({
+      next: (data) => { this.rentOptions = data; this.rentsLoading = false; },
+      error: () => this.rentsLoading = false,
+    });
   }
 
   closeCreateModal() {
@@ -244,6 +308,7 @@ export class Bookings implements OnInit {
         this.showCreateModal = false;
         this.bookingService.getCalendar().subscribe({
           next: (data) => {
+            this.allBookings = data;
             this.bookingsMap.clear();
             for (const b of data) {
               const key = this.toKey(new Date(b.start_date));

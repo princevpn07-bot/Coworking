@@ -26,11 +26,11 @@ export class BookingService {
   }
 
   getRents(): Observable<RentOption[]> {
-    return this.http.get<RentOption[]>(`${this.baseUrl}/Rents/GetAll`);
+    return this.http.get<RentOption[]>(`${this.apiUrl}/rents`);
   }
 
   getEmployees(): Observable<EmployeeOption[]> {
-    return this.http.get<EmployeeOption[]>(`${this.baseUrl}/Employees/GetAll`);
+    return this.http.get<EmployeeOption[]>(`${this.apiUrl}/employees`);
   }
 
   updateStatus(contractId: number, status: number): Observable<unknown> {

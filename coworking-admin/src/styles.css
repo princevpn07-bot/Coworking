@@ -14,9 +14,32 @@
   --transition: all 0.2s ease-in-out;
 }
 
-.event-chip.paid { background: #D1E9CF; color: #2D4A2B; }
-.event-chip.pending { background: #FFE8D1; color: #6B4C1E; }
-.event-chip.cancelled { background: #F0F0F0; color: #6B6B6B; }
+.event-chip.paid    { background: #D1E9CF; color: #2D4A2B; border-left: 3px solid #4a9245; }
+.event-chip.pending { background: #FFE8D1; color: #6B4C1E; border-left: 3px solid #d4820a; }
+.event-chip.cancelled { background: #F0F0F0; color: #6B6B6B; border-left: 3px solid #aaa; }
+
+.event-bar {
+  font-size: 10px;
+  font-weight: 600;
+  height: 18px;
+  line-height: 18px;
+  padding: 0 6px;
+  border-radius: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  /* 向左右延伸撐滿 day-cell 的 padding */
+  width: calc(100% + 16px);
+  margin-left: -8px;
+  box-sizing: border-box;
+}
+.event-bar.round-left  { border-top-left-radius:  8px; border-bottom-left-radius:  8px; width: calc(100% + 8px); }
+.event-bar.round-right { border-top-right-radius: 8px; border-bottom-right-radius: 8px; width: calc(100% + 8px); margin-right: -8px; }
+.event-bar.round-left.round-right { border-radius: 8px; width: 100%; margin-left: 0; }
+
+.event-bar.paid    { background: #C5E3C3; color: #1E3B1C; }
+.event-bar.pending { background: #FCDDB8; color: #5A3A10; }
+.event-bar.cancelled { background: #E8E8E8; color: #5a5a5a; }
 
 .booking-status-badge.paid { background: #D1E9CF; color: #2D4A2B; }
 .booking-status-badge.pending { background: #FFE8D1; color: #6B4C1E; }
@@ -335,8 +358,11 @@
 
 /* ── Dark Mode: Booking status badges ──────────────────────────────────── */
 .admin-wrapper.dark .event-chip.paid,
-.admin-wrapper.dark .booking-status-badge.paid   { background: #1a3320; color: #6fcf8e; }
+.admin-wrapper.dark .booking-status-badge.paid   { background: #1a3320; color: #6fcf8e; border-left-color: #6fcf8e; }
+.admin-wrapper.dark .event-bar.paid              { background: #1a3320; color: #6fcf8e; }
 .admin-wrapper.dark .event-chip.pending,
-.admin-wrapper.dark .booking-status-badge.pending { background: #2a1e0e; color: #f0c040; }
+.admin-wrapper.dark .booking-status-badge.pending { background: #2a1e0e; color: #f0c040; border-left-color: #f0c040; }
+.admin-wrapper.dark .event-bar.pending            { background: #2a1e0e; color: #f0c040; }
 .admin-wrapper.dark .event-chip.cancelled,
+.admin-wrapper.dark .event-bar.cancelled,
 .admin-wrapper.dark .booking-status-badge.cancelled { background: #1e2433; color: #8892a4; }

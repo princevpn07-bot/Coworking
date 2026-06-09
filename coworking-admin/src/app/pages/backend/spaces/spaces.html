@@ -253,6 +253,25 @@
         </div>
       </div>
 
+      <div class="form-section-title">租金方案</div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>時租（元／小時）</label>
+          <input type="number" [(ngModel)]="newSpace.hourly_price" min="0" placeholder="不設定請留空" />
+        </div>
+        <div class="form-group">
+          <label>日租（元／天）</label>
+          <input type="number" [(ngModel)]="newSpace.daily_price" min="0" placeholder="不設定請留空" />
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>月租（元／月）</label>
+          <input type="number" [(ngModel)]="newSpace.monthly_price" min="0" placeholder="不設定請留空" />
+        </div>
+        <div class="form-group"></div>
+      </div>
+
       <div class="form-group">
         <label>空間圖片</label>
         <input type="file" accept="image/*" (change)="onFileSelected($event)" />

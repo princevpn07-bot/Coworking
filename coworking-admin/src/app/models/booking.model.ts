@@ -3,6 +3,7 @@ export interface Booking {
   username: string | null;
   spacename: string | null;
   start_date: string;
+  end_date: string | null;
   status: number;
 }
 
@@ -30,6 +31,7 @@ export interface RentOption {
   price_type: number | null;
   price: number | null;
   space_id: number | null;
+  spacename: string | null;
 }
 
 export interface EmployeeOption {
@@ -39,6 +41,7 @@ export interface EmployeeOption {
   department: string | null;
   job_title: string | null;
   is_active: boolean | null;
+  name: string | null;
 }
 
 export interface CreateBookingPayload {

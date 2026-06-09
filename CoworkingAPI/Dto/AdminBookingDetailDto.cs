@@ -22,8 +22,8 @@ namespace CoworkingAPI.Dto
         public string? username {get; set;}
         public string? spacename {get; set;}
         public DateTime start_date {get; set;}
+        public DateTime? end_date {get; set;}
         public int status {get; set;}
-
     }
 
     public class CreateBookingDto : IValidatableObject

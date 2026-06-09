@@ -22,6 +22,9 @@ export interface CreateSpace {
   space_number: string;
   capacity: number;
   status: number;
+  hourly_price: number | null;
+  daily_price: number | null;
+  monthly_price: number | null;
 }
 
 export interface SpaceImageItem {

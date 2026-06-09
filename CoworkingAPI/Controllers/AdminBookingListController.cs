@@ -33,10 +33,12 @@ namespace CoworkingAPI.Controllers
         [HttpPatch("{id}/cancel")]
         public async Task<IActionResult> CancelBooking(int id)
         {
-            var booking = await _context.Bookings.FindAsync(id);
+            var booking = await _context.Bookings.Include(b => b.Rent).ThenInclude(r => r.Space).FirstOrDefaultAsync(b => b.contract_id == id);
             if (booking == null) return NotFound($"找不到預約 #{id}");
             if (booking.status == 2) return BadRequest("此預約已是取消狀態");
             booking.status = 2;
+            if (booking.Rent?.Space != null)
+                booking.Rent.Space.status = 0;
             await _context.SaveChangesAsync();
             return NoContent();
         }
@@ -50,6 +52,7 @@ namespace CoworkingAPI.Controllers
                 username = b.User != null ? b.User.name : null,
                 spacename = b.Rent != null && b.Rent.Space != null ? b.Rent.Space.space_number : null,
                 start_date = b.start_date ?? DateTime.MinValue,
+                end_date = b.end_date,
                 status = b.status ?? 0
             }).ToListAsync();
 
@@ -64,9 +67,15 @@ namespace CoworkingAPI.Controllers
                 if (dto.rent_id == null || dto.start_date == null || dto.end_date == null)
                     return BadRequest("rent_id、start_date、end_date 為必填");
 
-                var rent = await _context.Rents.FindAsync(dto.rent_id);
+                var rent = await _context.Rents.Include(r => r.Space).FirstOrDefaultAsync(r => r.rent_id == dto.rent_id);
                 if (rent == null)
                     return BadRequest($"找不到租賃方案 #{dto.rent_id}");
+
+                if (rent.Space == null)
+                    return BadRequest("此租賃方案未關聯任何空間");
+
+                if (rent.Space.status != 0)
+                    return BadRequest("此空間目前非可用狀態，無法建立預約");
 
                 var start = dto.start_date.Value;
                 var end = dto.end_date.Value;
@@ -106,6 +115,7 @@ namespace CoworkingAPI.Controllers
                     created_date = DateTime.Now,
                 };
                 _context.Bookings.Add(booking);
+                rent.Space.status = 1;
                 await _context.SaveChangesAsync();
 
                 // 發 LINE 推播通知
@@ -135,6 +145,43 @@ namespace CoworkingAPI.Controllers
             {
                 return StatusCode(500, new { message = ex.Message, inner = ex.InnerException?.Message });
             }
+        }
+
+        [HttpGet("rents")]
+        public async Task<IActionResult> GetRents()
+        {
+            var rents = await _context.Rents
+                .Include(r => r.Space)
+                .Where(r => r.is_active != false && r.Space != null && r.Space.status == 0)
+                .Select(r => new
+                {
+                    r.rent_id,
+                    r.space_id,
+                    r.price_type,
+                    r.price,
+                    r.is_active,
+                    spacename = r.Space!.space_number
+                }).ToListAsync();
+            return Ok(rents);
+        }
+
+        [HttpGet("employees")]
+        public async Task<IActionResult> GetEmployees()
+        {
+            var employees = await _context.Employees
+                .Include(e => e.User)
+                .Where(e => e.is_active != false)
+                .Select(e => new
+                {
+                    e.employees_id,
+                    e.user_id,
+                    e.location_id,
+                    e.department,
+                    e.job_title,
+                    e.is_active,
+                    name = e.User != null ? e.User.name : null
+                }).ToListAsync();
+            return Ok(employees);
         }
 
         [HttpGet("details")]
