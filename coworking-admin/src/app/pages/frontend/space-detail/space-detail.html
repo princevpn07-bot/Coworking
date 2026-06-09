@@ -85,9 +85,9 @@
         </div>
         <div class="actions">
           <button class="btn-book" routerLink="/payment">立即預約</button>
-          <div *ngIf="space as s" class="btn-fav">
+          <div *ngIf="space as s" class="btn-fav"(click)="toggleFavorite(s.spaceId, $event)">
             <span class="material-symbols-outlined favorite-icon"
-              [class.filled]="favoriteService.isFavorite(s.spaceId)" (click)="toggleFavorite(s.spaceId, $event)">
+              [class.filled]="favoriteService.isFavorite(s.spaceId)" >
               favorite
             </span>
           </div>

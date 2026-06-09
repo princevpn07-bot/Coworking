@@ -299,19 +299,41 @@
 .hero__booking-card .btn-fav {
   width: 56px;
   height: 56px;
+
   display: flex;
   align-items: center;
   justify-content: center;
+
   border: 1px solid #cfc5bb;
-  border-radius: 8px;
-  color: #695c4e;
-  background: none;
+  border-radius: 12px;
+
+  background: #fff7f2;
+
   cursor: pointer;
+  user-select: none;
+
+  flex-shrink: 0;
+
+  transition:
+    background-color .2s ease,
+    border-color .2s ease,
+    transform .15s ease;
+
 }
 
-.favorite-icon {
-  cursor: pointer;
+.hero__booking-card .btn-fav:hover {
+  background: #ffe9e9;
+  border-color: #f2b8b8;
+}
+
+.hero__booking-card .btn-fav:active {
+  transform: scale(0.95);
+}
+
+.material-symbols-outlined.favorite-icon {
   color: #695c4e;
+
+  transition: color .2s ease;
 
   font-variation-settings:
     'FILL' 0,
@@ -320,12 +342,23 @@
     'opsz' 24;
 }
 
-.favorite-icon.filled {
+.material-symbols-outlined.favorite-icon.filled {
+  color: #d32f2f;
+
   font-variation-settings:
     'FILL' 1,
-    'wght' 400,
+    'wght' 500,
     'GRAD' 0,
     'opsz' 24;
+}
+
+
+.hero__booking-card .btn-fav:hover .favorite-icon {
+  color: #c62828;
+}
+
+.hero__booking-card.btn-fav:hover .favorite-icon.filled {
+  color: #c62828;
 }
 
 /* Content Tabs */
@@ -561,7 +594,6 @@
   display: flex;
   justify-content: center;
   z-index: 9999;
-
 }
 
 .loading-box {
