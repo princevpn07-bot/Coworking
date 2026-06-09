@@ -85,9 +85,12 @@
         </div>
         <div class="actions">
           <button class="btn-book" routerLink="/payment">立即預約</button>
-          <button class="btn-fav">
-            <span class="material-symbols-outlined">favorite_border</span>
-          </button>
+          <div *ngIf="space as s" class="btn-fav">
+            <span class="material-symbols-outlined favorite-icon"
+              [class.filled]="favoriteService.isFavorite(s.spaceId)" (click)="toggleFavorite(s.spaceId, $event)">
+              favorite
+            </span>
+          </div>
         </div>
       </div>
     </div>
@@ -109,6 +112,10 @@
         位置交通
       </button>
 
+      <button [class.active]="activeTab === 'notice'" (click)="setTab('notice')">
+        注意事項
+      </button>
+
       <button [class.active]="activeTab === 'review'" (click)="setTab('review')">
         評價 (0)
       </button>
@@ -123,8 +130,21 @@
           <h2>空間介紹</h2>
           <p>
             本空間可容納 {{ space?.capacity }} 人使用，
-            適合會議討論、專案協作及商務簡報。
+            適合會議討論、專案協作及商務簡報，
+            打造兼具效率與舒適感的共享辦公環境。
           </p>
+
+          <hr class="space-rules__divider">
+
+          <h2>適合活動</h2>
+          <div class="activity-tags">
+            <span># 遠距工作</span>
+            <span># 臨時會議</span>
+            <span># 線上面試</span>
+            <span># 自習閱讀</span>
+            <span># 新創團隊短期辦公</span>
+            <span># 自由接案工作</span>
+          </div>
         </section>
 
         <!-- location -->
@@ -144,7 +164,47 @@
 
           </div>
         </section>
+        <section *ngSwitchCase="'notice'">
+          <h2>使用規範</h2>
+          <ul class="rule-list">
+            <li><span class="material-symbols-outlined">schedule</span>
+              請依預約時段準時進場與離場，避免影響下一位租借者使用權益。
+            </li>
+            <li><span class="material-symbols-outlined">cleaning_services</span>
+              使用完畢後請協助恢復場地原狀，並將垃圾分類丟棄。
+            </li>
+            <li><span class="material-symbols-outlined">wifi</span>
+              場地提供免費 Wi-Fi，請勿從事違法或影響網路穩定之行為。
+            </li>
+            <li><span class="material-symbols-outlined">construction</span>
+              設備使用如有異常，請立即聯繫管理人員協助處理。
+            </li>
+            <li><span class="material-symbols-outlined">groups</span>
+              使用人數請勿超過空間核定容量，以維護安全與使用品質。
+            </li>
+          </ul>
 
+          <hr class="space-rules__divider">
+
+          <h2>禁止事項</h2>
+          <ul class="rule-list">
+            <li><span class="material-symbols-outlined">smoke_free</span>
+              場地全面禁菸、電子煙及其他煙草產品，請勿在室內或指定禁菸區域吸菸。
+            </li>
+            <li><span class="material-symbols-outlined">volume_off</span>
+              請勿大聲喧嘩或播放高音量音樂，以免影響周邊環境。
+            </li>
+            <li><span class="material-symbols-outlined">local_bar</span>
+              未經同意禁止攜帶酒精飲品或危險物品進入場地。
+            </li>
+            <li><span class="material-symbols-outlined">pets</span>
+              除導盲犬等工作犬外，禁止攜帶寵物入內。
+            </li>
+            <li><span class="material-symbols-outlined">block</span>
+              禁止從事任何違法、危險或損害場地設備之行為。
+            </li>
+          </ul>
+        </section>
         <!-- review -->
         <section *ngSwitchCase="'review'">
           <h2>評價</h2>
@@ -156,7 +216,7 @@
       <!-- =========================SIDE AREA ========================== -->
       <div class="content-tabs__side">
         <section *ngSwitchCase="'amenities'">
-          <h3>設備服務</h3>
+          <h2>設備服務</h2>
           <div class="amenities-card">
 
             <ul>

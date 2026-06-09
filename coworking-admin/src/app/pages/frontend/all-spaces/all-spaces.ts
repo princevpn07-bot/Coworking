@@ -9,6 +9,7 @@ import { HttpClient } from '@angular/common/http';
 import { DatetimeFilter } from '../../../shared/datetime-filter/datetime-filter';
 import * as L from 'leaflet';
 import 'leaflet.markercluster';
+import { NgZone } from '@angular/core';
 
 
 @Component({
@@ -21,26 +22,26 @@ import 'leaflet.markercluster';
 })
 export class AllSpaces implements OnInit, AfterViewInit {
 
-  
+
   // 宣告空間陣列
   spaces: any[] = [];
 
   // 💡 新增：用來完好保存從後端 API 撈出來的「最原始、未篩選」的數據快照
   allSpacesData: any[] = [];
-// 篩選變數
+  // 篩選變數
   selectedCapacity: number = 0;
   searchKeyword: string = '';
-  
+
   // 選單開關狀態
   isPriceFilterOpen: boolean = false;
   isRegionFilterOpen: boolean = false;
   isDateTimeFilterOpen: boolean = false;
   // 💡 新增：儲存目前由子組件回傳的價格區間（預設為 0 ~ 100000）
   currentPriceRange = { min: 0, max: 100000 };
-   // ------------------------------------------
+  // ------------------------------------------
   // 🗺️ 區域篩選相關變數（✨ 新增）
   // ------------------------------------------
-  
+
   // 儲存目前由地區子組件回傳的勾選結果
   currentRegionRange = {
     city: '',
@@ -48,8 +49,8 @@ export class AllSpaces implements OnInit, AfterViewInit {
     stations: [] as string[]
   };
 
-  
-// 🌟 新增：控制時間彈窗的變數
+
+  // 🌟 新增：控制時間彈窗的變數
 
   searchDate: string = '';
   searchStartTime: string = '';
@@ -59,7 +60,7 @@ export class AllSpaces implements OnInit, AfterViewInit {
   map!: L.Map;
   markerLayer!: L.LayerGroup;
 
-  constructor(private locationService: LocationService, private router: Router) { }
+  constructor(private locationService: LocationService, private router: Router, private ngZone: NgZone) { }
 
   ngOnInit(): void { }
 
@@ -95,9 +96,9 @@ export class AllSpaces implements OnInit, AfterViewInit {
   @HostListener('document:click', ['$event'])
   onDocumentClick(event: MouseEvent) {
     const target = event.target as HTMLElement;
-    if (!target.closest('.search-group__item') && 
-        !target.closest('.price-box-wrapper') && 
-        !target.closest('.region-box-wrapper')) {
+    if (!target.closest('.search-group__item') &&
+      !target.closest('.price-box-wrapper') &&
+      !target.closest('.region-box-wrapper')) {
       this.closeAllFilters();
     }
   }
@@ -126,8 +127,8 @@ export class AllSpaces implements OnInit, AfterViewInit {
     this.searchDate = result.date;
     this.searchStartTime = result.startTime;
     this.searchEndTime = result.endTime;
-  // 🌟 核心修正：選完時間後，不再只做前端過濾，而是直接重新 call API
-    this.onSearch(); 
+    // 🌟 核心修正：選完時間後，不再只做前端過濾，而是直接重新 call API
+    this.onSearch();
     this.isDateTimeFilterOpen = false;
   }
 
@@ -149,14 +150,14 @@ export class AllSpaces implements OnInit, AfterViewInit {
     if (this.searchDate) {
       // 由於我們 UI 可能會傳 "2026/06/14 至 2026/06/16" 這種區間
       // 目前 C# API 只接收單一日期，所以我們先擷取前面的第一天，並將 / 換成 -
-      const firstDate = this.searchDate.split(' ')[0]; 
+      const firstDate = this.searchDate.split(' ')[0];
       formattedDate = firstDate.replace(/\//g, '-'); // 變成 "2026-06-14"
     }
 
     // 2. 處理時間變數
     const start = this.searchStartTime || undefined;
     const end = this.searchEndTime || undefined;
-    
+
     this.locationService.getFrontendSpaces(keyword, capacity, formattedDate, start, end).subscribe({
       next: (data: any[]) => {
         this.allSpacesData = data.map(item => ({
@@ -183,13 +184,13 @@ export class AllSpaces implements OnInit, AfterViewInit {
     this.spaces = this.allSpacesData.filter((space) => {
       const spacePrice = Number(space.price);
       const matchesPrice = spacePrice >= filterMin && spacePrice <= filterMax;
-      
+
       const fullAddressText = (space.name || '') + (space.location || '') + (space.dbAddress || '');
       const matchesCity = !this.currentRegionRange.city || fullAddressText.includes(this.currentRegionRange.city);
-      const matchesDistrict = this.currentRegionRange.districts.length === 0 || 
-                              this.currentRegionRange.districts.some(dist => fullAddressText.includes(dist));
-      const matchesMrt = this.currentRegionRange.stations.length === 0 || 
-                         this.currentRegionRange.stations.some(station => (space.location || '').includes(station));
+      const matchesDistrict = this.currentRegionRange.districts.length === 0 ||
+        this.currentRegionRange.districts.some(dist => fullAddressText.includes(dist));
+      const matchesMrt = this.currentRegionRange.stations.length === 0 ||
+        this.currentRegionRange.stations.some(station => (space.location || '').includes(station));
 
       return matchesPrice && matchesCity && matchesDistrict && matchesMrt;
     });
@@ -199,7 +200,7 @@ export class AllSpaces implements OnInit, AfterViewInit {
   onSearch(): void {
     // 統一從這裡把所有的搜尋條件傳給 loadSpacesFromDb
     this.loadSpacesFromDb(
-      this.searchKeyword.trim() || undefined, 
+      this.searchKeyword.trim() || undefined,
       this.selectedCapacity > 0 ? this.selectedCapacity : undefined);
   }
 
@@ -211,7 +212,7 @@ export class AllSpaces implements OnInit, AfterViewInit {
       if (space.latitude == null || space.longitude == null) return;
       const latlng: L.LatLngExpression = [space.latitude, space.longitude];
       bounds.extend(latlng);
-      
+
       const marker = L.marker(latlng, { riseOnHover: true }).bindPopup(`
         <div class="map-popup">
           <div class="map-popup__title">${space.name}</div>
@@ -224,6 +225,8 @@ export class AllSpaces implements OnInit, AfterViewInit {
   }
 
   goToSpaceDetail(spaceId: any): void {
-    this.router.navigate(['/space-detail', spaceId]);
+    this.ngZone.run(() => {
+      this.router.navigate(['/space-detail', spaceId]);
+    });
   }
 }

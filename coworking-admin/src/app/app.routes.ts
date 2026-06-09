@@ -16,7 +16,7 @@ import { Register } from './pages/auth/register/register';
 import { MyOrders } from './pages/frontend/my-orders/my-orders';
 import { PaymentComponent } from './pages/frontend/payment-component/payment-component';
 import { UserProfile } from './pages/frontend/user-profile/user-profile';
-
+import { MyFavorites } from './pages/frontend/my-favorites/my-favorites';
 
 export const routes: Routes = [
   {
@@ -28,9 +28,10 @@ export const routes: Routes = [
       { path: 'space/:id', component: SpaceDetail },
       { path: 'my-orders', component: MyOrders },
       { path: 'payment', component: PaymentComponent },
-      { path: 'space-detail/:id', component:  SpaceDetail },
-      { path: 'user-profile', component: UserProfile }
-      
+      { path: 'space-detail/:id', component: SpaceDetail },
+      { path: 'user-profile', component: UserProfile },
+      {path: 'my-favorites',component: MyFavorites}
+
     ]
   },
   { path: 'login', component: Login },
@@ -42,11 +43,11 @@ export const routes: Routes = [
     children: [
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
       { path: 'dashboard', component: Dashboard, data: { title: '儀表板總覽' } },
-      { path: 'spaces',    component: Spaces,    data: { title: '空間與資產' } },
-      { path: 'bookings',  component: Bookings,  data: { title: '預訂與日曆' } },
-      { path: 'resources', component: Resources,  data: { title: '資源調配'   } },
-      { path: 'members',   component: Members,   data: { title: '成員與公司' } },
-      { path: 'profile',   component: Profile,   data: { title: '個人資料'   } }
+      { path: 'spaces', component: Spaces, data: { title: '空間與資產' } },
+      { path: 'bookings', component: Bookings, data: { title: '預訂與日曆' } },
+      { path: 'resources', component: Resources, data: { title: '資源調配' } },
+      { path: 'members', component: Members, data: { title: '成員與公司' } },
+      { path: 'profile', component: Profile, data: { title: '個人資料' } }
     ]
   }
 ];

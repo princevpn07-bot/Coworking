@@ -1,10 +1,10 @@
-import { Component, inject } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { SpaceDetailService, SpaceDetailDto } from '../../../services/space-detail.service';
 import { ActivatedRoute } from '@angular/router';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
-
+import { FavoriteService } from '../../../services/favorite';
 
 @Component({
   selector: 'app-space-detail',
@@ -15,7 +15,7 @@ import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 
 })
 
-export class SpaceDetail {
+export class SpaceDetail implements OnInit {
 
   // =========================
   // inject
@@ -23,7 +23,15 @@ export class SpaceDetail {
   private route = inject(ActivatedRoute);
   private spaceDetailService = inject(SpaceDetailService);
 
-  constructor(private sanitizer: DomSanitizer) { }
+
+  constructor(private sanitizer: DomSanitizer, public favoriteService: FavoriteService) { }
+  toggleFavorite(spaceId: number, event: Event) {
+    event.stopPropagation();
+    this.favoriteService.toggleFavorite(spaceId);
+  }
+
+
+  protected detailService = inject(SpaceDetailService);
 
   // =========================
   // state
@@ -48,9 +56,9 @@ export class SpaceDetail {
     '3': '每月'
   };
 
-  activeTab: 'intro' | 'amenities' | 'location' | 'review' = 'intro';
+  activeTab: 'intro' | 'amenities' | 'location' | 'notice' | 'review' = 'intro';
 
-  setTab(tab: 'intro' | 'amenities' | 'location' | 'review') {
+  setTab(tab: 'intro' | 'amenities' | 'location' | 'notice' | 'review') {
     this.activeTab = tab;
   }
 
@@ -97,6 +105,9 @@ export class SpaceDetail {
         console.error(err);
         this.loading = false;
       }
+
     });
+
   }
+
 }

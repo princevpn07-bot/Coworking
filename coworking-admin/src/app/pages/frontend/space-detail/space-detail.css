@@ -309,6 +309,25 @@
   cursor: pointer;
 }
 
+.favorite-icon {
+  cursor: pointer;
+  color: #695c4e;
+
+  font-variation-settings:
+    'FILL' 0,
+    'wght' 400,
+    'GRAD' 0,
+    'opsz' 24;
+}
+
+.favorite-icon.filled {
+  font-variation-settings:
+    'FILL' 1,
+    'wght' 400,
+    'GRAD' 0,
+    'opsz' 24;
+}
+
 /* Content Tabs */
 .content-tabs {
   margin-bottom: 120px;
@@ -445,6 +464,60 @@
   border-color: #b8aea3;
 }
 
+.rule-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.rule-list li {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+
+  margin-bottom: 16px;
+
+  font-size: 18px;
+  color: #4c463e;
+  line-height: 1.6;
+}
+
+.rule-list .material-symbols-outlined {
+  font-size: 22px;
+
+  color: #8a7a67;
+
+  flex-shrink: 0;
+
+  margin-top: 3px;
+}
+
+/* 區塊分隔線 */
+.space-rules__divider {
+  border: 0;
+  border-top: 1px solid #e8e1d8;
+
+  margin: 40px 0;
+}
+
+.activity-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.activity-tags span {
+  padding: 8px 16px;
+
+  background: #f5f1eb;
+  border: 1px solid #e8e1d8;
+  border-radius: 999px;
+
+  color: #695c4e;
+  font-size: 16px;
+  font-weight: 500;
+}
+
 .amenities-card {
   background-color: #f8f2f0;
   border-radius: 12px;
@@ -452,7 +525,7 @@
   padding: 32px;
 }
 
-.content-tabs__side section h3 {
+.content-tabs__side section h2 {
   font-size: 32px;
   font-weight: 600;
   margin-bottom: 24px;

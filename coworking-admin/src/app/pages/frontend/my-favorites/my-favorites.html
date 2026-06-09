@@ -1,0 +1,41 @@
+<div class="favorites-page">
+  <div class="container">
+    <div class="page-header">
+      <h1>我的收藏</h1>
+      <p class="subtitle">
+        共收藏 {{ favorites.length }} 個空間
+      </p>
+    </div>
+    @if (favorites.length === 0) {
+    <div class="empty-state">
+      <div class="empty-icon">❤️</div>
+      <h3>尚未收藏任何空間</h3>
+      <p>收藏後會顯示在這裡</p>
+    </div>
+    } @else {
+    <div class="favorite-list">
+      @for (space of favorites; track space.space_id) {
+      <div class="favorite-card">
+        <div class="favorite-info">
+          <h3>
+            空間名稱：{{ space.space_number}}
+          </h3>
+          <p>
+            容量：{{ space.capacity ?? '未知' }}
+          </p>
+          <p>
+            狀態：{{ space.status ?? '未知' }}
+          </p>
+          <a [routerLink]="['/space-detail', space.space_id]">
+            查看詳情
+          </a>
+        </div>
+        <button (click)="removeFavorite(space.space_id)">
+          移除
+        </button>
+      </div>
+      }
+    </div>
+    }
+  </div>
+</div>
