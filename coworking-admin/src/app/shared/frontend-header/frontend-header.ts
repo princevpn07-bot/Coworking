@@ -3,6 +3,7 @@ import { Router, RouterLink, RouterLinkActive } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { AuthService } from '../../services/auth';
 import { ProfileService } from '../../services/profile';
+import { hasBackendAccess } from '../../models/role.model';
 
 @Component({
   selector: 'app-frontend-header',
@@ -15,6 +16,7 @@ export class FrontendHeader implements OnInit {
   username = '';
   showDropdown = false;
   avatarUrl = '';
+  canLoginBackend = false;
 
   constructor(private auth: AuthService, private router: Router, private profileService: ProfileService) {}
 
@@ -22,7 +24,7 @@ export class FrontendHeader implements OnInit {
     this.isLoggedIn = this.auth.isLoggedIn();
     if (this.isLoggedIn) {
       this.username = this.auth.getUsername();
-
+      this.canLoginBackend = hasBackendAccess(this.auth.getrole());
       this.profileService.avatar$.subscribe(url => {
         this.avatarUrl = url;
       });

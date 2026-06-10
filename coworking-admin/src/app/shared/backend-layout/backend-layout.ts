@@ -1,5 +1,6 @@
 import { Component, OnInit, OnDestroy, NgZone } from '@angular/core';
 import { RouterOutlet, RouterLink, RouterLinkActive, Router, ActivatedRoute, NavigationEnd } from '@angular/router';
+import { AuthService } from '../../services/auth';
 import { filter } from 'rxjs';
 
 const WEEKDAYS = ['星期日', '星期一', '星期二', '星期三', '星期四', '星期五', '星期六'];
@@ -20,6 +21,7 @@ export class BackendLayout implements OnInit, OnDestroy {
     private router: Router,
     private activatedRoute: ActivatedRoute,
     private ngZone: NgZone,
+    private auth: AuthService
   ) {}
 
   ngOnInit() {
@@ -62,5 +64,10 @@ export class BackendLayout implements OnInit, OnDestroy {
     let route = this.activatedRoute;
     while (route.firstChild) route = route.firstChild;
     return route.snapshot.data['title'] ?? '';
+  }
+
+  logout() {
+    this.auth.logout();
+    this.router.navigate(['/login']);
   }
 }
