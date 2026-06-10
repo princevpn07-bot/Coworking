@@ -14,6 +14,7 @@ namespace CoworkingAPI.Models
         public decimal? longitude {get; set;}
         public decimal? latitude {get; set;}
         public string? mrt_info {get; set;}
+        public int? owner_user_id { get; set; }
 
         [JsonIgnore]
         public ICollection<Space>? Spaces { get; set; }

@@ -101,6 +101,13 @@ namespace CoworkingAPI.Controllers
                 if (employee?.location_id != null)
                     locationIdClaim = employee.location_id.ToString();
             }
+            else if (user.role == 60)
+            {
+                var ownedLocation = await _context.Locations
+                    .FirstOrDefaultAsync(l => l.owner_user_id == user.user_id);
+                if (ownedLocation != null)
+                    locationIdClaim = ownedLocation.location_id.ToString();
+            }
 
             var claims = new[]
             {

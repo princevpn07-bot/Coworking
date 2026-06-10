@@ -42,7 +42,7 @@ namespace CoworkingAPI.Controllers
                 UserId = m.user_id,
                 Name = m.name,
                 Email = m.email,
-                Role = m.role == 99 ? "admin" : m.role == 80 ? "staff" : m.role == 20 ? "client" : "unknown",
+                Role = m.role == 99 ? "admin" : m.role == 80 ? "staff" : m.role == 60 ? "partner" : m.role == 20 ? "client" : "unknown",
                 Status = m.is_active,
                 LineId = m.line_id
             }).ToListAsync();
@@ -103,10 +103,20 @@ namespace CoworkingAPI.Controllers
                     employee.is_active = true;
                 }
             }
+            else if (role == 60)
+            {
+                if (dto?.LocationId != null)
+                {
+                    var location = await _context.Locations.FindAsync(dto.LocationId);
+                    if (location != null) location.owner_user_id = id;
+                }
+            }
             else if (role == 20)
             {
                 var employee = await _context.Employees.FirstOrDefaultAsync(e => e.user_id == id);
                 if (employee != null) employee.is_active = false;
+                var ownedLocations = await _context.Locations.Where(l => l.owner_user_id == id).ToListAsync();
+                foreach (var loc in ownedLocations) loc.owner_user_id = null;
             }
 
             await _context.SaveChangesAsync();

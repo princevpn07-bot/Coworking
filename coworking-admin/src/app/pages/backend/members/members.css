@@ -198,6 +198,7 @@
 
 .badge.admin     { background-color: #333; color: white; }
 .badge.editor    { background-color: #C1E899; color: #102008; }
+.badge.partner   { background-color: #D4EDFF; color: #0057A8; }
 .badge.viewer    { background-color: #E0E2EC; color: #44474E; }
 .status {
   font-size: 14px;

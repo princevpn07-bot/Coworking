@@ -1,6 +1,7 @@
 <div class="members-top-bar">
   <div class="tabs">
     <button class="tab-item" [class.active]="activeTab === 'client'" (click)="setTab('client')">客戶 / 公司</button>
+    <button class="tab-item" [class.active]="activeTab === 'partner'" (click)="setTab('partner')">合作夥伴</button>
     <button class="tab-item" [class.active]="activeTab === 'staff'" (click)="setTab('staff')">內部員工</button>
   </div>
   <div class="header-actions">
@@ -131,10 +132,22 @@
         <label>角色</label>
         <select [(ngModel)]="pendingRole">
           <option [ngValue]="20">客戶</option>
+          <option [ngValue]="60">合作夥伴</option>
           <option [ngValue]="80">員工</option>
           <option [ngValue]="99">管理員</option>
         </select>
       </div>
+      @if (isPartnerRole) {
+        <div class="form-group">
+          <label>擁有地點</label>
+          <select [(ngModel)]="employeeForm.locationId">
+            <option [ngValue]="null">-- 不指定 --</option>
+            @for (loc of locations; track loc.location_id) {
+              <option [ngValue]="loc.location_id">{{ loc.city }} {{ loc.address }}</option>
+            }
+          </select>
+        </div>
+      }
       @if (isStaffRole) {
         <div class="form-row">
           <div class="form-group">
@@ -296,6 +309,7 @@
         <label>角色</label>
         <select [(ngModel)]="newUser.role">
           <option [ngValue]="20">客戶</option>
+          <option [ngValue]="60">合作夥伴</option>
           <option [ngValue]="80">員工</option>
           <option [ngValue]="99">管理員</option>
         </select>

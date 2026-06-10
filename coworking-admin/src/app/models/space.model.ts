@@ -7,6 +7,7 @@ export interface Location {
   longitude: number | null;
   latitude: number | null;
   mrt_info: string | null;
+  owner_user_id: number | null;
 }
 
 export interface Space {

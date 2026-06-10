@@ -16,10 +16,10 @@ export class Members implements OnInit {
   private cdr = inject(ChangeDetectorRef);
   private currentUserEmail = this.authService.getCurrentUserEmail();
   data: MemberPageData | null = null;
-  activeTab: 'client' | 'staff' = 'client';
+  activeTab: 'client' | 'staff' | 'partner' = 'client';
   searchQuery = '';
 
-  setTab(tab: 'client' | 'staff'): void {
+  setTab(tab: 'client' | 'staff' | 'partner'): void {
     this.activeTab = tab;
   }
 
@@ -29,6 +29,8 @@ export class Members implements OnInit {
     return this.data.memberList.filter(m => {
       const matchTab = this.activeTab === 'client'
         ? m.role === 'client'
+        : this.activeTab === 'partner'
+        ? m.role === 'partner'
         : m.role === 'admin' || m.role === 'staff';
       if (!matchTab) return false;
       if (!q) return true;
@@ -71,6 +73,7 @@ export class Members implements OnInit {
   roleClass(role: string | null): string {
     if (role === 'admin') return 'admin';
     if (role === 'staff') return 'editor';
+    if (role === 'partner') return 'partner';
     if (role === 'client') return 'viewer';
     return 'viewer';
   }
@@ -78,6 +81,7 @@ export class Members implements OnInit {
   roleLabel(role: string | null): string {
     if (role === 'admin') return '管理員';
     if (role === 'staff') return '員工';
+    if (role === 'partner') return '合作夥伴';
     if (role === 'client') return '客戶';
     return '未知';
   }
@@ -115,6 +119,7 @@ export class Members implements OnInit {
   employeeForm = { department: '', jobTitle: '', locationId: null as number | null, birth: '' };
 
   get isStaffRole(): boolean { return this.pendingRole === 80 || this.pendingRole === 99; }
+  get isPartnerRole(): boolean { return this.pendingRole === 60; }
 
   openRoleModal(member: MemberItem): void {
     this.selectedMember = member;
@@ -137,6 +142,8 @@ export class Members implements OnInit {
       jobTitle: this.employeeForm.jobTitle || undefined,
       locationId: this.employeeForm.locationId ?? undefined,
       birth: this.employeeForm.birth || undefined,
+    } : this.isPartnerRole ? {
+      locationId: this.employeeForm.locationId ?? undefined,
     } : undefined;
     this.memberService.updateRole(this.selectedMember.userId, this.pendingRole, employeeData).subscribe({
       next: () => { this.actionSubmitting.set(false); this.closeRoleModal(); this.loadMemberPage(); },
@@ -151,6 +158,7 @@ export class Members implements OnInit {
   private roleValue(role: string | null): number {
     if (role === 'admin') return 99;
     if (role === 'staff') return 80;
+    if (role === 'partner') return 60;
     return 20;
   }
 
