@@ -9,7 +9,9 @@
           <button type="button" (click)="prevMonth()">&#8249;</button>
           <button type="button" (click)="nextMonth()">&#8250;</button>
         </div>
-        <button type="button" class="btn-primary" (click)="openCreateModal()">+ 新增預約</button>
+        @if (!isPartner) {
+          <button type="button" class="btn-primary" (click)="openCreateModal()">+ 新增預約</button>
+        }
       </div>
     </header>
 

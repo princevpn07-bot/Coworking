@@ -138,14 +138,23 @@
         </select>
       </div>
       @if (isPartnerRole) {
+        <div class="form-row">
+          <div class="form-group">
+            <label>城市</label>
+            <input type="text" [(ngModel)]="partnerLocationForm.city" placeholder="例：台北市" />
+          </div>
+          <div class="form-group">
+            <label>電話</label>
+            <input type="text" [(ngModel)]="partnerLocationForm.phone" placeholder="選填" />
+          </div>
+        </div>
         <div class="form-group">
-          <label>擁有地點</label>
-          <select [(ngModel)]="employeeForm.locationId">
-            <option [ngValue]="null">-- 不指定 --</option>
-            @for (loc of locations; track loc.location_id) {
-              <option [ngValue]="loc.location_id">{{ loc.city }} {{ loc.address }}</option>
-            }
-          </select>
+          <label>地址</label>
+          <input type="text" [(ngModel)]="partnerLocationForm.address" placeholder="例：信義區松仁路100號" />
+        </div>
+        <div class="form-group">
+          <label>捷運資訊</label>
+          <input type="text" [(ngModel)]="partnerLocationForm.mrtInfo" placeholder="選填，例：近市政府站2號出口" />
         </div>
       }
       @if (isStaffRole) {
@@ -307,13 +316,35 @@
 
       <div class="form-group">
         <label>角色</label>
-        <select [(ngModel)]="newUser.role">
+        <select [(ngModel)]="newUser.role" [disabled]="currentUserIsStaff">
           <option [ngValue]="20">客戶</option>
-          <option [ngValue]="60">合作夥伴</option>
-          <option [ngValue]="80">員工</option>
-          <option [ngValue]="99">管理員</option>
+          @if (!currentUserIsStaff) {
+            <option [ngValue]="60">合作夥伴</option>
+            <option [ngValue]="80">員工</option>
+            <option [ngValue]="99">管理員</option>
+          }
         </select>
       </div>
+      @if (isNewUserPartnerRole) {
+        <div class="form-row">
+          <div class="form-group">
+            <label>城市</label>
+            <input type="text" [(ngModel)]="newUser.partnerCity" placeholder="例：台北市" />
+          </div>
+          <div class="form-group">
+            <label>電話</label>
+            <input type="text" [(ngModel)]="newUser.partnerPhone" placeholder="選填" />
+          </div>
+        </div>
+        <div class="form-group">
+          <label>地址</label>
+          <input type="text" [(ngModel)]="newUser.partnerAddress" placeholder="例：信義區松仁路100號" />
+        </div>
+        <div class="form-group">
+          <label>捷運資訊</label>
+          <input type="text" [(ngModel)]="newUser.partnerMrtInfo" placeholder="選填，例：近市政府站2號出口" />
+        </div>
+      }
       @if (isNewUserStaffRole) {
         <div class="form-row">
           <div class="form-group">

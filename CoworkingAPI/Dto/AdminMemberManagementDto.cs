@@ -38,6 +38,10 @@ namespace CoworkingAPI.Dto
         public string? JobTitle { get; set; }
         public int? LocationId { get; set; }
         public DateOnly? Birth { get; set; }
+        public string? PartnerCity { get; set; }
+        public string? PartnerAddress { get; set; }
+        public string? PartnerPhone { get; set; }
+        public string? PartnerMrtInfo { get; set; }
     }
 
     public class CreateMemberDto
@@ -53,5 +57,9 @@ namespace CoworkingAPI.Dto
         public string? JobTitle { get; set; }
         public int? LocationId { get; set; }
         public DateOnly? Birth { get; set; }
+        public string? PartnerCity { get; set; }
+        public string? PartnerAddress { get; set; }
+        public string? PartnerPhone { get; set; }
+        public string? PartnerMrtInfo { get; set; }
     }
 }

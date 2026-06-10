@@ -15,6 +15,8 @@ export class BackendLayout implements OnInit, OnDestroy {
   pageTitle = '';
   currentTime = '';
   isDark = false;
+  get isAdmin(): boolean { return this.auth.isAdmin(); }
+  get isPartner(): boolean { return this.auth.isPartner(); }
   private timer: ReturnType<typeof setInterval> | null = null;
 
   constructor(

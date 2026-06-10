@@ -86,6 +86,10 @@ export class AuthService
     return id ? parseInt(id) : null;
   }
 
+  isAdmin(): boolean { return this.getrole() === '99'; }
+  isStaff(): boolean { return this.getrole() === '80'; }
+  isPartner(): boolean { return this.getrole() === '60'; }
+
   isLoggedIn(): boolean
   {
     return !!this.gettoken();

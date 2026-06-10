@@ -2,6 +2,7 @@ import { Component, OnInit, inject, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { BookingService } from '../../../services/booking';
+import { AuthService } from '../../../services/auth';
 import { Booking, BookingDetail, CalendarDay, UserOption, RentOption, EmployeeOption, CreateBookingPayload } from '../../../models/booking.model';
 
 @Component({
@@ -12,7 +13,9 @@ import { Booking, BookingDetail, CalendarDay, UserOption, RentOption, EmployeeOp
 })
 export class Bookings implements OnInit {
   private bookingService = inject(BookingService);
+  private authService = inject(AuthService);
   private cdr = inject(ChangeDetectorRef);
+  get isPartner(): boolean { return this.authService.isPartner(); }
 
   currentDate = new Date();
   calendarDays: CalendarDay[] = [];

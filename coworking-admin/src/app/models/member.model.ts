@@ -16,6 +16,10 @@ export interface CreateUserPayload {
   jobTitle?: string;
   locationId?: number;
   birth?: string;
+  partnerCity?: string;
+  partnerAddress?: string;
+  partnerPhone?: string;
+  partnerMrtInfo?: string;
 }
 
 export interface MemberItem {
@@ -33,6 +37,10 @@ export interface UpdateRolePayload {
   jobTitle?: string;
   locationId?: number;
   birth?: string;
+  partnerCity?: string;
+  partnerAddress?: string;
+  partnerPhone?: string;
+  partnerMrtInfo?: string;
 }
 
 export interface LocationOption {

@@ -4,6 +4,7 @@ using CoworkingAPI.Dto;
 using CoworkingAPI.Models;
 using CoworkingAPI.Services;
 using Microsoft.EntityFrameworkCore;
+using System.Security.Claims;
 
 namespace CoworkingAPI.Controllers
 {
@@ -18,6 +19,14 @@ namespace CoworkingAPI.Controllers
         {
             _context = context;
             _lineService = lineService;
+        }
+
+        private int? GetLocationFilter()
+        {
+            var role = int.TryParse(User.FindFirst(ClaimTypes.Role)?.Value, out var r) ? r : 0;
+            if (role == 99) return null;
+            var locStr = User.FindFirst("location_id")?.Value;
+            return int.TryParse(locStr, out var l) && l > 0 ? l : null;
         }
 
         [HttpPatch("{id}/status")]
@@ -46,7 +55,10 @@ namespace CoworkingAPI.Controllers
         [HttpGet("calendar")]
         public async Task<IActionResult> calendar()
         {
-            var booking = await _context.Bookings.Select(b => new AdminBookingListDto
+            var locationId = GetLocationFilter();
+            var booking = await _context.Bookings
+                .Where(b => !locationId.HasValue || b.Rent!.Space!.location_id == locationId)
+                .Select(b => new AdminBookingListDto
             {
                 contract_id = b.contract_id,
                 username = b.User != null ? b.User.name : null,
@@ -185,9 +197,13 @@ namespace CoworkingAPI.Controllers
         }
 
         [HttpGet("details")]
-        public async Task<IActionResult> details([FromQuery ]DateTime date)
+        public async Task<IActionResult> details([FromQuery] DateTime date)
         {
-            var details = await _context.Bookings.Where(b => b.start_date.HasValue && b.start_date.Value.Date == date.Date).Select(b => new AdminBookingDetailDto
+            var locationId = GetLocationFilter();
+            var details = await _context.Bookings
+                .Where(b => b.start_date.HasValue && b.start_date.Value.Date == date.Date
+                    && (!locationId.HasValue || b.Rent!.Space!.location_id == locationId))
+                .Select(b => new AdminBookingDetailDto
             {
                 contract_id = b.contract_id,
                 username = b.User != null ? b.User.name : null,

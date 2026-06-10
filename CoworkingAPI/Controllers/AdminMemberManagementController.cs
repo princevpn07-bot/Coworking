@@ -8,6 +8,7 @@ using CoworkingAPI.Dto;
 using CoworkingAPI.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Security.Claims;
 
 namespace CoworkingAPI.Controllers
 {
@@ -25,11 +26,18 @@ namespace CoworkingAPI.Controllers
         [HttpGet("memberpage")]
         public async Task<IActionResult> memberpage()
         {
-            int totalmember = await _context.Users.CountAsync();
+            var callerRole = int.TryParse(User.FindFirst(ClaimTypes.Role)?.Value, out var r) ? r : 0;
+            var isStaff = callerRole == 80;
+
+            var userQuery = _context.Users.AsQueryable();
+            if (isStaff)
+                userQuery = userQuery.Where(u => u.role == 20);
+
+            int totalmember = await userQuery.CountAsync();
 
             int booked = await _context.Bookings.Where(b => b.start_date == DateTime.Today).Select(b => b.user_id).Distinct().CountAsync();
 
-            int blocked = await _context.Users.CountAsync(m => m.is_active == false);
+            int blocked = await userQuery.CountAsync(m => m.is_active == false);
 
             var bookingCounts = await _context.Bookings
                 .Where(b => b.user_id != null)
@@ -37,7 +45,7 @@ namespace CoworkingAPI.Controllers
                 .Select(g => new { UserId = g.Key, Count = g.Count() })
                 .ToDictionaryAsync(x => x.UserId, x => x.Count);
 
-            var memberlist = await _context.Users.Select(m => new MemberListItemDto
+            var memberlist = await userQuery.Select(m => new MemberListItemDto
             {
                 UserId = m.user_id,
                 Name = m.name,
@@ -105,11 +113,14 @@ namespace CoworkingAPI.Controllers
             }
             else if (role == 60)
             {
-                if (dto?.LocationId != null)
+                _context.Locations.Add(new Location
                 {
-                    var location = await _context.Locations.FindAsync(dto.LocationId);
-                    if (location != null) location.owner_user_id = id;
-                }
+                    city = dto?.PartnerCity,
+                    address = dto?.PartnerAddress,
+                    phone = dto?.PartnerPhone,
+                    mrt_info = dto?.PartnerMrtInfo,
+                    owner_user_id = id
+                });
             }
             else if (role == 20)
             {
@@ -183,6 +194,18 @@ namespace CoworkingAPI.Controllers
                     location_id = dto.LocationId,
                     birth = dto.Birth,
                     is_active = true
+                });
+                await _context.SaveChangesAsync();
+            }
+            else if (dto.Role == 60)
+            {
+                _context.Locations.Add(new Location
+                {
+                    city = dto.PartnerCity,
+                    address = dto.PartnerAddress,
+                    phone = dto.PartnerPhone,
+                    mrt_info = dto.PartnerMrtInfo,
+                    owner_user_id = newUser.user_id
                 });
                 await _context.SaveChangesAsync();
             }

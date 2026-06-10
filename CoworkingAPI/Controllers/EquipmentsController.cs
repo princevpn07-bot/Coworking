@@ -3,6 +3,7 @@ using CoworkingAPI.Data;
 using CoworkingAPI.Dto;
 using CoworkingAPI.Models;
 using Microsoft.EntityFrameworkCore;
+using System.Security.Claims;
 
 namespace CoworkingAPI.Controllers
 {
@@ -17,6 +18,14 @@ namespace CoworkingAPI.Controllers
             _context = context;
         }
 
+        private int? GetLocationFilter()
+        {
+            var role = int.TryParse(User.FindFirst(ClaimTypes.Role)?.Value, out var r) ? r : 0;
+            if (role == 99) return null;
+            var locStr = User.FindFirst("location_id")?.Value;
+            return int.TryParse(locStr, out var l) && l > 0 ? l : null;
+        }
+
         [HttpGet("GetAll")]
         public async Task<IActionResult> GetAll()
         {
@@ -27,8 +36,10 @@ namespace CoworkingAPI.Controllers
         [HttpGet("GetAllCards")]
         public async Task<IActionResult> GetAllCards()
         {
+            var locationId = GetLocationFilter();
             var equipments = await _context.Equipments
                 .Include(e => e.Location)
+                .Where(e => !locationId.HasValue || e.location_id == locationId)
                 .ToListAsync();
 
             var spaceAsserts = await _context.spaceasserts

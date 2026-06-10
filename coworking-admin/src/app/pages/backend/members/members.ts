@@ -47,7 +47,8 @@ export class Members implements OnInit {
     return { name: '', email: '', password: '', phone: '', role: 20 };
   }
 
-  get isNewUserStaffRole(): boolean { return this.newUser.role === 80 || this.newUser.role === 99; }
+  get isNewUserStaffRole(): boolean { return this.newUser.role === 80; }
+  get isNewUserPartnerRole(): boolean { return this.newUser.role === 60; }
 
   private avatarColorList = ['', 'bg-green', 'bg-blue', 'bg-purple', 'bg-orange', 'bg-red'];
 
@@ -117,14 +118,17 @@ export class Members implements OnInit {
   pendingRole = 20;
   locations: LocationOption[] = [];
   employeeForm = { department: '', jobTitle: '', locationId: null as number | null, birth: '' };
+  partnerLocationForm = { city: '', address: '', phone: '', mrtInfo: '' };
 
-  get isStaffRole(): boolean { return this.pendingRole === 80 || this.pendingRole === 99; }
+  get isStaffRole(): boolean { return this.pendingRole === 80; }
   get isPartnerRole(): boolean { return this.pendingRole === 60; }
+  get currentUserIsStaff(): boolean { return this.authService.isStaff(); }
 
   openRoleModal(member: MemberItem): void {
     this.selectedMember = member;
     this.pendingRole = this.roleValue(member.role);
     this.employeeForm = { department: '', jobTitle: '', locationId: null, birth: '' };
+    this.partnerLocationForm = { city: '', address: '', phone: '', mrtInfo: '' };
     this.actionError.set('');
     this.showRoleModal.set(true);
     if (this.locations.length === 0) {
@@ -143,7 +147,10 @@ export class Members implements OnInit {
       locationId: this.employeeForm.locationId ?? undefined,
       birth: this.employeeForm.birth || undefined,
     } : this.isPartnerRole ? {
-      locationId: this.employeeForm.locationId ?? undefined,
+      partnerCity: this.partnerLocationForm.city || undefined,
+      partnerAddress: this.partnerLocationForm.address || undefined,
+      partnerPhone: this.partnerLocationForm.phone || undefined,
+      partnerMrtInfo: this.partnerLocationForm.mrtInfo || undefined,
     } : undefined;
     this.memberService.updateRole(this.selectedMember.userId, this.pendingRole, employeeData).subscribe({
       next: () => { this.actionSubmitting.set(false); this.closeRoleModal(); this.loadMemberPage(); },

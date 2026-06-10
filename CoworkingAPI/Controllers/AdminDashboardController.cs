@@ -2,6 +2,7 @@ using CoworkingAPI.Data;
 using CoworkingAPI.Dto;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Security.Claims;
 
 namespace CoworkingAPI.Controllers
 {
@@ -16,24 +17,37 @@ namespace CoworkingAPI.Controllers
             _context = context;
         }
 
+        private int? GetLocationFilter()
+        {
+            var role = int.TryParse(User.FindFirst(ClaimTypes.Role)?.Value, out var r) ? r : 0;
+            if (role == 99) return null;
+            var locStr = User.FindFirst("location_id")?.Value;
+            return int.TryParse(locStr, out var l) && l > 0 ? l : null;
+        }
+
         [HttpGet("summary")]
         public async Task<IActionResult> GetSummary()
         {
             var now = DateTime.Today;
             var firstOfMonth = new DateTime(now.Year, now.Month, 1);
             var firstOfNextMonth = firstOfMonth.AddMonths(1);
+            var locationId = GetLocationFilter();
 
-            var monthlyRevenue = await _context.Bookings
+            var query = _context.Bookings.AsQueryable();
+            if (locationId.HasValue)
+                query = query.Where(b => b.Rent!.Space!.location_id == locationId);
+
+            var monthlyRevenue = await query
                 .Where(b => b.status == 1 && b.start_date >= firstOfMonth && b.start_date < firstOfNextMonth)
                 .SumAsync(b => b.total_price ?? 0);
 
-            var activeContracts = await _context.Bookings
+            var activeContracts = await query
                 .CountAsync(b => b.status == 1 && b.end_date > now);
 
-            var todayBookings = await _context.Bookings
+            var todayBookings = await query
                 .CountAsync(b => b.created_date >= now && b.created_date < now.AddDays(1));
 
-            var expiringThisMonth = await _context.Bookings
+            var expiringThisMonth = await query
                 .CountAsync(b => b.status == 1 && b.end_date >= now && b.end_date < firstOfNextMonth);
 
             return Ok(new DashboardSummaryDto
@@ -50,8 +64,13 @@ namespace CoworkingAPI.Controllers
         {
             var now = DateTime.Today;
             var sevenDaysLater = now.AddDays(7);
+            var locationId = GetLocationFilter();
 
-            var result = await _context.Bookings
+            var query = _context.Bookings.AsQueryable();
+            if (locationId.HasValue)
+                query = query.Where(b => b.Rent!.Space!.location_id == locationId);
+
+            var result = await query
                 .Where(b => b.status == 1 && b.end_date >= now && b.end_date <= sevenDaysLater)
                 .OrderBy(b => b.end_date)
                 .Select(b => new ExpiringContractDto
@@ -71,7 +90,13 @@ namespace CoworkingAPI.Controllers
         [HttpGet("pending")]
         public async Task<IActionResult> GetPendingPayments()
         {
-            var result = await _context.Bookings
+            var locationId = GetLocationFilter();
+
+            var query = _context.Bookings.AsQueryable();
+            if (locationId.HasValue)
+                query = query.Where(b => b.Rent!.Space!.location_id == locationId);
+
+            var result = await query
                 .Where(b => b.status == 0)
                 .OrderBy(b => b.pay_deadline)
                 .Select(b => new PendingPaymentDto

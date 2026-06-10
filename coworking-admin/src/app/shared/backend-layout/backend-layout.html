@@ -17,14 +17,18 @@
         <span class="material-symbols-outlined">layers</span>
         空間與資產
       </a>
-      <a class="nav-item" routerLink="/backend/resources" routerLinkActive="active">
-        <span class="material-symbols-outlined">inventory_2</span>
-        資源調配
-      </a>
-      <a class="nav-item" routerLink="/backend/members" routerLinkActive="active">
-        <span class="material-symbols-outlined">group</span>
-        成員與公司
-      </a>
+      @if (!isPartner) {
+        <a class="nav-item" routerLink="/backend/resources" routerLinkActive="active">
+          <span class="material-symbols-outlined">inventory_2</span>
+          資源調配
+        </a>
+      }
+      @if (!isPartner) {
+        <a class="nav-item" routerLink="/backend/members" routerLinkActive="active">
+          <span class="material-symbols-outlined">group</span>
+          成員與公司
+        </a>
+      }
 
     </nav>
     <div class="sidebar-footer">

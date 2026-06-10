@@ -3,6 +3,7 @@ using CoworkingAPI.Data;
 using CoworkingAPI.Dto;
 using CoworkingAPI.Models;
 using Microsoft.EntityFrameworkCore;
+using System.Security.Claims;
 
 namespace CoworkingAPI.Controllers
 {
@@ -17,10 +18,21 @@ namespace CoworkingAPI.Controllers
             _context = context;
         }
 
+        private int? GetLocationFilter()
+        {
+            var role = int.TryParse(User.FindFirst(ClaimTypes.Role)?.Value, out var r) ? r : 0;
+            if (role == 99) return null;
+            var locStr = User.FindFirst("location_id")?.Value;
+            return int.TryParse(locStr, out var l) && l > 0 ? l : null;
+        }
+
         [HttpGet("spaceinfo")]
         public async Task<IActionResult> spaceinfo()
         {
-            var spaceinfo = await _context.Spaces.Select(s => new AdminSpaceInfoDto
+            var locationId = GetLocationFilter();
+            var spaceinfo = await _context.Spaces
+                .Where(s => !locationId.HasValue || s.location_id == locationId)
+                .Select(s => new AdminSpaceInfoDto
             {
                 space_id = s.space_id,
                 location_id = s.location_id,
@@ -31,6 +43,7 @@ namespace CoworkingAPI.Controllers
                 assetcount = _context.spaceasserts.Count(sa => sa.space_id == s.space_id),
                 imagePath = _context.SpaceImages.Where(i => i.space_id == s.space_id).Select(i => i.image_path).FirstOrDefault()
             }).ToListAsync();
+
             return Ok(spaceinfo);
         }
 
