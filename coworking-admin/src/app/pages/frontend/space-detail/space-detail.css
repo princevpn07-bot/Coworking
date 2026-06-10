@@ -321,7 +321,8 @@
 
 }
 
-.hero__booking-card .btn-fav:hover {
+.hero__booking-card .btn-fav:hover,
+.hero__booking-card .btn-fav.active {
   background: #ffe9e9;
   border-color: #f2b8b8;
 }
@@ -357,7 +358,7 @@
   color: #c62828;
 }
 
-.hero__booking-card.btn-fav:hover .favorite-icon.filled {
+.hero__booking-card .btn-fav:hover .favorite-icon.filled {
   color: #c62828;
 }
 

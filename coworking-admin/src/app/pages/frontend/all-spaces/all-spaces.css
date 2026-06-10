@@ -24,8 +24,10 @@
 .listing-section__search-bar {
   padding: 1.5rem 2rem;
   border-bottom: 1px solid #cfc5bb;
-  z-index: 9999 !important;     /* 確保層級高於右側地圖與下方列表 */
-  overflow: visible !important;  /* 絕對不能是 hidden，否則彈窗會被切斷看不見 */
+  z-index: 9999 !important;
+  /* 確保層級高於右側地圖與下方列表 */
+  overflow: visible !important;
+  /* 絕對不能是 hidden，否則彈窗會被切斷看不見 */
 }
 
 .listing-section__feed {
@@ -48,7 +50,7 @@
   display: flex;
   border: 1px solid #cfc5bb;
   border-radius: 4px;
- overflow: visible !important;
+  overflow: visible !important;
   margin-bottom: 1rem;
 }
 
@@ -56,7 +58,8 @@
   flex: 1;
   display: flex;
   align-items: center;
-  padding:0.98rem 1rem; /*搜尋的框比例*/
+  padding: 0.98rem 1rem;
+  /*搜尋的框比例*/
   border-right: 1px solid #cfc5bb;
   background: #ffffff;
 }
@@ -122,6 +125,31 @@
   font-size: 1rem;
 }
 
+.capacity-filter {
+  position: relative;
+}
+
+.capacity-filter select {
+  width: 100%;
+
+  border: none;
+  background: transparent;
+
+  color: #504538;
+  font-size: 14px;
+  font-weight: 500;
+
+  cursor: pointer;
+  outline: none;
+
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+
+  padding-right: 24px;
+}
+
+
 /* Cards */
 .listing-info {
   margin-bottom: 1.5rem;
@@ -176,8 +204,9 @@
 .card__content {
   display: flex;
   justify-content: space-between;
-  align-items: flex-start;
+  align-items: baseline;
 }
+
 
 .card__title {
   font-size: 1.1rem;
@@ -207,6 +236,26 @@
 
 .card__fav:hover {
   color: #695c4e;
+}
+
+.card__fav .material-symbols-outlined {
+  color: #7e766d;
+  display: block;
+  font-variation-settings:
+    'FILL' 0,
+    'wght' 400,
+    'GRAD' 0,
+    'opsz' 24;
+}
+
+.card__fav .material-symbols-outlined.filled {
+  color: #d32f2f;
+
+  font-variation-settings:
+    'FILL' 1,
+    'wght' 500,
+    'GRAD' 0,
+    'opsz' 24;
 }
 
 /* Pagination */

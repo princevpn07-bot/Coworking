@@ -3,7 +3,7 @@
   <section class="listing-section">
     <div class="listing-section__search-bar">
       <div class="search-group">
-        
+
         <div class="search-group__item">
           <span class="material-symbols-outlined">search</span>
           <input type="text" [(ngModel)]="searchKeyword" (keyup.enter)="onSearch()" placeholder="地點" />
@@ -14,10 +14,10 @@
          <span style="color: #666; font-size: 14px; margin-left: 8px; flex: 1;">
          {{ searchDate ? (searchDate + ' ' + (searchStartTime | slice:0:5) + ' ~ ' + (searchEndTime | slice:0:5)) : '時間' }}
           </span>
-<span *ngIf="searchDate" class="material-symbols-outlined" 
-        (click)="searchDate=''; searchStartTime=''; searchEndTime=''; onSearch(); $event.stopPropagation()" 
+<span *ngIf="searchDate" class="material-symbols-outlined"
+        (click)="searchDate=''; searchStartTime=''; searchEndTime=''; onSearch(); $event.stopPropagation()"
         style="font-size: 16px; color: #999; margin-left: 4px; cursor: pointer; display: flex; align-items: center; justify-content: center; width: 22px; height: 22px; border-radius: 50%; transition: background 0.2s;"
-        onmouseover="this.style.backgroundColor='#f0f0f0'" 
+        onmouseover="this.style.backgroundColor='#f0f0f0'"
         onmouseout="this.style.backgroundColor='transparent'">
     close
   </span>
@@ -31,7 +31,7 @@
           </div>
         </div>
 
-        <div class="search-group__item" style="max-width: 120px;">
+        <div class="search-group__item capacity-filter" style="max-width: 120px;">
           <span class="material-symbols-outlined">person</span>
           <select [(ngModel)]="selectedCapacity" (change)="onSearch()">
             <option [value]="0">不限人數</option>
@@ -89,21 +89,23 @@
       </p>
 
       <div class="card-grid" *ngIf="spaces && spaces.length > 0; else noDataBlock">
-        <article class="card" *ngFor="let space of spaces" 
-       (click)="goToSpaceDetail(space.id)" 
+        <article class="card" *ngFor="let space of spaces"
+       (click)="goToSpaceDetail(space.id)"
            style="cursor: pointer;" >
           <div class="card__image-wrapper">
             <img [src]="space?.img" [alt]="space?.name"  />
             <span class="card__badge">{{ space?.capacity }}</span>
           </div>
           <div class="card__content">
-            <div>
+            <div class="card__info">
               <h3 class="card__title">{{ space?.name }}</h3>
               <p class="card__location">{{ space?.location }}</p>
               <p class="card__price">NT$ {{ space?.price | number }} / 月起</p>
             </div>
-            <button class="card__fav" (click)="$event.stopPropagation()">
-              <span class="material-symbols-outlined">favorite_border</span>
+            <button class="card__fav" (click)="toggleFavorite(space.id, $event)">
+              <span class="material-symbols-outlined"
+              [class.filled]="favoriteService.isFavorite(space.id)"
+              >favorite</span>
             </button>
           </div>
         </article>

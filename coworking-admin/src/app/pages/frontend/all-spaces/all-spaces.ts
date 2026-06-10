@@ -10,7 +10,7 @@ import { DatetimeFilter } from '../../../shared/datetime-filter/datetime-filter'
 import * as L from 'leaflet';
 import 'leaflet.markercluster';
 import { NgZone } from '@angular/core';
-
+import { FavoriteService } from '../../../services/favorite';
 
 @Component({
   selector: 'app-all-spaces',
@@ -60,7 +60,12 @@ export class AllSpaces implements OnInit, AfterViewInit {
   map!: L.Map;
   markerLayer!: L.LayerGroup;
 
-  constructor(private locationService: LocationService, private router: Router, private ngZone: NgZone) { }
+  constructor(private locationService: LocationService, private router: Router, private ngZone: NgZone, public favoriteService: FavoriteService) { }
+
+  toggleFavorite(id: number, event: Event) {
+    event.stopPropagation();
+    this.favoriteService.toggleFavorite(id);
+  }
 
   ngOnInit(): void { }
 
