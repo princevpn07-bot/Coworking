@@ -28,20 +28,16 @@
             <span class="welcome-text">歡迎，{{ username }}</span>
             <span class="material-symbols-outlined dropdown-icon" [class.open]="showDropdown">menu</span>
           </button>
-
-          <div class="dropdown-menu" [class.is-open]="showDropdown">
+          <div class="dropdown-menu" *ngIf="showDropdown">
             <a class="dropdown-item" routerLink="/my-orders" (click)="showDropdown=false">
-              <span class="material-symbols-outlined">receipt_long</span>
-              我的訂單
+              <span class="material-symbols-outlined">receipt_long</span>我的訂單
             </a>
             <a routerLink="/user-profile" class="dropdown-item" (click)="showDropdown=false">
-              <span class="material-symbols-outlined">manage_accounts</span>
-              個人資料
+              <span class="material-symbols-outlined">manage_accounts</span>個人資料
             </a>
             <div class="dropdown-divider"></div>
-            <button class="dropdown-item text-danger" (click)="logout()">
-              <span class="material-symbols-outlined">logout</span>
-              登出帳號
+            <button class="dropdown-item logout-item" (click)="logout()">
+              <span class="item-icon">🚪</span>登出
             </button>
           </div>
         </div>

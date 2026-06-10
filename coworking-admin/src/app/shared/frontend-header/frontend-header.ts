@@ -1,8 +1,9 @@
-import { Component, HostListener, OnInit } from '@angular/core';
+import { Component, HostListener, OnDestroy, OnInit } from '@angular/core';
 import { Router, RouterLink, RouterLinkActive } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { AuthService } from '../../services/auth';
 import { ProfileService } from '../../services/profile';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-frontend-header',
@@ -10,11 +11,13 @@ import { ProfileService } from '../../services/profile';
   templateUrl: './frontend-header.html',
   styleUrl: './frontend-header.css',
 })
-export class FrontendHeader implements OnInit {
+export class FrontendHeader implements OnInit, OnDestroy {
   isLoggedIn = false;
   username = '';
   showDropdown = false;
   avatarUrl = '';
+  canLoginBackend = false;
+  private avatarSubscription?: Subscription;
 
   constructor(private auth: AuthService, private router: Router, private profileService: ProfileService) {}
 
@@ -23,7 +26,7 @@ export class FrontendHeader implements OnInit {
     if (this.isLoggedIn) {
       this.username = this.auth.getUsername();
 
-      this.profileService.avatar$.subscribe(url => {
+      this.avatarSubscription = this.profileService.avatar$.subscribe(url => {
         this.avatarUrl = url;
       });
 
@@ -37,6 +40,10 @@ export class FrontendHeader implements OnInit {
         error: (err) => console.error('導覽列自動獲取頭貼失敗', err)
       });
     }
+  }
+
+  ngOnDestroy() {
+    this.avatarSubscription?.unsubscribe();
   }
 
   get avatarInitial(): string {

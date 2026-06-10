@@ -30,14 +30,15 @@
     <div class="sidebar-footer">
       <a class="user-profile" routerLink="/backend/profile" routerLinkActive="active">
         <span class="material-symbols-outlined">account_circle</span>
-        <div class="user-info">
-          <span class="user-name">個人資料</span>
-          <span class="user-role">管理員</span>
-        </div>
+        個人資料
       </a>
-      <a class="logout-link" href="#">
+      <a class="user-profile" routerLink="/">
+        <span class="material-symbols-outlined">home</span>
+        返回前台
+      </a>
+      <a class="logout-link" (click)="logout()">
         <span class="material-symbols-outlined">logout</span>
-        退出登錄
+        登出
       </a>
     </div>
   </aside>
