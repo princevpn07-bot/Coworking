@@ -264,6 +264,12 @@ body {
   filter: grayscale(1);
 }
 
+.alert-message {
+  color: red;
+  font-size: 14px;
+
+}
+
 .form-group {
   margin-bottom: 20px;
 }
@@ -276,6 +282,9 @@ body {
 }
 .form-group .input-wrapper {
   position: relative;
+}
+.form-group .personal-name-input {
+  margin-bottom: 20px;
 }
 .form-group .input-wrapper input, .form-group .input-wrapper select {
   width: 100%;

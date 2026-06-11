@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Component } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AuthService } from '../../../services/auth';
+import { FormsModule } from '@angular/forms';
 
 interface AddBookingPayload {
   user_id: number | null;
@@ -20,7 +21,7 @@ interface AddBookingPayload {
 
 @Component({
   selector: 'app-payment-component',
-  imports: [],
+  imports: [FormsModule],
   templateUrl: './payment-component.html',
   styleUrl: './payment-component.css',
 })
@@ -32,6 +33,9 @@ export class PaymentComponent {
   endDate = '';
   invoiceType = 'personal';
   submitting = false;
+  userName = '';
+  userPhone = '';
+  userEmail = '';
 
   constructor(
     private http: HttpClient,
@@ -65,6 +69,11 @@ export class PaymentComponent {
 
     if (endDate <= startDate) {
       alert('結束日期必須晚於開始日期');
+      return;
+    }
+
+    if (!this.userName || !this.userPhone || !this.userEmail) {
+      alert('姓名、電話與電子郵件為必填欄位');
       return;
     }
 
