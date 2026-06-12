@@ -1,0 +1,619 @@
+/* ==========================================================================
+   WorkspaceCollective 專屬古典編輯感樣式表
+   完全無 Tailwind 依賴、完全標準語意化傳統 CSS、無任何代碼省略
+   ========================================================================== */
+
+:host {
+  display: block;
+  /* 嚴格對齊 index.css 主設計系統核心變數 */
+  --font-serif-headline: "Libre Caslon Text", "Georgia", "Source Serif 4", serif;
+  --font-serif-body: "Source Serif 4", "Georgia", serif;
+  --font-sans-label: "Work Sans", "Inter", "system-ui", sans-serif;
+
+  --color-brand-bg: #fef8f6;
+  --color-brand-text: #1d1b1a;
+  --color-brand-primary: #695c4e;     /* 核心深咖啡色 */
+  --color-brand-secondary: #615e5c;
+  --color-brand-tertiary: #6a5c4d;
+  --color-brand-accent: #a39281;
+  
+  --transition-smooth: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+
+  background-color: var(--color-brand-bg);
+  color: var(--color-brand-text);
+  font-family: var(--font-serif-body);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ==========================================================================
+   基底控制優化 (Scrollbar & Selection)
+   ========================================================================== */
+html {
+  scroll-behavior: smooth;
+}
+
+/* 電影級客製化滾動條 */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: var(--color-brand-bg);
+}
+::-webkit-scrollbar-thumb {
+  background: #cfc5bb;
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-brand-accent);
+}
+
+/* 優雅文字選取範範疇 */
+::selection {
+  background-color: rgba(105, 92, 78, 0.2);
+}
+
+/* ==========================================
+   主要畫布容器佈局 (Main Structure)
+   ========================================== */
+.main-container {
+  max-width: 800px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 3rem 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 4rem;
+  box-sizing: border-box;
+}
+
+.section-divider-full {
+  width: 100%;
+  height: 1px;
+  background-color: rgba(163, 146, 129, 0.2);
+}
+
+/* ==========================================
+   🎯 前導廣告視覺區 (Hero Section - 慢慢淡淡入特殊動效)
+   ========================================== */
+.hero-section {
+  text-align: center;
+  padding: 2rem 0;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+/* 大標題淡入 */
+.headline-xl {
+  font-family: var(--font-serif-headline);
+  font-size: 2.75rem;
+  font-weight: 700;
+  line-height: 1.2;
+  color: var(--color-brand-text);
+  margin: 0;
+  opacity: 0;
+  animation: textEditorialFadeInUp 1.2s cubic-bezier(0.25, 0.8, 0.25, 1) forwards;
+  animation-delay: 0.15s;
+}
+
+/* 斜體副標淡淡入 */
+.body-lg-italic {
+  font-family: var(--font-serif-body);
+  font-size: 1.25rem;
+  color: var(--color-brand-secondary);
+  font-style: italic;
+  max-width: 650px;
+  margin: 0 auto;
+  opacity: 0;
+  animation: textEditorialFadeInUp 1.2s cubic-bezier(0.25, 0.8, 0.25, 1) forwards;
+  animation-delay: 0.35s;
+}
+
+/* 細裝飾線淡入 */
+.thin-divider-center {
+  width: 64px;
+  height: 1px;
+  background-color: var(--color-brand-accent);
+  margin: 1.75rem auto;
+  opacity: 0;
+  animation: textEditorialFadeInUp 1.2s cubic-bezier(0.25, 0.8, 0.25, 1) forwards;
+  animation-delay: 0.45s;
+}
+
+/* 描述內文淡淡入 */
+.body-md-desc {
+  font-family: var(--font-serif-body);
+  font-size: 1.05rem;
+  color: var(--color-brand-text);
+  text-align: justify;
+  line-height: 1.75;
+  max-width: 720px;
+  margin: 0 auto;
+  opacity: 0;
+  animation: textEditorialFadeInUp 1.2s cubic-bezier(0.25, 0.8, 0.25, 1) forwards;
+  animation-delay: 0.55s;
+}
+
+/* 大視覺影像框淡入 */
+.hero-image-frame {
+  margin-top: 2.5rem;
+  width: 100%;
+  height: 420px;
+  overflow: hidden;
+  border-radius: 4px;
+  border: 1px solid rgba(163, 146, 129, 0.3);
+  background-color: rgba(163, 146, 129, 0.05);
+  position: relative;
+  opacity: 0;
+  animation: textEditorialFadeInUp 1.4s cubic-bezier(0.25, 0.8, 0.25, 1) forwards;
+  animation-delay: 0.7s;
+}
+
+.hero-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: grayscale(100%);
+  opacity: 0.85;
+  transition: var(--transition-smooth);
+}
+
+.hero-image-frame:hover .hero-image {
+  filter: grayscale(0%);
+  opacity: 1;
+  transform: scale(1.02);
+}
+
+/* ==========================================
+   🎯 核心價值區塊 (Benefits Section - 完美原版排版與懸停還原)
+   ========================================== */
+.benefits-section {
+  display: flex;
+  flex-direction: column;
+  gap: 2.5rem;
+}
+
+.headline-lg {
+  font-family: var(--font-serif-headline);
+  font-size: 1.85rem;
+  font-weight: 700;
+  text-align: center;
+  color: var(--color-brand-text);
+  margin: 0;
+}
+
+.benefits-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.5rem;
+}
+
+/* 完美復刻：初始為優雅半透明背板、Hairline細框與無陰影 */
+.benefit-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 2rem 1.5rem;
+  background-color: rgba(255, 255, 255, 0.45); 
+  border: 1px solid rgba(163, 146, 129, 0.3);  
+  border-radius: 4px;
+  box-shadow: 0 0 0 rgba(0, 0, 0, 0);
+  transition: var(--transition-smooth);          
+  box-sizing: border-box;
+}
+
+/* 懸停動效：整體卡片上浮、轉純白、散發精緻微陰影 */
+.benefit-card:hover {
+  background-color: #ffffff;                    
+  border-color: var(--color-brand-primary);      
+  transform: translateY(-4px);                  
+  box-shadow: 0 8px 24px rgba(105, 92, 78, 0.06); 
+}
+
+/* 🎯 完美修復：還原為乾淨裸 Icon 獨立排版，不帶任何外加圓圈底色 */
+.card-icon {
+  font-size: 32px !important;
+  color: var(--color-brand-primary);
+  margin-bottom: 1rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background-color: transparent;
+  transition: background-color 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+/* 🎯 完美修復：當滑鼠移過去卡片時，Icon 底部顯現圓襯色調，且完全不影響原版尺寸與文字定位 */
+.benefit-card:hover .card-icon {
+  background-color: rgba(105, 92, 78, 0.1);
+}
+.card-title {
+  font-family: var(--font-sans-label);
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--color-brand-primary);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin: 0 0 0.75rem 0;
+}
+
+.card-desc {
+  font-family: var(--font-serif-body);
+  font-size: 0.875rem;
+  color: var(--color-brand-secondary);
+  line-height: 1.6;
+  margin: 0;
+}
+
+/* ==========================================
+   合作流程橫向列表區塊 (Process Section)
+   ========================================== */
+.process-section {
+  display: flex;
+  flex-direction: column;
+  gap: 2.5rem;
+}
+
+.process-container {
+  display: flex;
+  flex-direction: column;
+}
+
+.process-row {
+  display: flex;
+  gap: 2rem;
+  padding: 2rem 1rem;
+  border-bottom: 1px solid rgba(163, 146, 129, 0.2);
+  transition: background-color 0.2s ease;
+  border-radius: 4px;
+}
+
+.process-row:hover {
+  background-color: rgba(163, 146, 129, 0.04);
+}
+
+.process-row:last-child {
+  border-bottom: none;
+}
+
+.process-title-col {
+  width: 35%;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+}
+
+.process-step-title {
+  font-family: var(--font-serif-headline);
+  font-size: 1.25rem;
+  color: var(--color-brand-primary);
+  font-weight: 700;
+  margin: 0;
+}
+
+.process-desc-col {
+  width: 65%;
+  display: flex;
+  align-items: center;
+}
+
+.body-md {
+  font-family: var(--font-serif-body);
+  font-size: 1rem;
+  color: var(--color-brand-secondary);
+  line-height: 1.65;
+  margin: 0;
+}
+
+/* ==========================================
+   古典簡約底線申請表單區 (Form Aesthetics)
+   ========================================== */
+.form-card-wrapper {
+  background-color: rgba(163, 146, 129, 0.05);
+  padding: 3rem;
+  border: 1px solid rgba(163, 146, 129, 0.3);
+  border-radius: 4px;
+}
+
+.form-title-area {
+  text-align: center;
+  margin-bottom: 3rem;
+}
+
+.partner-form {
+  display: flex;
+  flex-direction: column;
+  gap: 2.5rem;
+}
+
+.form-row-twin {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+}
+
+.form-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.label-xs {
+  font-family: var(--font-sans-label);
+  font-size: 11px;
+  color: var(--color-brand-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-weight: 600;
+}
+
+/* 預設底線與錯誤警告線條全面採用穩重的品牌深咖啡色 */
+.minimal-underline-input {
+  border: none;
+  border-bottom: 1px solid var(--color-brand-primary); 
+  border-radius: 0;
+  background-color: transparent;
+  padding: 0.65rem 0.25rem;
+  font-family: var(--font-serif-body);
+  font-size: 1rem;
+  color: var(--color-brand-text);
+  transition: border-color 0.2s ease, border-width 0.1s ease;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.minimal-underline-input::placeholder {
+  color: #a39281;
+  opacity: 0.5;
+}
+
+.minimal-underline-input:focus {
+  outline: none;
+  border-bottom-color: var(--color-brand-primary);
+  border-bottom-width: 2px;
+}
+
+.minimal-underline-input.input-error {
+  border-bottom-color: var(--color-brand-primary) !important;
+  border-bottom-width: 1.5px;
+}
+
+/* 下拉選單指標處理 */
+.select-chevron-container {
+  position: relative;
+  width: 100%;
+}
+
+.select-native {
+  cursor: pointer;
+  appearance: none;
+  -webkit-appearance: none;
+  padding-right: 1.75rem !important;
+}
+
+.select-chevron-container::after {
+  content: 'expand_more';
+  font-family: 'Material Symbols Outlined';
+  position: absolute;
+  right: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--color-brand-secondary);
+  pointer-events: none;
+  font-size: 20px;
+}
+
+/* 虛線相片拖曳上傳盒 */
+.drag-upload-box {
+  border: 1px dashed var(--color-brand-accent);
+  background-color: #ffffff;
+  border-radius: 4px;
+  padding: 2.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  cursor: pointer;
+  text-align: center;
+  transition: var(--transition-smooth);
+}
+
+.drag-upload-box:hover {
+  background-color: rgba(163, 146, 129, 0.05);
+  border-color: var(--color-brand-primary);
+}
+
+.upload-cloud-icon {
+  width: 40px;
+  height: 40px;
+  font-size: 40px !important;
+  color: var(--color-brand-accent);
+  transition: transform 0.2s ease;
+}
+
+.drag-upload-box:hover .upload-cloud-icon {
+  transform: translateY(-2px);
+}
+
+.body-md-upload {
+  font-family: var(--font-serif-body);
+  font-size: 0.9rem;
+  color: var(--color-brand-secondary);
+  margin: 0;
+}
+
+.label-xs-upload-hint {
+  font-family: var(--font-sans-label);
+  font-size: 10px;
+  color: rgba(163, 146, 129, 0.8);
+  letter-spacing: 0.05em;
+  margin-top: 0.25rem;
+}
+
+.form-action-center {
+  display: flex;
+  justify-content: center;
+  padding-top: 1.5rem;
+}
+
+.btn-submit-form {
+  background-color: var(--color-brand-primary);
+  color: #ffffff;
+  font-family: var(--font-sans-label);
+  font-size: 0.85rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  padding: 1.15rem 3rem;
+  border: none;
+  border-radius: 4px;
+  box-shadow: 0 4px 12px rgba(105, 92, 78, 0.15);
+  transition: var(--transition-smooth);
+  cursor: pointer;
+}
+
+.btn-submit-form:hover {
+  background-color: var(--color-brand-tertiary);
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(105, 92, 78, 0.25);
+}
+
+.btn-submit-form:active {
+  transform: translateY(0);
+}
+
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+input[type="number"] {
+  -moz-appearance: textfield;
+}
+
+/* ==========================================
+   LINE 客服導引區 (Support Section)
+   ========================================== */
+.line-bot-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.25rem;
+  text-align: center;
+}
+
+.btn-line-outline {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  border: 1px solid var(--color-brand-primary);
+  background-color: transparent;
+  color: var(--color-brand-primary);
+  font-family: var(--font-sans-label);
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 0.85rem 1.75rem;
+  border-radius: 4px;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: var(--transition-smooth);
+}
+
+.btn-line-outline:hover {
+  background-color: var(--color-brand-primary);
+  color: #ffffff;
+}
+
+.line-text-link {
+  font-family: var(--font-serif-body);
+  font-size: 0.9rem;
+  color: var(--color-brand-secondary);
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
+.line-text-link:hover {
+  color: var(--color-brand-primary);
+}
+
+/* ==========================================
+   純 CSS 淡入軌跡
+   ========================================== */
+@keyframes textEditorialFadeInUp {
+  0% {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ==========================================
+   行動端響應式媒體查詢 (Responsive Queries)
+   ========================================== */
+@media (max-width: 768px) {
+  .main-container {
+    padding: 2rem 1.25rem;
+    gap: 3rem;
+  }
+
+  .headline-xl {
+    font-size: 2rem;
+  }
+
+  .body-lg-italic {
+    font-size: 1.1rem;
+  }
+
+  .hero-image-frame {
+    height: 280px;
+  }
+
+  /* 🎯 響應式垂直堆疊：當寬度小於 768px 時，卡片依設計系統規則變為 1 欄堆疊 */
+  .benefits-grid {
+    grid-template-columns: 1fr;
+    gap: 1.25rem;
+  }
+
+  .benefit-card {
+    padding: 1.5rem 1.25rem;
+  }
+
+  .process-row {
+    flex-direction: column;
+    gap: 0.75rem;
+    padding: 1.5rem 0.5rem;
+  }
+
+  .process-title-col, 
+  .process-desc-col {
+    width: 100%;
+  }
+
+  .form-card-wrapper {
+    padding: 2.25rem 1.25rem;
+  }
+
+  .form-row-twin {
+    grid-template-cols: 1fr;
+    gap: 1.25rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .headline-xl {
+    font-size: 1.65rem;
+  }
+
+  .hero-image-frame {
+    height: 200px;
+  }
+}

@@ -18,6 +18,7 @@ import { MyOrders } from './pages/frontend/my-orders/my-orders';
 import { PaymentComponent } from './pages/frontend/payment-component/payment-component';
 import { UserProfile } from './pages/frontend/user-profile/user-profile';
 import { MyFavorites } from './pages/frontend/my-favorites/my-favorites';
+import { Partners } from './pages/frontend/partners/partners';
 
 export const routes: Routes = [
   {
@@ -31,7 +32,8 @@ export const routes: Routes = [
       { path: 'payment', component: PaymentComponent },
       { path: 'space-detail/:id', component: SpaceDetail },
       { path: 'user-profile', component: UserProfile },
-      {path: 'my-favorites',component: MyFavorites}
+      {path: 'my-favorites',component: MyFavorites},
+       { path: 'partners', component: Partners }
 
     ]
   },
