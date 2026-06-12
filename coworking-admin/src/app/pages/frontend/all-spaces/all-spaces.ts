@@ -30,6 +30,12 @@ export class AllSpaces implements OnInit, AfterViewInit {
   allSpacesData: any[] = [];
   // 篩選變數
   selectedCapacity: number = 0;
+  isCapacityOpen = false;
+  selectCapacity(capacity: number) {
+    this.selectedCapacity = capacity;
+    this.isCapacityOpen = false;
+    this.onSearch();
+  }
   searchKeyword: string = '';
 
   // 選單開關狀態

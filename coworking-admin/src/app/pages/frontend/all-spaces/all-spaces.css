@@ -127,28 +127,93 @@
 
 .capacity-filter {
   position: relative;
+  min-width: 140px;
 }
 
-.capacity-filter select {
+.capacity-trigger {
   width: 100%;
-
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0.98rem 1rem;
   border: none;
-  background: transparent;
-
+  background: #fff;
   color: #504538;
-  font-size: 14px;
-  font-weight: 500;
-
   cursor: pointer;
-  outline: none;
-
-  appearance: none;
-  -webkit-appearance: none;
-  -moz-appearance: none;
-
-  padding-right: 24px;
+  transition:
+    background-color .2s ease,
+    color .2s ease;
 }
 
+.capacity-trigger:hover {
+  background: #fef8f6;
+}
+
+.capacity-text {
+  flex: 1;
+  text-align: left;
+}
+
+.capacity-arrow {
+  margin-left: auto;
+  color: #7e766d;
+  transition:
+    transform .25s ease,
+    color .25s ease;
+}
+
+.capacity-filter.open .capacity-arrow {
+  transform: rotate(180deg);
+}
+
+.capacity-dropdown {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 0;
+  width: 220px;
+  background: #ffffff;
+  border: 1px solid #e7e1df;
+  border-radius: 12px;
+  box-shadow:
+    0 12px 30px rgba(74, 60, 49, 0.12);
+  overflow: hidden;
+  z-index: 99999;
+}
+
+.capacity-option {
+  padding: 14px 18px;
+  color: #504538;
+  cursor: pointer;
+  transition:
+    background-color .2s ease,
+    color .2s ease;
+}
+
+.capacity-option:hover {
+  background: #fef8f6;
+  color: #695c4e;
+}
+
+.capacity-option.active {
+  background: #fff7f2;
+  color: #504538;
+  font-weight: 600;
+}
+
+.capacity-dropdown {
+  animation: dropdownIn .22s ease;
+}
+
+@keyframes dropdownIn {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
 
 /* Cards */
 .listing-info {

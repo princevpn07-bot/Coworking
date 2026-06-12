@@ -132,19 +132,44 @@
 
 .hero__info {
   display: flex;
+
   flex-direction: column;
   gap: 32px;
 }
 
-.hero__header h1 {
+.hero__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.hero__content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.hero__top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.share-btn {
+  margin-left: auto;
+}
+
+.hero__top h1 {
   font-size: 48px;
   font-weight: 700;
   line-height: 1.1;
-  margin-bottom: 16px;
+  margin: 0;
+
   color: #1d1b1a;
 }
 
-.hero__header .location {
+.hero__content .location {
   display: flex;
   align-items: center;
   gap: 8px;
@@ -152,13 +177,13 @@
   margin-bottom: 16px;
 }
 
-.hero__header .rating {
+.hero__content .rating {
   display: flex;
   align-items: center;
   gap: 8px;
 }
 
-.hero__header .rating .stars {
+.hero__content .rating .stars {
   color: #d97706;
   display: flex;
   font-size: 14px;
@@ -169,7 +194,7 @@
 
 }
 
-.hero__header .rating .count {
+.hero__content .rating .count {
   font-size: 14px;
   font-weight: 600;
   color: #4c463e;
@@ -629,4 +654,316 @@
 .content-tabs__nav button.active {
   color: #3f51b5;
   border-bottom: 2px solid #3f51b5;
+}
+
+
+.luxury-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+
+  background: rgba(29, 27, 26, 0.25);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  z-index: 100000;
+
+  /* 初始隱藏 */
+  opacity: 0;
+  pointer-events: none;
+
+  transition: opacity 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+/* 遮罩顯示狀態 */
+.luxury-modal-overlay.active {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* =========================================================
+   🚀 2. 中央精品卡片（你要的底色已補回）
+   ========================================================= */
+.luxury-center-card {
+  background: #ffffff;
+  /* ✔ 你原本的卡片底色（已補回核心） */
+
+  width: 90%;
+  max-width: 350px;
+
+  border-radius: 24px;
+
+  padding: 44px 28px 20px 28px;
+
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+
+  border: 1px solid rgba(255, 255, 255, 0.8);
+
+  /* 柔和浮起陰影 */
+  box-shadow:
+    0 4px 6px -1px rgba(0, 0, 0, 0.01),
+    0 10px 20px -3px rgba(105, 92, 78, 0.04),
+    0 25px 40px -5px rgba(105, 92, 78, 0.06),
+    0 0 1px 0 rgba(105, 92, 78, 0.08);
+
+  /* 出場動畫 */
+  transform: scale(0.92) translateY(10px);
+  transition: transform 0.55s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* 卡片顯示動畫 */
+.luxury-modal-overlay.active .luxury-center-card {
+  transform: scale(1) translateY(0);
+}
+
+/* =========================================================
+   ✨ 3. Icon 區塊
+   ========================================================= */
+.luxury-icon-wrapper {
+  position: relative;
+
+  width: 100%;
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 32px;
+}
+
+.luxury-icon-glow {
+  position: absolute;
+
+  width: 52px;
+  /* ⭐改成跟 core 一樣 */
+  height: 52px;
+  /* ⭐關鍵 */
+  background: #695c4e;
+
+  filter: blur(14px);
+  opacity: 0.12;
+
+  border-radius: 50%;
+
+  transform: scale(1.2);
+  transition: transform 0.6s ease;
+
+  pointer-events: none;
+}
+
+.luxury-modal-overlay.active .luxury-icon-glow {
+  transform: scale(1.2);
+}
+
+.luxury-icon-core {
+  position: relative;
+  width: 52px;
+  height: 52px;
+
+  background: #f8f2f0;
+  color: #695c4e;
+
+  border-radius: 50%;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.luxury-icon-core .material-symbols-outlined {
+  font-size: 26px;
+  font-weight: 600;
+}
+
+/* =========================================================
+   ✍️ 4. 文字區
+   ========================================================= */
+.luxury-text-package {
+  text-align: center;
+  margin-bottom: 36px;
+}
+
+.luxury-brand-title {
+  margin: 0;
+
+  font-family: "Libre Caslon Text", Georgia, serif;
+  font-size: 22px;
+  font-weight: 600;
+
+  color: #1d1b1a;
+  letter-spacing: 0.5px;
+}
+
+.luxury-divider-line {
+  width: 24px;
+  height: 2px;
+
+  background: #695c4e;
+  opacity: 0.5;
+
+  margin: 12px auto;
+  border-radius: 1px;
+}
+
+.luxury-brand-subtitle {
+  margin: 0;
+
+  font-family: "Source Serif 4", Georgia, serif;
+  font-size: 13.5px;
+
+  color: #4c463e;
+  opacity: 0.85;
+
+  line-height: 1.6;
+  padding: 0 4px;
+}
+
+.luxury-share-link-input:focus {
+  border-color: rgba(105, 92, 78, 0.3);
+  box-shadow: 0 0 0 3px rgba(105, 92, 78, 0.08);
+}
+
+/* =========================================================
+   🤎 6. 主按鈕
+   ========================================================= */
+.btn-luxury-action {
+  width: 100%;
+  padding: 14px;
+
+  background: #695c4e;
+  color: #ffffff;
+
+  border: none;
+  border-radius: 14px;
+
+  font-family: "Work Sans", sans-serif;
+  font-size: 13px;
+  font-weight: 500;
+
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+
+  cursor: pointer;
+
+  box-shadow: 0 4px 12px rgba(105, 92, 78, 0.15);
+
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.btn-luxury-action:hover {
+  background: #504538;
+  transform: translateY(-1.5px);
+  box-shadow: 0 6px 20px rgba(105, 92, 78, 0.25);
+}
+
+.btn-luxury-action:active {
+  transform: translateY(0);
+}
+
+/* =========================================================
+   （你原本 slider 區塊：保留）
+   ========================================================= */
+.avatar-crop-controller {
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+  margin-top: 1.5rem;
+  width: 160px;
+  padding: 12px;
+  background: #f8f2f0;
+  border-radius: 8px;
+  border: 1px solid #cfc5bb;
+  animation: fadeIn 0.3s ease;
+}
+
+/* input + button 並排容器 */
+.luxury-share-row {
+  display: flex;
+  align-items: stretch;
+  width: 100%;
+  margin-top: 18px;
+  gap: 10px;
+  align-self: stretch;
+}
+
+/* 讓 input 吃滿剩餘空間 */
+.luxury-share-link-input {
+  flex: 1;
+  width: 100%;
+  min-width: 0;
+  /* ⭐關鍵中的關鍵 */
+
+  padding: 12px 14px;
+
+  background: #f8f2f0;
+  border: 1px solid rgba(105, 92, 78, 0.12);
+  border-radius: 12px;
+
+  color: #4c463e;
+  font-size: 12px;
+
+  text-align: center;
+
+  outline: none;
+  box-sizing: border-box;
+
+  transition: all 0.25s ease;
+}
+
+/* icon button */
+.luxury-copy-icon-btn {
+  width: 44px;
+  height: 44px;
+  flex-shrink: 0;
+
+  border-radius: 12px;
+  border: 1px solid rgba(105, 92, 78, 0.12);
+
+  background: #f8f2f0;
+  color: #695c4e;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  cursor: pointer;
+
+  transition: all 0.2s ease;
+}
+
+/* hover 效果 */
+.luxury-copy-icon-btn:hover {
+  background: #695c4e;
+  color: #ffffff;
+  transform: translateY(-1px);
+}
+
+/* icon size */
+.luxury-copy-icon-btn .material-symbols-outlined {
+  font-size: 20px;
+}
+
+.share-btn {
+  background: transparent;
+  border: none;
+  padding: 0;
+
+  width: 40px;
+  height: 40px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  cursor: pointer;
+
+  color: #695c4e;
+  /* 你的主色 */
 }

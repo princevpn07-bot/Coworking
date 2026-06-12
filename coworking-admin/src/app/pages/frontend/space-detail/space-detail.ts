@@ -30,6 +30,22 @@ export class SpaceDetail implements OnInit {
     this.favoriteService.toggleFavorite(spaceId);
   }
 
+  showShareModal = false;
+  showCopySuccessToast = false;
+  shareUrl = window.location.href;
+  async copyLink() {
+    try {
+      await navigator.clipboard.writeText(this.shareUrl);
+
+      this.showShareModal = false;
+
+      // 如果要再跳成功視窗
+      this.showCopySuccessToast = true;
+
+    } catch (error) {
+      console.error(error);
+    }
+  }
 
   protected detailService = inject(SpaceDetailService);
 

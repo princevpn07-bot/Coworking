@@ -34,28 +34,66 @@
       </div>
     </div>
 
-
     <div class="hero__info">
       <div class="hero__header">
-        <h1>{{ space?.spaceNumber }}</h1>
-        <div class="location">
-          <span class="material-symbols-outlined">location_on</span>
-          <span>{{ space?.location?.address }}</span>
-        </div>
-        <div class="rating">
-          <div class="stars">
-            <!--<span class="material-symbols-outlined filled">star</span>-->
-            <!--<span class="material-symbols-outlined">star_half</span>-->
-            <span class="material-symbols-outlined">star</span>
-            <span class="material-symbols-outlined">star</span>
-            <span class="material-symbols-outlined">star</span>
-            <span class="material-symbols-outlined">star</span>
-            <span class="material-symbols-outlined">star</span>
+        <div class="hero__content">
+          <div class="hero__top">
+            <h1>{{ space?.spaceNumber }}</h1>
+            <button class="share-btn" (click)="showShareModal = true">
+              <span class="material-symbols-outlined">
+                upload
+              </span>
+            </button>
           </div>
-          <span class="count">0.0 (0 則評價)</span>
+          <div class="location">
+            <span class="material-symbols-outlined">location_on</span>
+            <span>{{ space?.location?.address }}</span>
+          </div>
+          <div class="rating">
+            <div class="stars">
+              <!--<span class="material-symbols-outlined filled">star</span>-->
+              <!--<span class="material-symbols-outlined">star_half</span>-->
+              <span class="material-symbols-outlined">star</span>
+              <span class="material-symbols-outlined">star</span>
+              <span class="material-symbols-outlined">star</span>
+              <span class="material-symbols-outlined">star</span>
+              <span class="material-symbols-outlined">star</span>
+            </div>
+            <span class="count">0.0 (0 則評價)</span>
+          </div>
         </div>
+
       </div>
 
+      <div class="luxury-modal-overlay" [class.active]="showShareModal" (click)="showShareModal = false">
+        <div class="luxury-center-card" [class.active]="showShareModal" (click)="$event.stopPropagation()">
+          <div class="luxury-icon-wrapper">
+            <div class="luxury-icon-glow"></div>
+            <div class="luxury-icon-core">
+              <span class="material-symbols-outlined">
+                share
+              </span>
+            </div>
+          </div>
+          <div class="luxury-text-package">
+            <h3 class="luxury-brand-title">
+              分享此空間
+            </h3>
+            <div class="luxury-divider-line"></div>
+            <p class="luxury-brand-subtitle">
+              將此空間連結分享給朋友或社群平台
+            </p>
+            <div class="luxury-share-row">
+              <input class="luxury-share-link-input" [value]="shareUrl" readonly>
+              <button type="button" class="luxury-copy-icon-btn" (click)="copyLink()">
+                <span class="material-symbols-outlined">
+                  content_copy
+                </span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
 
       <div class="hero__amenities-bar">
         <div class="item" *ngFor="let equipment of equipments">
