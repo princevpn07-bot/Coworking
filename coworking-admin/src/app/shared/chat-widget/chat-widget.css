@@ -122,6 +122,23 @@
   40% { transform: translateY(-6px); }
 }
 
+.navigate-btn {
+  margin-top: 6px;
+  padding: 7px 14px;
+  background: #2563eb;
+  color: white;
+  border: none;
+  border-radius: 20px;
+  font-size: 13px;
+  cursor: pointer;
+  transition: background 0.2s;
+  align-self: flex-start;
+}
+
+.navigate-btn:hover {
+  background: #1d4ed8;
+}
+
 .chat-input {
   display: flex;
   align-items: flex-end;

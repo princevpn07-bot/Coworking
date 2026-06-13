@@ -1,10 +1,10 @@
-import { Component, OnInit, AfterViewInit, ViewEncapsulation, HostListener } from '@angular/core';
+import { Component, OnInit, AfterViewInit, ViewEncapsulation, HostListener, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { LocationService } from '../../../services/location';
 import { FormsModule } from '@angular/forms';
 import { PriceFilter } from '../../../shared/price-filter/price-filter';
 import { RegionFilterComponent } from '../../../shared/region-filter/region-filter.component';
-import { ActivatedRoute, Router } from '@angular/router'; // 🌟 補上 Router
+import { ActivatedRoute, Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { DatetimeFilter } from '../../../shared/datetime-filter/datetime-filter';
 import * as L from 'leaflet';
@@ -66,14 +66,30 @@ export class AllSpaces implements OnInit, AfterViewInit {
   map!: L.Map;
   markerLayer!: L.LayerGroup;
 
-  constructor(private locationService: LocationService, private router: Router, private ngZone: NgZone, public favoriteService: FavoriteService) { }
+  constructor(
+    private locationService: LocationService,
+    private router: Router,
+    private route: ActivatedRoute,
+    private ngZone: NgZone,
+    private cdr: ChangeDetectorRef,
+    public favoriteService: FavoriteService
+  ) { }
 
   toggleFavorite(id: number, event: Event) {
     event.stopPropagation();
     this.favoriteService.toggleFavorite(id);
   }
 
-  ngOnInit(): void { }
+  ngOnInit(): void {
+    this.route.queryParams.subscribe(p => {
+      this.currentPriceRange.min = p['minPrice'] != null ? Number(p['minPrice']) : 0;
+      this.currentPriceRange.max = p['maxPrice'] != null ? Number(p['maxPrice']) : 100000;
+      this.selectedCapacity = p['capacity'] ? Number(p['capacity']) : 0;
+      this.currentRegionRange.city = p['city'] || '';
+      this.searchKeyword = p['keyword'] || '';
+      this.onSearch();
+    });
+  }
 
   ngAfterViewInit(): void {
     requestAnimationFrame(() => {
@@ -92,7 +108,7 @@ export class AllSpaces implements OnInit, AfterViewInit {
         }
       });
       this.map.addLayer(this.markerLayer);
-      this.loadSpacesFromDb();
+      this.ngZone.run(() => this.renderMarkers());
     });
   }
 
@@ -205,6 +221,7 @@ export class AllSpaces implements OnInit, AfterViewInit {
 
       return matchesPrice && matchesCity && matchesDistrict && matchesMrt;
     });
+    this.cdr.detectChanges();
     this.renderMarkers();
   }
 

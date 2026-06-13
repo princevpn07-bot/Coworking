@@ -119,9 +119,20 @@ namespace CoworkingAPI.Controllers
                     {
                         booking.status = 1;
                         _context.Bookings.Update(booking);
+
+                        var rent = await _context.Rents.FirstOrDefaultAsync(r => r.rent_id == booking.rent_id);
+                        if (rent != null)
+                        {
+                            var space = await _context.Spaces.FirstOrDefaultAsync(s => s.space_id == rent.space_id);
+                            if (space != null)
+                            {
+                                space.status = 1;
+                                _context.Spaces.Update(space);
+                            }
+                        }
+
                         await _context.SaveChangesAsync();
                     }
-                    //
                     return Content("1|OK");
                 }
                 else
@@ -154,6 +165,18 @@ namespace CoworkingAPI.Controllers
                 // 更新預約狀態為已付款 (status = 1 表示已付款)
                 booking.status = 1;
                 _context.Bookings.Update(booking);
+
+                var rent = await _context.Rents.FirstOrDefaultAsync(r => r.rent_id == booking.rent_id);
+                if (rent != null)
+                {
+                    var space = await _context.Spaces.FirstOrDefaultAsync(s => s.space_id == rent.space_id);
+                    if (space != null)
+                    {
+                        space.status = 1;
+                        _context.Spaces.Update(space);
+                    }
+                }
+
                 await _context.SaveChangesAsync();
 
                 _logger.LogInformation($"Test payment success - Contract ID: {request.ContractId}");

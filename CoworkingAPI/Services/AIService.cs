@@ -1,14 +1,37 @@
 using OpenAI;
 using OpenAI.Chat;
 using System.ClientModel;
+using System.Text.Json;
+using System.Text.RegularExpressions;
 
 namespace CoworkingAPI.Services
 {
     public record MessageDto(string Role, string Content);
 
+    public class AIActionParams
+    {
+        public int? MinPrice { get; set; }
+        public int? MaxPrice { get; set; }
+        public int? Capacity { get; set; }
+        public string? City { get; set; }
+        public string? Keyword { get; set; }
+    }
+
+    public class AIAction
+    {
+        public string Type { get; set; } = string.Empty;
+        public AIActionParams Params { get; set; } = new();
+    }
+
+    public class AIResult
+    {
+        public string Message { get; set; } = string.Empty;
+        public AIAction? Action { get; set; }
+    }
+
     public interface IAIService
     {
-        Task<string> GenerateAsync(string prompt, List<MessageDto>? history = null);
+        Task<AIResult> GenerateAsync(string prompt, List<MessageDto>? history = null);
     }
 
     public class AIService : IAIService
@@ -30,7 +53,18 @@ namespace CoworkingAPI.Services
             - 獨立辦公室：私密空間，適合團隊或需要安靜的工作者
             - 會議室：可租借的會議空間，適合開會或簡報
 
-            如果用戶詢問特定時段是否有空位，請引導他們到「瀏覽空間」頁面查看即時資訊。
+            【重要規則】
+            當用戶的訊息涉及「找空間、推薦空間、預算、人數、地點」等需求時，
+            請在回覆的最後一行附上以下格式的 JSON（不要加 markdown，直接純文字）：
+            ACTION:{"type":"filter_spaces","params":{"minPrice":0,"maxPrice":20000,"capacity":10,"city":"台北","keyword":""}}
+
+            欄位說明：
+            - minPrice/maxPrice：從用戶提到的預算推算，若只說上限則 minPrice 填 0
+            - capacity：用戶提到的人數，沒提到則省略該欄位
+            - city：用戶提到的城市或地區，沒提到則省略
+            - keyword：其他關鍵字，沒有則填空字串或省略
+            只在真的需要引導用戶篩選空間時才加 ACTION，一般問答不需要加。
+
             如果問題與平台無關，請委婉說明你只能回答 CoWork 相關問題。
             """;
 
@@ -48,7 +82,7 @@ namespace CoworkingAPI.Services
             _client = openAIClient.GetChatClient("llama-3.3-70b-versatile");
         }
 
-        public async Task<string> GenerateAsync(string prompt, List<MessageDto>? history = null)
+        public async Task<AIResult> GenerateAsync(string prompt, List<MessageDto>? history = null)
         {
             var messages = new List<ChatMessage>
             {
@@ -69,7 +103,28 @@ namespace CoworkingAPI.Services
             messages.Add(ChatMessage.CreateUserMessage(prompt));
 
             var response = await _client.CompleteChatAsync(messages);
-            return response.Value.Content[0].Text ?? string.Empty;
+            var rawText = response.Value.Content[0].Text ?? string.Empty;
+
+            return ParseResult(rawText);
+        }
+
+        private static AIResult ParseResult(string rawText)
+        {
+            var match = Regex.Match(rawText, @"ACTION:(\{.*\})\s*$", RegexOptions.Multiline);
+            if (!match.Success)
+                return new AIResult { Message = rawText.Trim() };
+
+            var cleanMessage = rawText[..match.Index].Trim();
+            try
+            {
+                var action = JsonSerializer.Deserialize<AIAction>(match.Groups[1].Value,
+                    new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+                return new AIResult { Message = cleanMessage, Action = action };
+            }
+            catch
+            {
+                return new AIResult { Message = cleanMessage };
+            }
         }
     }
 }

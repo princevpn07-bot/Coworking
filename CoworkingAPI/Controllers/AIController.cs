@@ -21,7 +21,7 @@ namespace CoworkingAPI.Controllers
                 return BadRequest("Prompt is required.");
 
             var result = await _aiService.GenerateAsync(request.Prompt, request.History);
-            return Ok(new { reply = result });
+            return Ok(new { reply = result.Message, action = result.Action });
         }
     }
 

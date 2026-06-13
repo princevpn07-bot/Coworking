@@ -5,6 +5,25 @@ import { Observable } from 'rxjs';
 export interface ChatMessage {
   role: 'user' | 'assistant';
   content: string;
+  action?: AIAction;
+}
+
+export interface AIActionParams {
+  minPrice?: number;
+  maxPrice?: number;
+  capacity?: number;
+  city?: string;
+  keyword?: string;
+}
+
+export interface AIAction {
+  type: string;
+  params: AIActionParams;
+}
+
+export interface AskResponse {
+  reply: string;
+  action?: AIAction;
 }
 
 @Injectable({ providedIn: 'root' })
@@ -13,7 +32,7 @@ export class AiService {
 
   constructor(private http: HttpClient) {}
 
-  ask(prompt: string, history: ChatMessage[]): Observable<{ reply: string }> {
-    return this.http.post<{ reply: string }>(this.apiUrl, { prompt, history });
+  ask(prompt: string, history: ChatMessage[]): Observable<AskResponse> {
+    return this.http.post<AskResponse>(this.apiUrl, { prompt, history });
   }
 }
