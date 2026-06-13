@@ -17,7 +17,7 @@ export class SpaceService
 
   getLocations(): Observable<Location[]>
   {
-    return this.http.get<Location[]>(`${this.locationApiUrl}/GetAll`);
+    return this.http.get<Location[]>(`${this.adminApiUrl}/locations`);
   }
 
   getall(): Observable<Space[]>

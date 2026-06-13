@@ -77,6 +77,23 @@ namespace CoworkingAPI.Controllers
             return CreatedAtAction(nameof(spaceinfo), new { id = space.space_id }, space);
         }
 
+        [HttpGet("locations")]
+        public async Task<IActionResult> GetLocations()
+        {
+            var role = int.TryParse(User.FindFirst(ClaimTypes.Role)?.Value, out var r) ? r : 0;
+            var userId = int.TryParse(User.FindFirst("user_id")?.Value, out var u) ? u : 0;
+
+            var query = _context.Locations.AsQueryable();
+            if (role == 60)
+                query = query.Where(l => l.owner_user_id == userId);
+
+            var locations = await query
+                .Select(l => new { l.location_id, l.city, l.address })
+                .ToListAsync();
+
+            return Ok(locations);
+        }
+
         [HttpGet("assets/{space_id}")]
         public async Task<IActionResult> assets(int space_id)
         {
