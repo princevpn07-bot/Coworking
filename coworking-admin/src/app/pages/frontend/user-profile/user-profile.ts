@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter, HostListener , OnInit} from '@angular/core';
+import { Component, Input, Output, EventEmitter, HostListener , OnInit, ChangeDetectorRef} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ProfileService } from '../../../services/profile';
@@ -62,7 +62,10 @@ isImageLoading = false;        // 🌟 新增：控制頭貼是否正在讀取�
 
 private decodedImage: HTMLImageElement | null = null; // 🌟 新增：快取已解碼的圖片實體
 
-constructor(private profileService: ProfileService) {}
+constructor(
+  private profileService: ProfileService,
+  private cdr: ChangeDetectorRef
+) {}
 
 // 切換選單顯示狀態
 toggleDropdown(): void {
@@ -112,6 +115,7 @@ onDocumentClick(event: Event): void {
         this.originalProfile = { ...this.profile }; // 儲存原始資料快照
          this.profileService.updateAvatarStream(this.profile.avatarUrl);
         console.log('SQL 資料庫讀取成功，已同步至畫面！');
+        this.cdr.markForCheck(); // 手動標記元件需要檢查，確保畫面更新
       },
       error: (err) => {
         console.error('資料讀取失敗，請確認是否已登入取得驗證 Token', err);

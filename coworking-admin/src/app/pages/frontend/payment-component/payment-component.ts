@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
-import { Component } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { Component, ChangeDetectorRef } from '@angular/core'; // 引入 ChangeDetectorRef
 import { AuthService } from '../../../services/auth';
 import { FormsModule } from '@angular/forms';
 import { ProfileService } from '../../../services/profile';
@@ -45,7 +45,8 @@ export class PaymentComponent {
     private auth: AuthService,
     private route: ActivatedRoute,
     private router: Router,
-    private profileService: ProfileService
+    private profileService: ProfileService,
+    private cdr: ChangeDetectorRef // 注入 ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
@@ -54,6 +55,7 @@ export class PaymentComponent {
         this.userName = data.name || '';
         this.userEmail = data.email || '';
         this.userPhone = data.phone || '';
+        this.cdr.markForCheck(); // 手動標記元件需要檢查
       },
       error: (err) => {
         console.error('資料讀取失敗', err);
