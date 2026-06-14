@@ -212,14 +212,14 @@
   letter-spacing: 0.1em;
   line-height: 2;
 }
-.theme-text-input, 
+.theme-text-input,
 .theme-textarea-input,
 .addon-pure-input {
- 
+
   /* 🌟 核心修正：開啟 Tabular Lining Figures */
   font-variant-numeric: tabular-nums lining-nums;
 }
-.theme-text-input, 
+.theme-text-input,
 .theme-textarea-input,
 .addon-pure-input,
 .theme-select-input {
@@ -233,10 +233,10 @@
   font-size: 14px; /* 略微調小，增加留白，更顯高級 */
   letter-spacing: 0.03em; /* 🌟 增加字距，這會讓字看起來呼吸感更強，不擁擠 */
   color: #3f3a37;
-  
+
   /* 🌟 核心：將游標顏色改為你的品牌主色，消除不協調的藍色 */
-  caret-color: #695c4e; 
-  
+  caret-color: #695c4e;
+
   width: 100%;
   outline: none;
   transition: all 0.3s ease;
@@ -244,7 +244,7 @@
 
 .addon-pure-input {
   border: none !important; /* 強制移除 input 邊框 */
-   
+
 }
 /* 🌟 優化 Placeholder：讓提示字更淺、更隱晦，避免視覺干擾 */
 ::placeholder {
@@ -256,7 +256,7 @@
 }
 
 /* 點擊聚焦時的微奢狀態 */
-.theme-text-input:focus, 
+.theme-text-input:focus,
 .theme-textarea-input:focus,
 .addon-pure-input:focus,
 .theme-select-input:focus {
@@ -268,7 +268,7 @@
  line-height: 1.6; /* 增加行距，讓讀取簡介時更舒服 */
 }
 
-.theme-text-input:focus, 
+.theme-text-input:focus,
 .theme-textarea-input:focus {
   border-color: #695c4e;
 }
@@ -284,8 +284,8 @@
   display: flex;
   border: 1px solid #cfc5bb;
   border-radius: 0.125rem;
-  
-  
+
+
 }
 
 .addon-prefix-box {
@@ -313,7 +313,7 @@
 .custom-select-box {
 
 
-  
+
   position: relative;
   width: 100%;
 }
@@ -500,7 +500,7 @@
   align-items: center;
   justify-content: center;
   z-index: 100000; /* 確保不被任何元件擋住 */
-  
+
   /* 初始隱藏狀態 */
   opacity: 0;
   pointer-events: none;
@@ -524,9 +524,9 @@
   flex-direction: column;
   align-items: center;
   border: 1px solid rgba(255, 255, 255, 0.8); /* 高光細微邊框，增加立體層次 */
-  
+
   /* 多層次擴存環境柔和弱陰影，讓卡片輕盈懸浮 */
-  box-shadow: 
+  box-shadow:
     0 4px 6px -1px rgba(0, 0, 0, 0.01),
     0 10px 20px -3px rgba(105, 92, 78, 0.04),
     0 25px 40px -5px rgba(105, 92, 78, 0.06),
@@ -784,8 +784,8 @@
   list-style: none;
   z-index: 1000;
   box-shadow: 0 4px 20px rgba(105, 92, 78, 0.12);
-  max-height: 210px;       
-  overflow-y: auto;        
+  max-height: 210px;
+  overflow-y: auto;
 }
 
 /* 🌟 核心補回：選項本體的內襯風格與字體 */

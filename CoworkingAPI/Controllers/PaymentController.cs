@@ -56,7 +56,6 @@ namespace CoworkingAPI.Controllers
                 );
 
                 _logger.LogInformation($"Payment parameters created for Contract: {request.ContractId}, Amount: {request.TotalPrice}");
-
                 // 返回 JSON 格式的支付參數 (前端負責構建表單並提交)
                 return Ok(new
                 {

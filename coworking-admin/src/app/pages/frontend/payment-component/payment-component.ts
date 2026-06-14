@@ -3,8 +3,9 @@ import { Component } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AuthService } from '../../../services/auth';
 import { FormsModule } from '@angular/forms';
+import { ProfileService } from '../../../services/profile';
 
-interface AddBookingPayload {
+export interface AddBookingPayload {
   user_id: number | null;
   rent_id: number | null;
   employees_id: number | null;
@@ -36,13 +37,29 @@ export class PaymentComponent {
   userName = '';
   userPhone = '';
   userEmail = '';
+  companyName = '';
+  taxId = '';
 
   constructor(
     private http: HttpClient,
     private auth: AuthService,
     private route: ActivatedRoute,
     private router: Router,
+    private profileService: ProfileService
   ) {}
+
+  ngOnInit(): void {
+    this.profileService.getProfile().subscribe({
+      next: (data: any) => {
+        this.userName = data.name || '';
+        this.userEmail = data.email || '';
+        this.userPhone = data.phone || '';
+      },
+      error: (err) => {
+        console.error('資料讀取失敗', err);
+      },
+    });
+  }
 
   onStartDateChange(event: Event): void {
     this.startDate = (event.target as HTMLInputElement).value;
@@ -72,6 +89,13 @@ export class PaymentComponent {
       return;
     }
 
+    if (this.invoiceType === 'company') {
+      if (!this.companyName || !this.taxId) {
+        alert('公司名稱與統一編號為必填欄位');
+        return;
+      }
+    }
+
     if (!this.userName || !this.userPhone || !this.userEmail) {
       alert('姓名、電話與電子郵件為必填欄位');
       return;
@@ -85,6 +109,8 @@ export class PaymentComponent {
     const deadline = new Date(now);
     deadline.setDate(deadline.getDate() + 1);
 
+
+// deadline 還需要重新計算
     const payload: AddBookingPayload = {
       user_id: this.auth.getUserId(),
       rent_id: rentId && Number.isFinite(rentId) ? rentId : null,
@@ -92,8 +118,8 @@ export class PaymentComponent {
       created_date: now.toISOString(),
       start_date: `${this.startDate}T00:00:00`,
       end_date: `${this.endDate}T23:59:59`,
-      company_name: null,
-      tax_id: null,
+      company_name: this.invoiceType === 'company' ? this.companyName : null,
+      tax_id: this.invoiceType === 'company' ? this.taxId : null,
       status: 0,
       pay_deadline: deadline.toISOString(),
       cancelled_daedline: deadline.toISOString(),

@@ -21,6 +21,7 @@
 
     <section class="contact-section form-group">
       <h2>日期資訊</h2>
+
       <div class="inputs">
         <div class="date-picker">
           <div class="date-field">
@@ -60,13 +61,13 @@
             <div>
               <label>公司名稱</label>
               <div class="input-wrapper">
-                <input type="text" required placeholder="請輸入公司名稱" />
+                <input type="text" [(ngModel)]="companyName" name="companyName" #companyNameRef="ngModel" required placeholder="請輸入公司名稱" />
               </div>
             </div>
             <div>
               <label>統一編號</label>
               <div class="input-wrapper">
-                <input type="text" required placeholder="請輸入統一編號" />
+                <input type="text" [(ngModel)]="taxId" name="taxId" #taxIdRef="ngModel" required placeholder="請輸入統一編號" />
               </div>
             </div>
           </div>

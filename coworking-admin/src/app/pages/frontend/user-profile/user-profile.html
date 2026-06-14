@@ -1,13 +1,14 @@
 <div class="profile-page-canvas">
-  
   <div class="profile-sidebar-zone">
     <div class="sidebar-header-block">
       <h2 class="page-main-title">個人資料</h2>
       <p class="page-description-text">
-        管理您的工作空間身份。更新您的專業資訊與聯絡方式，以確保在 WorkspaceCollective 社群中的最佳體驗。
+        管理您的工作空間身份。
+        <br>
+        更新您的資訊與聯絡方式，以確保最佳的社群體驗。
       </p>
     </div>
-    
+
     <nav class="sidebar-nav-container">
       <a (click)="scrollToSection('basic', $event)" class="nav-anchor-link" [class.active]="activeSection === 'basic'">
         <span class="material-symbols-outlined" [class.icon-filled]="activeSection === 'basic'">person</span>
@@ -29,21 +30,21 @@
   </div>
 
   <form (ngSubmit)="onSubmit()" class="profile-form-canvas">
-    
+
     <section class="form-content-section" id="basic">
       <h2 class="section-serif-heading">基本資料</h2>
       <div class="avatar-and-fields-row">
-        
+
         <div class="profile-avatar-wrapper" (click)="isEditMode && !isImageLoading && fileInput.click()">
-          <div class="avatar-image-frame" style="position: relative;"> 
+          <div class="avatar-image-frame" style="position: relative;">
             <img [src]="profile.avatarUrl" alt="Profile avatar" />
-            
+
             <div class="avatar-loading-overlay" *ngIf="isImageLoading">
               <div class="avatar-spinner"></div>
               <span class="loading-text">讀取中</span>
             </div>
           </div>
-          
+
           <div class="avatar-camera-badge" *ngIf="isEditMode && !isImageLoading">
             <span class="material-symbols-outlined">photo_camera</span>
           </div>
@@ -75,41 +76,41 @@
           </div>
         </div>
 
-        <input 
-          type="file" 
-          #fileInput 
-          style="display: none;" 
-          accept="image/*" 
+        <input
+          type="file"
+          #fileInput
+          style="display: none;"
+          accept="image/*"
           (change)="onFileSelected($event)" />
-  
+
         <div class="fields-grid-container">
           <div class="input-field-group">
             <label class="field-uppercase-label">名字</label>
-            <input 
-              type="text" 
-              class="theme-text-input" 
-              name="firstName" 
-              [(ngModel)]="profile.firstName" 
+            <input
+              type="text"
+              class="theme-text-input"
+              name="firstName"
+              [(ngModel)]="profile.firstName"
               required
               [disabled]="!isEditMode" />
           </div>
 
           <div class="input-field-group">
             <label class="field-uppercase-label">姓氏</label>
-            <input 
-              type="text" 
-              class="theme-text-input" 
-              name="lastName" 
-              [(ngModel)]="profile.lastName" 
+            <input
+              type="text"
+              class="theme-text-input"
+              name="lastName"
+              [(ngModel)]="profile.lastName"
               required
               [disabled]="!isEditMode" />
           </div>
 
           <div class="input-field-group span-two-columns">
             <label class="field-uppercase-label">個人簡介</label>
-            <textarea 
-              class="theme-textarea-input" 
-              rows="4" 
+            <textarea
+              class="theme-textarea-input"
+              rows="4"
               name="bio"
               [(ngModel)]="profile.bio"
               [disabled]="!isEditMode"></textarea>
@@ -123,30 +124,30 @@
       <div class="fields-grid-container">
         <div class="input-field-group">
           <label class="field-uppercase-label">電子郵件</label>
-          <input 
-            type="email" 
-            class="theme-text-input" 
+          <input
+            type="email"
+            class="theme-text-input"
             name="email"
-            [(ngModel)]="profile.email" 
+            [(ngModel)]="profile.email"
             required
             [disabled]="!isEditMode" />
         </div>
 
         <div class="input-field-group">
           <label class="field-uppercase-label">電話號碼</label>
-          <input 
-            type="tel" 
-            class="theme-text-input" 
+          <input
+            type="tel"
+            class="theme-text-input"
             name="phone"
             [(ngModel)]="profile.phone"
             [disabled]="!isEditMode" />
         </div>
-        
+
         <div class="input-field-group span-two-columns">
           <label class="field-uppercase-label">地址</label>
-          <input 
-            type="text" 
-            class="theme-text-input" 
+          <input
+            type="text"
+            class="theme-text-input"
             name="address"
             [(ngModel)]="profile.address"
             [disabled]="!isEditMode" />
@@ -156,9 +157,9 @@
           <label class="field-uppercase-label">LINE ID</label>
           <div class="addon-input-row">
             <span class="addon-prefix-box">LINE ID:</span>
-            <input 
-              type="text" 
-              class="addon-pure-input" 
+            <input
+              type="text"
+              class="addon-pure-input"
               name="lineId"
               [(ngModel)]="profile.lineId"
               [disabled]="!isEditMode" />
@@ -172,9 +173,9 @@
       <div class="fields-grid-container">
         <div class="input-field-group span-two-columns">
           <label class="field-uppercase-label">公司名稱</label>
-          <input 
-            type="text" 
-            class="theme-text-input" 
+          <input
+            type="text"
+            class="theme-text-input"
             name="companyName"
             [(ngModel)]="profile.companyName"
             [disabled]="!isEditMode" />
@@ -182,9 +183,9 @@
 
         <div class="input-field-group">
           <label class="field-uppercase-label">職位</label>
-          <input 
-            type="text" 
-            class="theme-text-input" 
+          <input
+            type="text"
+            class="theme-text-input"
             name="jobTitle"
             [(ngModel)]="profile.jobTitle"
             [disabled]="!isEditMode" />
@@ -193,11 +194,11 @@
         <div class="input-field-group">
           <label class="field-uppercase-label">產業</label>
           <div class="custom-select-box" [class.open]="isDropdownOpen" [class.disabled]="!isEditMode">
-            
+
             <div class="theme-select-input" (click)="isEditMode && toggleDropdown()">
               {{ profile.industry || '建築與設計' }}
             </div>
-            
+
             <span class="material-symbols-outlined select-chevron-icon">expand_more</span>
 
             <ul class="custom-dropdown-list" *ngIf="isEditMode && isDropdownOpen">
@@ -248,7 +249,7 @@
           儲存變更
         </button>
       </ng-container>
-      
+
       <ng-container *ngIf="!isEditMode">
         <button type="button" class="btn-action-save" (click)="enterEditMode()">
           更改資料

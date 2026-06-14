@@ -82,8 +82,8 @@ onDocumentClick(event: Event): void {
     this.isDropdownOpen = false;
   }
 }
+
   ngOnInit(): void {
-    
     this.profileService.getProfile().subscribe({
       next: (data: any) => {
         // 映射後端傳回的各個 DTO 欄位到前端畫面上
@@ -98,7 +98,7 @@ onDocumentClick(event: Event): void {
         this.profile.twoFactorEnabled = data.twoFactorEnabled || false;
         if (data.image) {
           this.profile.avatarUrl = data.image; // 載入資料庫內存的大頭貼
-           
+
         }
         // 🌟 核心轉換：將後端的單一 Name 拆解回前端的「姓」與「名」
         const fullName = data.name || '';
@@ -144,7 +144,7 @@ onDocumentClick(event: Event): void {
       next: () => {
         // 🚀 改用精美的浮動 Toast 動畫
       this.showSuccessToast = true;
-      
+
     // 儲存成功後，將編輯模式關閉！
       this.isEditMode = false;
       this.originalProfile = { ...this.profile };
@@ -157,22 +157,24 @@ onDocumentClick(event: Event): void {
       }
     });
   }
-  enterEditMode(): void {
+
+enterEditMode(): void {
   this.isEditMode = true;
 }
+
 // 🌟 優化後的點擊滾動方法
 scrollToSection(sectionId: string, event: Event): void {
   event.preventDefault();
-  
+
   // 點擊時，先清除可能殘留的計時器
   if (this.scrollTimeout) {
     clearTimeout(this.scrollTimeout);
   }
 
   // 1. 啟用鎖定：告訴系統現在是點擊觸發的滾動
-  this.isProgrammaticScroll = true; 
+  this.isProgrammaticScroll = true;
   this.activeSection = sectionId; // 立即把高亮定格在目標上，不讓它亂跳
-  
+
   const element = document.getElementById(sectionId);
   if (element) {
     element.scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -181,7 +183,7 @@ scrollToSection(sectionId: string, event: Event): void {
   // 2. 當平滑滾動大約完成後（通常 500-600ms），自動解鎖讓手動滾動功能恢復
   this.scrollTimeout = setTimeout(() => {
     this.isProgrammaticScroll = false;
-  }, 600); 
+  }, 600);
 }
   // 🌟 新增：監聽網頁滾動事件（ScrollSpy），當滑鼠往下滾動時，左側選單會跟著右邊內容自動變色
   @HostListener('window:scroll', [])
@@ -189,7 +191,7 @@ scrollToSection(sectionId: string, event: Event): void {
     if (this.isProgrammaticScroll) return;
     const sections = ['basic', 'contact', 'professional', 'security'];
     const scrollPosition = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop || 0;
-    
+
     // 設定滾動判斷的 offset 緩衝值（對齊頂端 Navbar 80px + 額外間距）
     const offsetThreshold = 140;
 
@@ -213,7 +215,7 @@ scrollToSection(sectionId: string, event: Event): void {
  // 🌟 新增此方法，用來處理使用者選好圖片後的「即時預覽」
 onFileSelected(event: any): void {
   const file = event.target.files[0]; // 取得使用者選取的第一張圖片
-  
+
   if (file) {
     // 安全檢查：限制檔案大小（例如不得超過 2MB，可選）
     if (file.size > 2 * 1024 * 1024) {
@@ -234,7 +236,7 @@ onFileSelected(event: any): void {
       // 🌟 優化：在記憶體中預先建立並解碼圖片，且只做這一次！
       const img = new Image();
       img.src = this.rawImageBase64;
-     img.onload = () => { 
+     img.onload = () => {
       this.decodedImage = img;     // 將解碼完的實體快取起來
      this.bakeCroppedImage();     // 執行第一次渲染
         this.isImageLoading = false; // 🌟 解碼完成，關閉讀取中遮罩
@@ -253,10 +255,10 @@ if (!this.decodedImage) return;
   const img = this.decodedImage;
 
 
-  
+
     const canvas = document.createElement('canvas');
     const ctx = canvas.getContext('2d');
-    
+
     const size = 400; // 強制輸出高畫質 400x400 正方形頭像
     canvas.width = size;
     canvas.height = size;
@@ -264,7 +266,7 @@ if (!this.decodedImage) return;
     if (ctx) {
       // 🟢 核心演算 1：找出照片的短邊，作為 100% 縮放時的基礎正方形大小
       const baseSize = Math.min(img.width, img.height);
-      
+
       // 🟢 核心演算 2：根據放大比例（100% ~ 300%），等比例縮減原圖裁切框的大小
       const currentZoom = this.avatarScale / 100;
       const sSize = baseSize / currentZoom;
@@ -279,7 +281,7 @@ if (!this.decodedImage) return;
 
       // 🟢 核心實體繪製
       ctx.drawImage(img, sx, sy, sSize, sSize, 0, 0, size, size);
-      
+
       // 輸出並廣播
       this.profile.avatarUrl = canvas.toDataURL('image/jpeg', 0.9);
       this.profileService.updateAvatarStream(this.profile.avatarUrl);
@@ -295,7 +297,7 @@ onCancel(): void {
       // ... (這裡可以複製 ngOnInit 裡面的所有屬性賦值)
 
     this.profileService.updateAvatarStream(this.profile.avatarUrl);
-      
+
       // 2. 恢復原始資料後，關閉編輯模式
       this.isEditMode = false;
       console.log('編輯已取消，資料已復原');
