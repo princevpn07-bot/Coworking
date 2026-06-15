@@ -1,9 +1,9 @@
 <nav class="navbar">
   <div class="container">
-    <a class="logo" routerLink="/">WorkspaceCollective</a>
+    <a class="logo" routerLink="/"><img src="assets/COVO_logo.png" alt="WorkspaceCollective Logo" class="logo-img" /></a>
     <div class="nav-links">
       <a routerLink="/all-spaces" routerLinkActive="active">瀏覽空間</a>
-      <a href="#">企業方案</a>
+      <a routerLink="/" fragment="rental-plans">企業方案</a>
       <a routerLink="/partners" routerLinkActive="active">合作夥伴</a>
       <a href="#">關於我們</a>
     </div>
@@ -43,6 +43,11 @@
               <span class="material-symbols-outlined">handshake</span>
               合作夥伴
             </a>
+
+           <a routerLink="/my-favorites" class="dropdown-item" (click)="showDropdown=false">
+            <span class="material-symbols-outlined">favorite</span>
+            我的最愛
+          </a>
 
           <a routerLink="/user-profile" class="dropdown-item"(click)="showDropdown=false">
             <span class="material-symbols-outlined">manage_accounts</span>
