@@ -247,7 +247,7 @@ export class Home implements OnInit, AfterViewInit, OnDestroy {
       trigger: targetSection,
       start: 'top bottom',
       end: 'bottom top',  
-      onToggle: (self) => {
+      onToggle: (self: ScrollTrigger) => {
         this.isShaderVisible = self.isActive;
       }
     });
@@ -620,7 +620,7 @@ private initHorizontalScroll() {
         pin: true, 
         scrub: 1.5, // 🔒 完美留存
         invalidateOnRefresh: true, 
-        onUpdate: (self) => { this.scrollRotation.value = self.progress *180; } // 🔒 完美留存
+        onUpdate: (self: ScrollTrigger) => { this.scrollRotation.value = self.progress *180; } // 🔒 完美留存
       }
     });
 
@@ -882,7 +882,7 @@ private initHorizontalScroll() {
   }
 
   private initSmoothScroll() {
-    this.lenis = new Lenis({ duration: 1.2, easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)), smoothWheel: true });
+    this.lenis = new Lenis({ duration: 1.2, easing: (t: number) => Math.min(1, 1.001 - Math.pow(2, -10 * t)), smoothWheel: true });
     
     this.tickerHandler = (time: number) => {
       this.lenis?.raf(time * 1000);
@@ -951,6 +951,6 @@ private initHorizontalScroll() {
     if (this.tickerHandler) { gsap.ticker.remove(this.tickerHandler); }
     window.removeEventListener('mousemove', this.mouseMoveListener!);
     this.lenis?.destroy();
-    ScrollTrigger.getAll().forEach(trigger => trigger.kill());
+    ScrollTrigger.getAll().forEach((trigger: ScrollTrigger) => trigger.kill());
   }
 }

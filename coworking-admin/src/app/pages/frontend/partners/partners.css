@@ -310,236 +310,63 @@ html {
 }
 
 /* ==========================================
-   古典簡約底線申請表單區 (Form Aesthetics)
+   洽談聯繫區 (Contact Section)
    ========================================== */
-.form-card-wrapper {
-  background-color: rgba(163, 146, 129, 0.05);
-  padding: 3rem;
-  border: 1px solid rgba(163, 146, 129, 0.3);
-  border-radius: 4px;
-}
-
-.form-title-area {
-  text-align: center;
-  margin-bottom: 3rem;
-}
-
-.partner-form {
-  display: flex;
-  flex-direction: column;
-  gap: 2.5rem;
-}
-
-.form-row-twin {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 2rem;
-}
-
-.form-field {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-}
-
-.label-xs {
-  font-family: var(--font-sans-label);
-  font-size: 11px;
-  color: var(--color-brand-secondary);
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  font-weight: 600;
-}
-
-/* 預設底線與錯誤警告線條全面採用穩重的品牌深咖啡色 */
-.minimal-underline-input {
-  border: none;
-  border-bottom: 1px solid var(--color-brand-primary); 
-  border-radius: 0;
-  background-color: transparent;
-  padding: 0.65rem 0.25rem;
-  font-family: var(--font-serif-body);
-  font-size: 1rem;
-  color: var(--color-brand-text);
-  transition: border-color 0.2s ease, border-width 0.1s ease;
-  width: 100%;
-  box-sizing: border-box;
-}
-
-.minimal-underline-input::placeholder {
-  color: #a39281;
-  opacity: 0.5;
-}
-
-.minimal-underline-input:focus {
-  outline: none;
-  border-bottom-color: var(--color-brand-primary);
-  border-bottom-width: 2px;
-}
-
-.minimal-underline-input.input-error {
-  border-bottom-color: var(--color-brand-primary) !important;
-  border-bottom-width: 1.5px;
-}
-
-/* 下拉選單指標處理 */
-.select-chevron-container {
-  position: relative;
-  width: 100%;
-}
-
-.select-native {
-  cursor: pointer;
-  appearance: none;
-  -webkit-appearance: none;
-  padding-right: 1.75rem !important;
-}
-
-.select-chevron-container::after {
-  content: 'expand_more';
-  font-family: 'Material Symbols Outlined';
-  position: absolute;
-  right: 8px;
-  top: 50%;
-  transform: translateY(-50%);
-  color: var(--color-brand-secondary);
-  pointer-events: none;
-  font-size: 20px;
-}
-
-/* 虛線相片拖曳上傳盒 */
-.drag-upload-box {
-  border: 1px dashed var(--color-brand-accent);
-  background-color: #ffffff;
-  border-radius: 4px;
-  padding: 2.5rem;
+.contact-section {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  gap: 1rem;
-  cursor: pointer;
+  gap: 2rem;
   text-align: center;
-  transition: var(--transition-smooth);
+  padding: 1rem 0 2rem;
 }
 
-.drag-upload-box:hover {
-  background-color: rgba(163, 146, 129, 0.05);
-  border-color: var(--color-brand-primary);
-}
-
-.upload-cloud-icon {
-  width: 40px;
-  height: 40px;
-  font-size: 40px !important;
-  color: var(--color-brand-accent);
-  transition: transform 0.2s ease;
-}
-
-.drag-upload-box:hover .upload-cloud-icon {
-  transform: translateY(-2px);
-}
-
-.body-md-upload {
+.contact-desc {
   font-family: var(--font-serif-body);
-  font-size: 0.9rem;
+  font-size: 1.05rem;
   color: var(--color-brand-secondary);
+  line-height: 1.75;
+  max-width: 540px;
   margin: 0;
 }
 
-.label-xs-upload-hint {
-  font-family: var(--font-sans-label);
-  font-size: 10px;
-  color: rgba(163, 146, 129, 0.8);
-  letter-spacing: 0.05em;
-  margin-top: 0.25rem;
-}
-
-.form-action-center {
-  display: flex;
-  justify-content: center;
-  padding-top: 1.5rem;
-}
-
-.btn-submit-form {
+.btn-contact-primary {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
   background-color: var(--color-brand-primary);
   color: #ffffff;
   font-family: var(--font-sans-label);
   font-size: 0.85rem;
   font-weight: 600;
-  letter-spacing: 0.12em;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
-  padding: 1.15rem 3rem;
-  border: none;
+  padding: 1rem 2.25rem;
   border-radius: 4px;
-  box-shadow: 0 4px 12px rgba(105, 92, 78, 0.15);
+  text-decoration: none;
   transition: var(--transition-smooth);
-  cursor: pointer;
 }
 
-.btn-submit-form:hover {
+.btn-contact-primary:hover {
   background-color: var(--color-brand-tertiary);
   transform: translateY(-1px);
-  box-shadow: 0 6px 16px rgba(105, 92, 78, 0.25);
+  box-shadow: 0 6px 16px rgba(105, 92, 78, 0.2);
 }
 
-.btn-submit-form:active {
-  transform: translateY(0);
-}
-
-input[type="number"]::-webkit-outer-spin-button,
-input[type="number"]::-webkit-inner-spin-button {
-  -webkit-appearance: none;
+.contact-note {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-family: var(--font-sans-label);
+  font-size: 0.8rem;
+  color: var(--color-brand-accent);
+  letter-spacing: 0.03em;
   margin: 0;
 }
-input[type="number"] {
-  -moz-appearance: textfield;
-}
 
-/* ==========================================
-   LINE 客服導引區 (Support Section)
-   ========================================== */
-.line-bot-section {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 1.25rem;
-  text-align: center;
-}
-
-.btn-line-outline {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  border: 1px solid var(--color-brand-primary);
-  background-color: transparent;
-  color: var(--color-brand-primary);
-  font-family: var(--font-sans-label);
-  font-size: 0.75rem;
-  font-weight: 600;
-  padding: 0.85rem 1.75rem;
-  border-radius: 4px;
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
-  cursor: pointer;
-  transition: var(--transition-smooth);
-}
-
-.btn-line-outline:hover {
-  background-color: var(--color-brand-primary);
-  color: #ffffff;
-}
-
-.line-text-link {
-  font-family: var(--font-serif-body);
-  font-size: 0.9rem;
-  color: var(--color-brand-secondary);
-  text-decoration: underline;
-  text-underline-offset: 4px;
-}
-
-.line-text-link:hover {
-  color: var(--color-brand-primary);
+.note-icon {
+  font-size: 16px !important;
+  opacity: 0.7;
 }
 
 /* ==========================================
@@ -598,13 +425,8 @@ input[type="number"] {
     width: 100%;
   }
 
-  .form-card-wrapper {
-    padding: 2.25rem 1.25rem;
-  }
-
-  .form-row-twin {
-    grid-template-cols: 1fr;
-    gap: 1.25rem;
+  .contact-desc {
+    font-size: 0.95rem;
   }
 }
 

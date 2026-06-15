@@ -62,7 +62,7 @@ namespace CoworkingAPI.Controllers
                     }
 
                     var date = Booking.start_date?.ToString("yyyy/MM/dd") ?? "-";
-                    var timeRange = $"{Booking.start_date?.ToString("HH:mm")} - {Booking.end_date?.ToString("HH:mm")}";
+                    var timeRange = $"{Booking.start_date?.ToString("MM/dd HH:mm")} - {Booking.end_date?.ToString("MM/dd HH:mm")}";
                     var confirmCode = $"CW-{Booking.contract_id:D4}";
 
                     try

@@ -49,89 +49,21 @@
 
   <div class="section-divider-full"></div>
 
-  <section id="application-form" class="form-card-wrapper">
-    <div class="form-title-area">
-      <h2 class="headline-lg">立即申請成為空間夥伴</h2>
-    </div>
-    
-    <form [formGroup]="partnerForm" (ngSubmit)="onSubmit()" class="partner-form">
-      <div class="form-row-twin">
-        <div class="form-field">
-          <label class="label-xs" for="contact-name">聯絡人姓名</label>
-          <input class="minimal-underline-input" id="contact-name" type="text" formControlName="contactName" placeholder="請輸入姓名"
-                 [class.input-error]="partnerForm.get('contactName')?.touched && partnerForm.get('contactName')?.invalid" />
-        </div>
-        <div class="form-field">
-          <label class="label-xs" for="contact-phone">聯絡電話</label>
-          <input class="minimal-underline-input" id="contact-phone" type="tel" formControlName="contactPhone" placeholder="09xx-xxx-xxx"
-                 [class.input-error]="partnerForm.get('contactPhone')?.touched && partnerForm.get('contactPhone')?.invalid" />
-        </div>
-      </div>
-
-      <div class="form-field">
-        <label class="label-xs" for="contact-email">電子信箱</label>
-        <input class="minimal-underline-input" id="contact-email" type="email" formControlName="contactEmail" placeholder="example@email.com"
-               [class.input-error]="partnerForm.get('contactEmail')?.touched && partnerForm.get('contactEmail')?.invalid" />
-      </div>
-
-      <div class="form-row-twin">
-        <div class="form-field">
-          <label class="label-xs" for="space-name">空間名稱</label>
-          <input class="minimal-underline-input" id="space-name" type="text" formControlName="spaceName" placeholder="請輸入空間名稱"
-                 [class.input-error]="partnerForm.get('spaceName')?.touched && partnerForm.get('spaceName')?.invalid" />
-        </div>
-        <div class="form-field">
-          <label class="label-xs" for="space-type">空間類型</label>
-          <div class="select-chevron-container">
-            <select class="minimal-underline-input select-native" id="space-type" formControlName="spaceType"
-                    [class.input-error]="partnerForm.get('spaceType')?.touched && partnerForm.get('spaceType')?.invalid">
-              <option disabled value="">請選擇類型</option>
-              <option value="coworking">共同工作空間</option>
-              <option value="meeting">會議室</option>
-              <option value="private">獨立辦公室</option>
-              <option value="event">活動場地</option>
-            </select>
-          </div>
-        </div>
-      </div>
-
-      <div class="form-field">
-        <label class="label-xs" for="space-address">空間地址</label>
-        <input class="minimal-underline-input" id="space-address" type="text" formControlName="spaceAddress" placeholder="請輸入完整地址"
-               [class.input-error]="partnerForm.get('spaceAddress')?.touched && partnerForm.get('spaceAddress')?.invalid" />
-      </div>
-
-      <div class="form-row-twin">
-        <div class="form-field">
-          <label class="label-xs" for="space-capacity">容納人數</label>
-          <input class="minimal-underline-input" id="space-capacity" type="number" formControlName="capacity" placeholder="例如: 10"
-                 [class.input-error]="partnerForm.get('capacity')?.touched && partnerForm.get('capacity')?.invalid" />
-        </div>
-        <div class="form-field">
-          <label class="label-xs" for="space-size">坪數大小</label>
-          <input class="minimal-underline-input" id="space-size" type="number" formControlName="spaceSize" placeholder="例如: 30"
-                 [class.input-error]="partnerForm.get('spaceSize')?.touched && partnerForm.get('spaceSize')?.invalid" />
-        </div>
-      </div>
-
-      <div class="drag-upload-box">
-        <span class="material-symbols-outlined upload-cloud-icon">cloud_upload</span>
-        <p class="body-md-upload">拖曳或點擊上傳空間照片 (PNG, JPG)</p>
-        <p class="label-xs-upload-hint">建議尺寸 1920x1080，單張不超過 5MB</p>
-      </div>
-
-      <div class="form-action-center">
-        <button class="btn-submit-form" type="submit">提交空間申請</button>
-      </div>
-    </form>
-  </section>
-
-  <section class="line-bot-section">
-    <button class="btn-line-outline">
+  <section class="contact-section">
+    <h2 class="headline-lg">想成為合作夥伴？</h2>
+    <div class="thin-divider-center"></div>
+    <p class="contact-desc">
+      成為合作夥伴是一件慎重的事，我們透過 LINE 與您直接溝通，
+      一對一評估最適合的合作方式。
+    </p>
+    <a class="btn-contact-primary" href="https://line.me/R/ti/p/@389xvrdl" target="_blank" rel="noopener noreferrer">
       <span class="material-symbols-outlined">chat</span>
-      💬 啟動 LINE Bot 智能助手諮詢
-    </button>
-    <a class="line-text-link" href="#">或是直接加入 官方 LINE 帳號 聯絡真人客服</a>
+      透過 LINE 聯繫我們
+    </a>
+    <p class="contact-note">
+      <span class="material-symbols-outlined note-icon">info</span>
+      服務時間：週一至週五 09:00 – 18:00
+    </p>
   </section>
 
 </main>

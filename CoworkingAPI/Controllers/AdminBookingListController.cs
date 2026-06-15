@@ -141,7 +141,7 @@ namespace CoworkingAPI.Controllers
                             .FirstOrDefaultAsync(r => r.rent_id == dto.rent_id);
                         var spaceName = spaceRent?.Space?.space_number ?? "共享空間";
                         var date = start.ToString("yyyy/MM/dd");
-                        var timeRange = $"{start:HH:mm} - {end:HH:mm}";
+                        var timeRange = $"{start:MM/dd HH:mm} - {end:MM/dd HH:mm}";
                         var confirmCode = $"CW-{booking.contract_id:D4}";
                         try
                         {

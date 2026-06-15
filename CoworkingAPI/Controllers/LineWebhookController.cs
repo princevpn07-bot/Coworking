@@ -62,6 +62,22 @@ namespace CoworkingAPI.Controllers
                     var lineUserId = ev.source.userId;
                     var text = ev.message.text?.Trim() ?? "";
 
+                    // 合作夥伴詢問觸發
+                    var partnerKeywords = new[] { "合作", "成為夥伴", "空間合作", "加入", "partner" };
+                    if (partnerKeywords.Any(k => text.Contains(k, StringComparison.OrdinalIgnoreCase)))
+                    {
+                        Utility.ReplyMessage(ev.replyToken,
+                            "感謝您有意與 COVO 合作！🤝\n\n" +
+                            "請先確認您已在 COVO 平台完成註冊，並提供以下資訊：\n\n" +
+                            "1️⃣ COVO 平台註冊 Email\n" +
+                            "2️⃣ 資產所在城市\n" +
+                            "3️⃣ 資產地址\n\n" +
+                            "我們收到後將審核您的帳號並升級為合作夥伴，\n" +
+                            "完成後您即可自行登入後台建立與管理空間。",
+                            _channelAccessToken);
+                        continue;
+                    }
+
                     // 判斷是否為 Email 格式
                     if (text.Contains("@") && text.Contains("."))
                     {
