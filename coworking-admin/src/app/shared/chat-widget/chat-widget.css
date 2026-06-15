@@ -1,72 +1,107 @@
 .chat-toggle {
   position: fixed;
-  bottom: 28px;
-  right: 28px;
-  width: 56px;
-  height: 56px;
-  border-radius: 50%;
-  background: #2563eb;
-  color: white;
-  font-size: 22px;
-  border: none;
-  cursor: pointer;
-  box-shadow: 0 4px 14px rgba(37, 99, 235, 0.4);
-  z-index: 1000;
-  transition: background 0.2s, transform 0.2s;
+   bottom: 28px;
+   right: 28px;
+   width: 130px;             /* 💡 改為 90px，配合貓咪的大小 */
+   height: 130px;            /* 💡 改為 90px，配合貓咪的大小 */
+   border-radius: 50%;
+   background: transparent; /* 💡 關鍵：改成透明，移去原本的藍色背景 */
+   border: none;
+   cursor: pointer;
+   box-shadow: none;        /* 💡 關鍵：移除原本藍色按鈕的陰影 */
+   z-index: 1000;
+   transition: transform 0.2s;
+   display: flex;
+   justify-content: center;
+   align-items: center;
+   padding: 0;
 }
 
 .chat-toggle:hover {
-  background: #1d4ed8;
-  transform: scale(1.08);
+ background: transparent; /* 💡 游標滑過去時也保持透明，不會冒出藍色 */
+   transform: scale(1.1);   /* 💡 滑過去時貓咪會微微放大 1.1 倍，視覺互動感更好！ */
 }
 
 .chat-box {
   position: fixed;
-  bottom: 96px;
+  bottom: 115px; /* 微調高度，留出優雅的喘息空間給大貓咪 */
   right: 28px;
-  width: 340px;
-  height: 460px;
-  background: #fff;
-  border-radius: 16px;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+  width: 360px;  
+  height: 500px; 
+  background: #ffffff;
+  border-radius: 24px; /* 圓潤現代的倒角 */
+  /* 精緻低調的微陰影，營造出和主頁卡片一樣的懸浮輕盈感 */
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.08), 0 4px 14px rgba(0, 0, 0, 0.02);
   display: flex;
   flex-direction: column;
   z-index: 999;
   overflow: hidden;
+  border: 1px solid rgba(218, 214, 208, 0.5); /* 帶有暖色調的極細邊框 */
 }
 
+/* 標頭：對照 Menu 膠囊的深炭灰霧面漸層，呈現高階科技感 */
 .chat-header {
-  background: #2563eb;
-  color: white;
-  padding: 14px 16px;
-  font-weight: 600;
+  background: linear-gradient(135deg, #3a3a3c, #1c1c1e);
+  color: #f5f5f7;
+  padding: 18px 20px;
+  font-weight: 500;
   font-size: 15px;
+  letter-spacing: 0.6px;
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
 
 .close-btn {
-  background: none;
+  background: rgba(255, 255, 255, 0.12);
   border: none;
-  color: white;
-  font-size: 16px;
+  color: #e8e8ed;
+  font-size: 11px;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   cursor: pointer;
-  padding: 0;
-  line-height: 1;
+  transition: all 0.2s;
 }
 
+.close-btn:hover {
+  background: rgba(255, 255, 255, 0.25);
+  color: #ffffff;
+}
+
+/* 對話紀錄區塊 */
 .chat-messages {
   flex: 1;
   overflow-y: auto;
-  padding: 14px 12px;
+  padding: 22px 16px;
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 14px;
+  background: #faf9f6; /* 💡 完美融合：與主頁背景底色相同的暖洋洋灰白色 */
+}
+
+/* 隱形現代滾動條 */
+.chat-messages::-webkit-scrollbar,
+.chat-input textarea::-webkit-scrollbar {
+  width: 5px;
+}
+.chat-messages::-webkit-scrollbar-thumb,
+.chat-input textarea::-webkit-scrollbar-thumb {
+  background: #d1cbdc;
+  border-radius: 10px;
 }
 
 .message {
   display: flex;
+  animation: fadeInMessage 0.35s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+}
+
+@keyframes fadeInMessage {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
 .message.user {
@@ -77,116 +112,200 @@
   justify-content: flex-start;
 }
 
+/* 訊息氣泡優化 */
 .bubble {
-  max-width: 80%;
-  padding: 10px 14px;
-  border-radius: 16px;
+  max-width: 78%;
+  padding: 12px 16px;
   font-size: 14px;
-  line-height: 1.5;
+  line-height: 1.6;
   white-space: pre-wrap;
   word-break: break-word;
 }
 
+/* 使用者氣泡：改為與 Menu 選單一致的高級深色系 */
 .message.user .bubble {
-  background: #2563eb;
-  color: white;
-  border-bottom-right-radius: 4px;
+  background: linear-gradient(135deg, #48484a, #1c1c1e);
+  color: #ffffff;
+  border-radius: 20px 20px 4px 20px;
+  box-shadow: 0 4px 12px rgba(28, 28, 30, 0.12);
 }
 
+/* 機器人氣泡：採用主頁植物陰影下的「柔和暖灰色」，極具奢華雜誌感 */
 .message.assistant .bubble {
-  background: #f1f5f9;
-  color: #1e293b;
-  border-bottom-left-radius: 4px;
+  background: #f2efeb; /* 💡 對照主頁暖灰底色 */
+  color: #2c2c2e;      /* 深炭灰文字，閱讀極為舒適 */
+  border-radius: 20px 20px 20px 4px;
+  border: 1px solid rgba(230, 225, 218, 0.7);
 }
 
-.bubble.loading {
-  display: flex;
-  gap: 4px;
-  align-items: center;
-  padding: 12px 16px;
-}
-
-.bubble.loading span {
-  width: 7px;
-  height: 7px;
-  background: #94a3b8;
-  border-radius: 50%;
-  animation: bounce 1.2s infinite;
-}
-
-.bubble.loading span:nth-child(2) { animation-delay: 0.2s; }
-.bubble.loading span:nth-child(3) { animation-delay: 0.4s; }
-
-@keyframes bounce {
-  0%, 80%, 100% { transform: translateY(0); }
-  40% { transform: translateY(-6px); }
-}
-
-.navigate-btn {
-  margin-top: 6px;
-  padding: 7px 14px;
-  background: #2563eb;
-  color: white;
-  border: none;
-  border-radius: 20px;
-  font-size: 13px;
-  cursor: pointer;
-  transition: background 0.2s;
-  align-self: flex-start;
-}
-
-.navigate-btn:hover {
-  background: #1d4ed8;
-}
-
+/* 底部輸入區塊 */
 .chat-input {
   display: flex;
-  align-items: flex-end;
-  gap: 8px;
-  padding: 10px 12px;
-  border-top: 1px solid #e2e8f0;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 16px;
+  background: #ffffff;
+  border-top: 1px solid #f2efeb;
 }
 
 .chat-input textarea {
   flex: 1;
   resize: none;
-  border: 1px solid #e2e8f0;
-  border-radius: 10px;
-  padding: 8px 12px;
+  border: 1px solid #e5e1da;
+  border-radius: 14px;
+  padding: 11px 14px;
   font-size: 14px;
   font-family: inherit;
   outline: none;
   max-height: 80px;
+  background: #fcfbfa;
+  color: #1c1c1e;
+  transition: all 0.2s ease;
   overflow-y: auto;
-  transition: border-color 0.2s;
 }
 
+/* 輸入框聚焦時：散發優雅的淡灰色微光，絕不突兀 */
 .chat-input textarea:focus {
-  border-color: #2563eb;
+  border-color: #8e8e93;
+  background: #ffffff;
+  box-shadow: 0 0 0 3px rgba(142, 142, 147, 0.1);
 }
 
-.chat-input textarea:disabled {
-  background: #f8fafc;
-}
-
+/* 發送按鈕：同樣對照主頁膠囊選單的霧面深炭灰 */
 .chat-input button {
-  width: 36px;
-  height: 36px;
+  width: 38px;
+  height: 38px;
   border-radius: 50%;
-  background: #2563eb;
-  color: white;
+  background: linear-gradient(135deg, #3a3a3c, #1c1c1e);
+  color: #ffffff;
   border: none;
   cursor: pointer;
-  font-size: 14px;
+  font-size: 13px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   flex-shrink: 0;
-  transition: background 0.2s;
+  transition: all 0.25s ease;
+  box-shadow: 0 3px 8px rgba(28, 28, 30, 0.15);
 }
 
 .chat-input button:hover:not(:disabled) {
-  background: #1d4ed8;
+  transform: scale(1.06);
+  box-shadow: 0 5px 14px rgba(28, 28, 30, 0.25);
 }
 
 .chat-input button:disabled {
-  background: #93c5fd;
+  background: #f2efeb;
+  color: #c7c7cc;
+  box-shadow: none;
   cursor: not-allowed;
+}
+/* ==========================================================================
+   以下為新增的貓咪 Lottie 按鈕優化樣式（加在檔案最底部，不影響既有排版）
+   ========================================================================== */
+
+/* 💡 1. 漂浮容器樣式：給予 3.5 秒一週期的柔和上下滑行效果 */
+.cat-float-container {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  animation: cat-floating 3.5s ease-in-out infinite;
+}
+
+/* 💡 2. 上下漂浮的關鍵幀：利用 translateY 做出滑順的懸浮感 */
+@keyframes cat-floating {
+  0% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-8px); /* 緩慢向上漂移 8 像素 */
+  }
+  100% {
+    transform: translateY(0px);
+  }
+}
+
+/* 當 AI 正在載入（思考中）時，讓整個按鈕產生溫和的放大縮小呼吸效果 */
+.chat-toggle.loading ng-lottie {
+  animation: cat-pulse 1.2s infinite ease-in-out;
+}
+
+@keyframes cat-pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.15); }
+}
+
+/* ==========================================================================
+   全新新增：表情符號功能樣式（加在檔案最底部，不影響既有排版）
+   ========================================================================== */
+
+/* 輸入框左側的笑臉切換按鈕 */
+.emoji-toggle-btn {
+  background: none;
+  border: none;
+  font-size: 19px;
+  cursor: pointer;
+  padding: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.2s ease;
+  flex-shrink: 0;
+}
+
+.emoji-toggle-btn:hover:not(:disabled) {
+  transform: scale(1.18); /* 滑過去時微微放大，增加趣味性 */
+}
+
+.emoji-toggle-btn:disabled {
+  cursor: not-allowed;
+  opacity: 0.4;
+}
+
+/* 表情符號彈出面板：採用絕對定位，優雅浮現在輸入框之上 */
+.emoji-picker {
+  position: absolute;
+  bottom: 74px; /* 完美懸浮在底部輸入欄的上方 */
+  left: 16px;
+  right: 16px;
+  background: #ffffff;
+  border: 1px solid rgba(230, 225, 218, 0.9); /* 對照主頁溫潤暖灰色邊框 */
+  border-radius: 16px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.06);
+  display: grid;
+  grid-template-columns: repeat(8, 1fr); /* 一列精準排入 8 個表情，兩列共 16 個 */
+  gap: 6px;
+  padding: 10px;
+  z-index: 1001;
+  max-height: 110px;
+  overflow-y: auto;
+  /* 絲滑的淡入並往上飄動的小動畫 */
+  animation: slideUpEmoji 0.2s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+}
+
+@keyframes slideUpEmoji {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* 面板內個別表情的樣式 */
+.emoji-item {
+  background: none;
+  border: none;
+  font-size: 20px;
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.15s ease;
+}
+
+/* 滑鼠滑過個別表情時的精緻回饋 */
+.emoji-item:hover {
+  background: #f2efeb; /* 💡 完美對照：採用主頁相同的質感暖灰色作為選取底色 */
+  transform: scale(1.25); /* 放大凸顯目前選中的表情 */
 }

@@ -2,6 +2,8 @@ import { ApplicationConfig, provideBrowserGlobalErrorListeners } from '@angular/
 import { provideRouter ,withInMemoryScrolling} from '@angular/router';
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { authInterceptor } from './interceptors/auth.interceptor';
+import { provideLottieOptions } from 'ngx-lottie';
+import player from 'lottie-web';
 
 import { routes } from './app.routes';
 
@@ -16,6 +18,10 @@ export const appConfig: ApplicationConfig = {
       withInMemoryScrolling({
         anchorScrolling: 'enabled',
         scrollPositionRestoration: 'enabled'})
-        )
+        ),
+        provideLottieOptions({
+      player: () => player,
+    }),
+        
   ]
 };
