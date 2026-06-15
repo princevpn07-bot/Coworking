@@ -25,14 +25,18 @@
 }
 
 .navbar .logo {
-  font-size: 24px;
-  font-weight: 500;
-  font-style: italic;
-  color: #695c4e;
-  letter-spacing: 0.05em;
+ display: flex;
+  align-items: center;
   text-decoration: none;
+  /* 移除原本的 font-size, font-style 等文字樣式 */
 }
-
+/* 新增圖片樣式控管 */
+.navbar .logo-img {
+  height: 42px;    /* 設定適合導覽列的高度（導覽列總高 80px） */
+  width: auto;     /* 讓寬度根據圖片比例自動縮放 */
+  display: block;
+  object-fit: contain;
+}
 .navbar .nav-links {
   display: flex;
   gap: 32px;
