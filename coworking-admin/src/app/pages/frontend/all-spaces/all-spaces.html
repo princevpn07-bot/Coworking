@@ -114,7 +114,7 @@
       </p>
 
       <div class="card-grid" *ngIf="spaces && spaces.length > 0; else noDataBlock">
-        <article class="card" *ngFor="let space of spaces" (click)="goToSpaceDetail(space.id)" style="cursor: pointer;">
+        <article class="card" [id]="'space-card-' + space.id" [class.card--active]="selectedSpaceId === space.id" *ngFor="let space of spaces" (click)="goToSpaceDetail(space.id)" style="cursor: pointer;">
           <div class="card__image-wrapper">
             <img [src]="space?.img" [alt]="space?.name" />
             <span class="card__badge">{{ space?.capacity }}</span>
@@ -123,7 +123,7 @@
             <div class="card__info">
               <h3 class="card__title">{{ space?.name }}</h3>
               <p class="card__location">{{ space?.location }}</p>
-              <p class="card__price">NT$ {{ space?.price | number }} / 月起</p>
+              <p class="card__price">NT$ {{ space?.price | number }} / 小時起</p>
             </div>
             <button class="card__fav" (click)="toggleFavorite(space.id, $event)">
               <span class="material-symbols-outlined"
@@ -167,9 +167,9 @@
           <div class="switch"></div>
         </div>
       </div>
-      <button class="map-section__fab">
+      <!--<button class="map-section__fab">
         <span class="material-symbols-outlined">my_location</span>
-      </button>
+      </button>-->
     </div>
   </aside>
 

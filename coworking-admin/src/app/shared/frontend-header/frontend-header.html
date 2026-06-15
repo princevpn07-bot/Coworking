@@ -11,45 +11,57 @@
 
       <!-- 未登入 -->
       <ng-container *ngIf="!isLoggedIn">
+        <button class="btn-favorite" routerLink="/my-favorites" aria-label="我的收藏">
+          <span class="material-symbols-outlined">
+            favorite
+          </span>
+        </button>
         <button class="btn-login" routerLink="/login">登入</button>
         <button class="btn-book" routerLink="/all-spaces">立即預訂</button>
       </ng-container>
 
       <!-- 已登入 -->
       <ng-container *ngIf="isLoggedIn">
+        <button class="btn-favorite" routerLink="/my-favorites" aria-label="我的收藏">
+          <span class="material-symbols-outlined">
+            favorite
+          </span>
+        </button>
         <button class="btn-book" routerLink="/all-spaces">立即預訂</button>
         <div class="user-menu">
           <button class="user-avatar-btn" [class.active]="showDropdown" (click)="toggleDropdown()">
-            <span class="avatar-circle" style="overflow: hidden; display: flex; align-items: center; justify-content: center;">
-           <img *ngIf="avatarUrl" [src]="avatarUrl" alt="Avatar" style="width: 100%; height: 100%; object-fit: cover;" />
-            <ng-container *ngIf="!avatarUrl">{{ avatarInitial }}</ng-container></span>
+            <span class="avatar-circle"
+              style="overflow: hidden; display: flex; align-items: center; justify-content: center;">
+              <img *ngIf="avatarUrl" [src]="avatarUrl" alt="Avatar"
+                style="width: 100%; height: 100%; object-fit: cover;" />
+              <ng-container *ngIf="!avatarUrl">{{ avatarInitial }}</ng-container></span>
             <span class="welcome-text">歡迎，{{ username }}</span>
-          <span class="material-symbols-outlined dropdown-icon" [class.open]="showDropdown">menu</span>
+            <span class="material-symbols-outlined dropdown-icon" [class.open]="showDropdown">menu</span>
           </button>
 
-        <div class="dropdown-menu" [class.is-open]="showDropdown">
-          @if (canLoginBackend) {
+          <div class="dropdown-menu" [class.is-open]="showDropdown">
+            @if (canLoginBackend) {
             <a class="dropdown-item" routerLink="/backend" (click)="showDropdown=false">
               <span class="material-symbols-outlined">dashboard</span>
               進入後台
             </a>
-          }
-          <a class="dropdown-item" routerLink="/my-orders" (click)="showDropdown=false">
-            <span class="material-symbols-outlined">receipt_long</span>
-            我的訂單
-           </a>
+            }
+            <a class="dropdown-item" routerLink="/my-orders" (click)="showDropdown=false">
+              <span class="material-symbols-outlined">receipt_long</span>
+              我的訂單
+            </a>
 
             <a routerLink="/partners" class="dropdown-item" (click)="showDropdown=false">
               <span class="material-symbols-outlined">handshake</span>
               合作夥伴
             </a>
 
-          <a routerLink="/user-profile" class="dropdown-item"(click)="showDropdown=false">
-            <span class="material-symbols-outlined">manage_accounts</span>
-            個人資料
-          </a>
-          <div class="dropdown-divider"></div>
-            <button class="dropdown-item text-danger" (click)="logout()">
+            <a routerLink="/user-profile" class="dropdown-item" (click)="showDropdown=false">
+              <span class="material-symbols-outlined">manage_accounts</span>
+              個人資料
+            </a>
+            <div class="dropdown-divider"></div>
+            <button class="dropdown-item logout-item" (click)="logout()">
               <span class="material-symbols-outlined">logout</span>
               登出帳號
             </button>

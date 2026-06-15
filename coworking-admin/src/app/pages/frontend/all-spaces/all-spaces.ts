@@ -22,7 +22,7 @@ import { FavoriteService } from '../../../services/favorite';
 })
 export class AllSpaces implements OnInit, AfterViewInit {
 
-
+  selectedSpaceId: number | null = null;
   // 宣告空間陣列
   spaces: any[] = [];
 
@@ -65,6 +65,7 @@ export class AllSpaces implements OnInit, AfterViewInit {
 
   map!: L.Map;
   markerLayer!: L.LayerGroup;
+  earthIcon!: L.DivIcon;
 
   constructor(
     private locationService: LocationService,
@@ -109,6 +110,34 @@ export class AllSpaces implements OnInit, AfterViewInit {
       });
       this.map.addLayer(this.markerLayer);
       this.ngZone.run(() => this.renderMarkers());
+    });
+
+    this.earthIcon = L.divIcon({
+      className: '',
+      html: `
+    <div style="
+      width: 14px;
+      height: 14px;
+      background: #D8BBA2;
+      border: 2px solid #A67C52;
+      border-radius: 50%;
+      box-shadow: 0 3px 6px rgba(0,0,0,0.15);
+      position: relative;
+    ">
+      <div style="
+        width: 6px;
+        height: 6px;
+        background: #F7F1EA;
+        border-radius: 50%;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+      "></div>
+    </div>
+  `,
+      iconSize: [20, 20],
+      iconAnchor: [10, 10]
     });
   }
 
@@ -241,10 +270,26 @@ export class AllSpaces implements OnInit, AfterViewInit {
       const latlng: L.LatLngExpression = [space.latitude, space.longitude];
       bounds.extend(latlng);
 
-      const marker = L.marker(latlng, { riseOnHover: true }).bindPopup(`
+      const marker = L.marker(latlng, {
+        icon: this.earthIcon, riseOnHover: true
+      }).on('click', () => {
+        this.ngZone.run(() => {
+
+          this.selectedSpaceId = space.id;
+
+          const card = document.getElementById(`space-card-${space.id}`);
+
+          if (card) {
+            card.scrollIntoView({
+              behavior: 'smooth',
+              block: 'center'
+            });
+          }
+        });
+      }).bindPopup(`
         <div class="map-popup">
           <div class="map-popup__title">${space.name}</div>
-          <div class="map-popup__price">NT$ ${space.price} / 月</div>
+          <div class="map-popup__price">NT$ ${space.price} / 小時起</div>
         </div>
       `);
       this.markerLayer.addLayer(marker);

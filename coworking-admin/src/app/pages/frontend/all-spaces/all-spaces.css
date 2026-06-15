@@ -546,6 +546,14 @@
   color: #8f664a;
 }
 
+.card--active {
+  border: 2px solid #D8BBA2;
+  box-shadow: 0 8px 24px rgba(166,124,82,.25);
+  transform: translateY(-2px);
+  transition: all .25s ease;
+  background: #FFF9F4;
+}
+
 
 @media (max-width: 768px) {
   :host {

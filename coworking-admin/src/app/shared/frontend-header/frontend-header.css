@@ -1,4 +1,6 @@
-:host { display: block; }
+:host {
+  display: block;
+}
 
 .navbar {
   position: sticky;
@@ -65,7 +67,7 @@
 .navbar .btn-login {
   background: none;
   border: none;
-  color: #64748b;
+  color: #695c4e;
   font-weight: 600;
   cursor: pointer;
   padding: 8px 16px;
@@ -84,7 +86,36 @@
   transition: opacity 0.2s;
 }
 
-.navbar .btn-book:hover { opacity: 0.9; }
+.navbar .btn-book:hover {
+  opacity: 0.9;
+}
+
+.btn-favorite {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background: transparent;
+  border: none;
+  padding: 0;
+
+  cursor: pointer;
+
+  color: #695c4e;
+
+  transition: all 0.25s ease;
+}
+
+.favorite-icon {
+  font-size: 28px;
+
+  font-variation-settings:
+    'FILL' 0,
+    'wght' 400,
+    'GRAD' 0,
+    'opsz' 24;
+}
+
 
 /* 使用者選單 */
 .user-menu {
@@ -142,17 +173,21 @@
 .chevron.open {
   transform: rotate(180deg);
 }
+
 /* 1. 定義滑出動畫 (從上方滑下 + 展開) */
 @keyframes menuPopUp {
-  0% { 
-    opacity: 0; 
-    transform: scaleY(0.85) translateY(-20px); /* 從上方20px處滑下 */
+  0% {
+    opacity: 0;
+    transform: scaleY(0.85) translateY(-20px);
+    /* 從上方20px處滑下 */
   }
-  100% { 
-    opacity: 1; 
-    transform: scaleY(1) translateY(0); 
+
+  100% {
+    opacity: 1;
+    transform: scaleY(1) translateY(0);
   }
 }
+
 /* 下拉選單 */
 .dropdown-menu {
 
@@ -171,22 +206,35 @@
 
 
   /* 🌟 核心：設定這些屬性，讓選單滑回去時有動畫 */
-  opacity: 0; 
-  transform: translateY(-20px) scaleY(0.85); /* 向上縮回去 */
-  pointer-events: none; /* 關閉時禁止滑鼠點擊 */
+  opacity: 0;
+  transform: translateY(-20px) scaleY(0.85);
+  /* 向上縮回去 */
+  pointer-events: none;
+  /* 關閉時禁止滑鼠點擊 */
   transform-origin: top center;
   transition: opacity 0.3s ease, transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
 
 }
+
 /* 🌟 當選單開啟時的狀態 */
 .dropdown-menu.is-open {
   opacity: 1;
-  transform: translateY(0) scaleY(1); /* 恢復原狀 */
-  pointer-events: auto; /* 開啟時允許滑鼠點擊 */
+  transform: translateY(0) scaleY(1);
+  /* 恢復原狀 */
+  pointer-events: auto;
+  /* 開啟時允許滑鼠點擊 */
 }
+
 @keyframes fadeIn {
-  from { opacity: 0; transform: translateY(-4px); }
-  to   { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .dropdown-item {
@@ -204,46 +252,66 @@
   text-decoration: none;
   transition: background 0.15s;
 }
+
 /* 🌟 針對圖標的專屬設定：調整與文字的間距 */
 .dropdown-item .material-symbols-outlined {
-  font-size: 22px;           /* 圖標大小 */
-  margin-right: 8px;        /* 🌟 這就是你要的「圖標跟名字的間距」 */
-  color: #8c827a;            /* 圖標顏色稍微淡一點，更有質感 */
+  font-size: 22px;
+  /* 圖標大小 */
+  margin-right: 8px;
+  /* 🌟 這就是你要的「圖標跟名字的間距」 */
+  color: #8c827a;
+  /* 圖標顏色稍微淡一點，更有質感 */
 }
 
 .dropdown-item:hover {
- background-color: #f8f2f0;
+  background-color: #f8f2f0;
   color: #3b2314;
 }
 
 /* 🌟 處理「選單圖標 (三條線)」的間距與顏色變化 */
 .dropdown-icon {
-color: #695c4e;            /* 這是你原本的咖啡色 */
-  transition: all 0.25s ease; /* 讓所有變化都平滑過場 */
-  padding: 4px;              /* 給圖標一點呼吸空間 */
-  border-radius: 50%;        /* 讓互動範圍變成圓形 */
-  display: inline-flex;      /* 確保對齊 */
+  color: #695c4e;
+  /* 這是你原本的咖啡色 */
+  transition: all 0.25s ease;
+  /* 讓所有變化都平滑過場 */
+  padding: 4px;
+  /* 給圖標一點呼吸空間 */
+  border-radius: 50%;
+  /* 讓互動範圍變成圓形 */
+  display: inline-flex;
+  /* 確保對齊 */
 
 }
 
 
 /* 滑鼠移過去時的變化 */
 .user-avatar-btn:hover .dropdown-icon {
-  color: #865131;            /* 顏色稍微變深，增加層次感 */
-  background-color: rgba(105, 92, 78, 0.08); /* 加上極淡的咖啡色底色 */
+  color: #865131;
+  /* 顏色稍微變深，增加層次感 */
+  background-color: rgba(105, 92, 78, 0.08);
+  /* 加上極淡的咖啡色底色 */
 }
+
 /* 🌟 讓按鈕在選單開啟時維持「被按下」的背景色 */
 .user-avatar-btn.active {
-  background-color: rgba(104, 78, 50, 0.12) !important; /* 這是你點擊時的顏色，讓它長駐 */
-  border-radius: 8px; /* 保持圓角一致 */
-  outline: none; /* 移除點擊後的藍色框線 */
+  background-color: rgba(104, 78, 50, 0.12) !important;
+  /* 這是你點擊時的顏色，讓它長駐 */
+  border-radius: 8px;
+  /* 保持圓角一致 */
+  outline: none;
+  /* 移除點擊後的藍色框線 */
 }
+
 /* 3. 點下去 (Active) 的變化 */
 .user-avatar-btn:active .dropdown-icon {
-  color: #1d1b1a;            /* 點擊瞬間顏色變更深 */
-  background-color: rgba(105, 92, 78, 0.15); /* 點擊時底色加深 */
-  transform: scale(0.95);    /* 點擊瞬間圖標微縮，產生「被按下」的機械觸感 */
+  color: #1d1b1a;
+  /* 點擊瞬間顏色變更深 */
+  background-color: rgba(105, 92, 78, 0.15);
+  /* 點擊時底色加深 */
+  transform: scale(0.95);
+  /* 點擊瞬間圖標微縮，產生「被按下」的機械觸感 */
 }
+
 .dropdown-divider {
   height: 1px;
   background: rgba(126, 118, 109, 0.15);
@@ -251,9 +319,18 @@ color: #695c4e;            /* 這是你原本的咖啡色 */
 }
 
 .logout-item {
-  color: #c0392b;
+  color: #dc3545;
 }
 
-.item-icon {
-  font-size: 15px;
+.logout-item .material-symbols-outlined {
+  color: #dc3545;
+}
+
+.logout-item:hover {
+  background-color: #fff5f5;
+  color: #b02a37;
+}
+
+.logout-item:hover .material-symbols-outlined {
+  color: #b02a37;
 }
