@@ -1,133 +1,291 @@
-<section class="hero">
-  <div class="hero-bg">
-    <img src="assets/your-background-image.png" alt="Hero background">
-  </div>
-  <div class="container">
-    <div class="hero-content">
-      <h1>一鍵開啟，你的專屬美學辦公室</h1>
-      <p>在喧囂中尋找寧靜，為您的專注與創造力打造專屬的高級避難所。</p>
-      <div class="search-bar">
-        <div class="search-item">
-          <span class="material-symbols-outlined icon">location_on</span>
-          <div class="info">
-            <label>地點</label>
-            <input type="text" placeholder="尋找城市或空間">
+<div class="main-content">
+  <section class="hero">
+
+    <div class="cinematic-gate">
+      <div class="gate-door left-door"></div>
+      <div class="gate-text-center">
+        <span class="gate-text-l">CO</span><span class="gate-text-r">VO</span>
+      </div>
+      <div class="gate-door right-door"></div>
+    </div>
+
+    <div class="hero-slides-wrapper">
+      
+      <div class="hero-slide">
+        <div class="hero-bg">
+          <canvas #imageCanvas style="width: 100%; height: 100%; object-fit: cover;"></canvas>
+        </div>
+        <div class="container hero-slide-content">
+          <h1 class="hero-title">一鍵開啟，你的專屬美學辦公室</h1>
+          <p class="hero-subtitle">在喧囂中尋找寧靜，為您的專注與創造力打造專屬的高級避難所。</p>
+          
+          <div class="search-bar">
+            <div class="search-item">
+              <span class="material-symbols-outlined icon">location_on</span>
+              <div class="info"><label>地點</label><input type="text" placeholder="尋找城市或空間"></div>
+            </div>
+            <div class="search-item">
+              <span class="material-symbols-outlined icon">calendar_today</span>
+              <div class="info"><label>日期</label><input type="text" placeholder="選擇入住日期"></div>
+            </div>
+            <div class="search-item">
+              <span class="material-symbols-outlined icon">person</span>
+              <div class="info"><label>人數</label><input type="text" placeholder="新增訪客"></div>
+            </div>
+            <button class="btn-search" routerLink="/all-spaces">搜尋</button>
           </div>
         </div>
-        <div class="search-item">
-          <span class="material-symbols-outlined icon">calendar_today</span>
-          <div class="info">
-            <label>日期</label>
-            <input type="text" placeholder="選擇入住日期">
+      </div>
+
+      <div class="hero-slide" (mouseenter)="onVideoMouseEnter()">
+        <div class="hero-bg">
+          <video #heroVideo src="assets/office_.mp4" loop muted playsinline (play)="isVideoPlaying = true" (pause)="isVideoPlaying = false"></video>
+        </div>
+        
+        <button class="video-ui-play-btn" [class.is-playing]="isVideoPlaying" (click inversion)="toggleVideo($event)">
+          <span class="material-symbols-outlined">{{ isVideoPlaying ? 'pause' : 'play_arrow' }}</span>
+        </button>
+
+        <div class="container hero-slide-content">
+          <h1 class="hero-title">微觀專注，沉澱思緒的極致淨土</h1>
+          <p class="hero-subtitle">全面捨棄繁複沉重的贅餘裝飾，留下極簡線條，給思維騰出無限想像空間。</p>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <section class="horizontal-pin-container" #pinContainer>
+    <div class="horizontal-bg-shader">
+      <canvas #prefaceCanvas></canvas>
+    </div>
+
+    <div class="horizontal-bg-typography">AESTHETIC SPACES</div>
+
+    <div class="horizontal-scroll-wrapper" #scrollWrapper>
+      <div class="horizontal-intro">
+        <h2 class="reveal-text">精選空間</h2>
+        <p class="reveal-text">為不同工作型態量身打造的專屬領域。<br>往下滾動滑鼠，探索全球美學空間。</p>
+        <a class="view-all reveal-text" routerLink="/all-spaces">查看所有空間 <span class="material-symbols-outlined">arrow_forward</span></a>
+      </div>
+
+      <div class="horizontal-grid">
+        <div class="horizontal-card">
+          <div class="image-box" [routerLink]="['/space-detail',1]" style="view-transition-name: space-morph-1;"><img src="assets/Featured_space_01.png"></div>
+          <h3>墨染方寸</h3><p class="location">信義, 台北</p>
+        </div>
+        <div class="horizontal-card alt-offset">
+          <div class="image-box" style="view-transition-name: space-morph-2;"><img src="assets/Featured_space_02.png"></div>
+          <h3>光合書屋</h3><p class="location">靜安, 上海</p>
+        </div>
+        <div class="horizontal-card">
+          <div class="image-box" style="view-transition-name: space-morph-3;"><img src="assets/Featured_space_03.png"></div>
+          <h3>知性書閣</h3><p class="location">代官山, 東京</p>
+        </div>
+        <div class="horizontal-card alt-offset">
+          <div class="image-box" style="view-transition-name: space-morph-4;"><img src="assets/Featured_space_04.png"></div>
+          <h3>領袖專專屬</h3><p class="location">梅菲爾, 倫敦</p>
+        </div>
+      </div>
+    </div>
+
+    <svg class="svg-shader-filter">
+      <defs>
+        <filter id="liquid-chromatic-shader">
+          <feTurbulence type="fractalNoise" baseFrequency="0.008" numOctaves="3" result="noise" />
+          <feDisplacementMap in="SourceGraphic" in2="noise" scale="0" xChannelSelector="R" yChannelSelector="G" id="glsl-displacement" />
+          <feColorMatrix type="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 1 0" id="glsl-chromatic" />
+        </filter>
+      </defs>
+    </svg>
+  </section>
+
+  <section class="philosophy">
+    <div class="container philosophy-3d-wrapper">
+      <div class="philosophy-center-text">
+        <h2>策展理念</h2>
+        <p>PHILOSOPHY</p>
+        <span class="reveal-text">光影、留白、與思維情緒的無形對話</span>
+      </div>
+
+      <div class="floating-card card-1" (mouseenter)="onCardMouseEnter(0)" (mouseleave)="onCardMouseLeave()">
+        <div class="card-inner"><img src="assets/Featured_space_01.png" alt="空間1"><div class="card-caption">光影留白</div></div>
+        <div class="hover-description-box"><p>讓自然日光自由穿透，在明暗交織中沉澱心靈，找回最純粹的工作專注力。</p></div>
+      </div>
+      
+      <div class="floating-card card-2" (mouseenter)="onCardMouseEnter(1)" (mouseleave)="onCardMouseLeave()">
+        <div class="card-inner"><img src="assets/Featured_space_02.png" alt="空間2"><div class="card-caption">減法藝術</div></div>
+        <div class="hover-description-box"><p>捨棄一切繁複沉重的贅餘裝飾，留下極簡線條，給思維騰出無限想像空間。</p></div>
+      </div>
+      
+      <div class="floating-card card-3" (mouseenter)="onCardMouseEnter(2)" (mouseleave)="onCardMouseLeave()">
+        <div class="card-inner"><img src="assets/Featured_space_03.png" alt="空間3"><div class="card-caption">極致專注</div></div>
+        <div class="hover-description-box"><p>特製高階聲學防噪降音結構，將外界城市的喧囂徹底隔絕，營造深度工作領域。</p></div>
+      </div>
+      
+      <div class="floating-card card-4" (mouseenter)="onCardMouseEnter(3)" (mouseleave)="onCardMouseLeave()">
+        <div class="card-inner"><img src="assets/Planning_concept_01.png" alt="空間4"><div class="card-caption">心靈避難所</div></div>
+        <div class="hover-description-box"><p>結合溫潤原木質調與落地窗天光，打造都市高壓環境下感官最舒適的避風港。</p></div>
+      </div>
+      
+      <div class="floating-card card-5" (mouseenter)="onCardMouseEnter(4)" (mouseleave)="onCardMouseLeave()">
+        <div class="card-inner"><img src="assets/Featured_space_04.png" alt="空間5"><div class="card-caption">美學重構</div></div>
+        <div class="hover-description-box"><p>打破傳統辦公室生硬冰冷的格子間格局，融入藝廊策展思維，讓工作成為享受。</p></div>
+      </div>
+      
+      <div class="floating-card card-6" (mouseenter)="onCardMouseEnter(5)" (mouseleave)="onCardMouseLeave()">
+        <div class="card-inner"><img src="assets/Featured_space_01.png" alt="空間6"><div class="card-caption">感官沉澱</div></div>
+        <div class="hover-description-box"><p>精選低色溫智慧環境照明，舒緩雙眼無視決疲勞，溫和引導大腦進入深度思考。</p></div>
+      </div>
+      
+      <div class="floating-card card-7" (mouseenter)="onCardMouseEnter(6)" (mouseleave)="onCardMouseLeave()">
+        <div class="card-inner"><img src="assets/Featured_space_02.png" alt="空間7"><div class="card-caption">首席商務空間</div></div>
+        <div class="hover-description-box"><p>提供企業等級的私密行政辦公環境，具備高度隱私的獨立隔音空間，讓您的團隊專注於核心戰略，無後顧之憂。</p></div>
+      </div>
+      
+      <div class="floating-card card-8" (mouseenter)="onCardMouseEnter(7)" (mouseleave)="onCardMouseLeave()">
+        <div class="card-inner"><img src="assets/Featured_space_03.png" alt="空間8"><div class="card-caption">靈感湧現</div></div>
+        <div class="hover-description-box"><p>開放式共享階梯社區與微醺中島，在每一次不經意的對話中碰撞出創意火花。</p></div>
+      </div>
+      
+      <div class="floating-card card-9" (mouseenter)="onCardMouseEnter(8)" (mouseleave)="onCardMouseLeave()">
+        <div class="card-inner"><img src="assets/Planning_concept_01.png" alt="空間9"><div class="card-caption">流動光域</div></div>
+        <div class="hover-description-box"><p>採用大面積超白全景採光玻璃，讓金黃色的日光與樹影隨時間在室內優雅流轉。</p></div>
+      </div>
+      
+      <div class="floating-card card-10" (mouseenter)="onCardMouseEnter(9)" (mouseleave)="onCardMouseLeave()">
+        <div class="card-inner"><img src="assets/Featured_space_04.png" alt="空間10"><div class="card-caption">留白境地</div></div>
+        <div class="hover-description-box"><p>刻意不填滿的空間陳列，給予團隊彈性呼吸與延展可能，成就創意孵化的溫床。</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="rental-plans">
+    <div class="container">
+      <div class="section-header">
+        <div>
+          <h2 class="reveal-text">租賃方案</h2>
+          <p class="reveal-text">靈活多元的進駐選擇，全面支援您的工作型態</p>
+        </div>
+      </div>
+      <div class="plans-visual-grid">
+        <div class="visual-plan-card">
+          <div class="card-image-box"><img src="assets/Featured_space_01.png" alt="流動辦公席位"><div class="image-mask"></div> </div>
+          <div class="card-info-content">
+            <span class="plan-badge">最靈活</span>
+            <h3>流動辦公席位</h3>
+            <div class="plan-price">NT$ 600<span> / 日起</span></div>
+            <p class="plan-desc">自由選擇公共策展區的任意座位，沉浸於藝術與自然光交織的專注氛圍中。</p>
+            <ul class="plan-features">
+              <li><span class="material-symbols-outlined">check</span>營業時間內自由進出</li>
+              <li><span class="material-symbols-outlined">check</span>精品手沖咖啡無限供應</li>
+            </ul>
+            <button class="btn-plan-action">立即預訂</button>
           </div>
         </div>
-        <div class="search-item">
-          <span class="material-symbols-outlined icon">person</span>
-          <div class="info">
-            <label>人數</label>
-            <input type="text" placeholder="新增訪客">
+        <div class="visual-plan-card active">
+          <div class="card-image-box"><img src="assets/Featured_space_02.png" alt="專屬固定辦公桌"><div class="image-mask"></div></div>
+          <div class="card-info-content">
+            <span class="plan-badge font-premium">熱門推薦</span>
+            <h3>專屬固定辦公桌</h3>
+            <div class="plan-price">NT$ 8,500<span> / 月起</span></div>
+            <p class="plan-desc">專為需要固定高專注基地的創作者打造。擁有個人專屬位置與專利人體工學椅。</p>
+            <ul class="plan-features">
+              <li><span class="material-symbols-outlined">check</span>24/7 全天候專屬門禁進出</li>
+              <li><span class="material-symbols-outlined">check</span>每月免費商務會議室額度</li>
+            </ul>
+            <button class="btn-plan-action premium">申請進駐</button>
           </div>
         </div>
-        <button class="btn-search" routerLink="/all-spaces">搜尋</button>
+        <div class="visual-plan-card">
+          <div class="card-image-box"><img src="assets/Featured_space_03.png" alt="美學獨立辦公室"><div class="image-mask"></div></div>
+          <div class="card-info-content">
+            <span class="plan-badge">高隱私</span>
+            <h3>美學獨立辦公室</h3>
+            <div class="plan-price">洽詢客服<span> / 專人報價</span></div>
+            <p class="plan-desc">高規格隔音與全採光落地窗，高級不被打擾的行政空間，全面支援團隊擴張。</p>
+            <ul class="plan-features">
+              <li><span class="material-symbols-outlined">check</span>客製化人數辦公配置 (2-20人)</li>
+              <li><span class="material-symbols-outlined">check</span>專屬秘書行政支援與貴賓接待</li>
+            </ul>
+            <button class="btn-plan-action">聯繫專人</button>
+          </div>
+        </div>
       </div>
     </div>
-  </div>
-</section>
+  </section>
 
-<section class="collections">
-  <div class="container">
-    <div class="section-header">
-      <div>
-        <h2>精選空間</h2>
-        <p>為不同工作型態量身打造的專屬領域</p>
-      </div>
-      <a class="view-all" routerLink="/all-spaces">查看所有空間 <span class="material-symbols-outlined">arrow_forward</span></a>
-    </div>
-    <div class="grid">
-      <div class="card">
-        <div class="image-box" [routerLink]="['/space-detail',1]">
-          <img src="assets/Featured_space_01.png" alt="墨染方寸">
+  <section class="amenities">
+    <div class="container">
+      <div class="amenities-split-layout">
+        <div class="amenities-left-content">
+          <div class="section-header-left">
+            <h2 class="reveal-text">極致細節，無憂辦公</h2>
+            <p class="reveal-text">我們打理好所有繁瑣的商務庶務，讓您的焦點只留在創造卓越。</p>
+          </div>
+          <div class="amenities-2x2-grid">
+            <div class="amenity-item">
+              <span class="material-symbols-outlined">vpn_lock</span>
+              <h4>企業級安全網路</h4>
+              <p>全場配備對稱式高速光纖與獨立防火牆，保障資料絕對安全。</p>
+            </div>
+            <div class="amenity-item">
+              <span class="material-symbols-outlined">coffee</span>
+              <h4>精品咖啡與點心</h4>
+              <p>每日供應現烘單品手沖咖啡與氣泡水，放鬆舒壓吧。</p>
+            </div>
+            <div class="amenity-item">
+              <span class="material-symbols-outlined">nest_audio</span>
+              <h4>專業聲學靜音艙</h4>
+              <p>備有單人專利隔音電話亭，確保視訊會議與商業通話絕不外洩。</p>
+            </div>
+            <div class="amenity-item">
+              <span class="material-symbols-outlined">print</span>
+              <h4>全功能行政中心</h4>
+              <p>配備高效雲端列印、碎紙機及各式進口頂級設計師辦公文具。</p>
+            </div>
+          </div>
         </div>
-        <h3>墨染方寸</h3>
-        <p class="location">信義, 台北</p>
-      </div>
-      <div class="card alt-offset">
-        <div class="image-box">
-          <img src="assets/Featured_space_02.png" alt="光合書屋">
-        </div>
-        <h3>光合書屋</h3>
-        <p class="location">靜安, 上海</p>
-      </div>
-      <div class="card">
-        <div class="image-box">
-          <img src="assets/Featured_space_03.png" alt="知性書閣">
-        </div>
-        <h3>知性書閣</h3>
-        <p class="location">代官山, 東京</p>
-      </div>
-      <div class="card alt-offset">
-        <div class="image-box">
-          <img src="assets/Featured_space_04.png" alt="領袖專屬">
-        </div>
-        <h3>領袖專屬</h3>
-        <p class="location">梅菲爾, 倫敦</p>
+        <div class="amenities-right-image-box"><img src="assets/Planning_concept_01.png" alt="Premium Amenities Visual"></div>
       </div>
     </div>
-  </div>
-</section>
+  </section>
 
-<section class="philosophy">
-  <div class="container">
-    <div class="grid">
-      <div class="content">
-        <h2>策展理念<span>光影與空間的對話</span></h2>
-        <div class="text-body">
-          <p>我們相信，空間不僅是容納物理存在的容器，更是塑造思維與情緒的無形力量。WorkspaceCollective 拒絕過度裝飾，轉而追求「留白」的藝術，讓光線成為設計的主角。</p>
-          <p>每一個角落都經過精心策劃，從材質的觸感、聲學的考量到自然光的引入，皆旨在創造一個能讓心靈沉澱、靈感自然湧現的避難所。在這裡，工作不再是負擔，而是一場優雅的修行。</p>
+  <section class="network">
+    <div class="container">
+      <div class="section-header center">
+        <h2 class="reveal-text">全球網絡</h2>
+        <p class="reveal-text">無論您身在何處，都能找到屬於您的寧靜綠洲。</p>
+      </div>
+      <div class="regions">
+        <div class="region">
+          <h3>Asia Pacific</h3>
+          <ul>
+            <li><a href="#">Taipei</a></li>
+            <li><a href="#">Tokyo</a></li>
+            <li><a href="#">Singapore</a></li>
+            <li><a href="#">Sydney</a></li>
+          </ul>
         </div>
-        <button class="btn-explore">探索我們的設計語彙</button>
-      </div>
-      <div class="image-wrapper">
-        <img src="assets/Planning_concept_01.png" alt="Curatorial Philosophy">
-      </div>
-    </div>
-  </div>
-</section>
-
-<section class="network">
-  <div class="container">
-    <div class="section-header center">
-      <h2>全球網絡</h2>
-      <p>無論您身在何處，都能找到屬於您的寧靜綠洲。</p>
-    </div>
-    <div class="regions">
-      <div class="region">
-        <h3>Asia Pacific</h3>
-        <ul>
-          <li><a href="#">Taipei</a></li>
-          <li><a href="#">Tokyo</a></li>
-          <li><a href="#">Singapore</a></li>
-          <li><a href="#">Sydney</a></li>
-        </ul>
-      </div>
-      <div class="region">
-        <h3>Europe</h3>
-        <ul>
-          <li><a href="#">London</a></li>
-          <li><a href="#">Paris</a></li>
-          <li><a href="#">Berlin</a></li>
-          <li><a href="#">Milan</a></li>
-        </ul>
-      </div>
-      <div class="region">
-        <h3>North America</h3>
-        <ul>
-          <li><a href="#">New York</a></li>
-          <li><a href="#">Los Angeles</a></li>
-          <li><a href="#">Toronto</a></li>
-          <li><a href="#">Vancouver</a></li>
-        </ul>
+        <div class="region">
+          <h3>Europe</h3>
+          <ul>
+            <li><a href="#">London</a></li>
+            <li><a href="#">Paris</a></li>
+            <li><a href="#">Berlin</a></li>
+            <li><a href="#">Milan</a></li>
+          </ul>
+        </div>
+        <div class="region">
+          <h3>North America</h3>
+          <ul>
+            <li><a href="#">New York</a></li>
+            <li><a href="#">Los Angeles</a></li>
+            <li><a href="#">Toronto</a></li>
+            <li><a href="#">Vancouver</a></li>
+          </ul>
+        </div>
       </div>
     </div>
-  </div>
-</section>
+  </section>
+</div>
