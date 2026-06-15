@@ -255,3 +255,77 @@
   display: inline-block;
   will-change: transform, opacity;
 }
+
+/* ==========================================================================
+   🌙 建築美學學派：首頁全量關燈模式 (.dark-mode) 頂級藝廊濾鏡
+   ========================================================================== */
+
+/* 1. 核心變數洗刷：底色與文字色對流反轉 */
+:host-context(.dark-mode) {
+  --on-background: #f5efe9;         /* 全域大字轉為高級細體白 */
+  --surface-container-low: #121110; /* 全網頁大畫布底色轉為奢華闇黑 */
+}
+
+/* 為所有大面積區塊註冊絲滑的關燈過渡動畫，模擬影廳漸暗的手感 */
+:host-context(.dark-mode) .hero,
+:host-context(.dark-mode) .rental-plans,
+:host-context(.dark-mode) .amenities,
+:host-context(.dark-mode) .horizontal-pin-container {
+  transition: background-color 0.8s cubic-bezier(0.16, 1, 0.3, 1), color 0.5s ease;
+}
+
+/* 2. 剛性覆寫：將原本純白 (#ffffff) 的展示區段，降修為溫潤的暗炭木色 (#1c1a18) */
+:host-context(.dark-mode) .hero,
+:host-context(.dark-mode) .rental-plans,
+:host-context(.dark-mode) .amenities {
+  background-color: #1c1a18 !important;
+  color: #e3ded8;
+}
+
+/* 3. 精選空間與租賃方案卡片面板黑夜化 */
+:host-context(.dark-mode) .horizontal-card .image-box {
+  border-color: #3d3630;
+}
+:host-context(.dark-mode) .visual-plan-card {
+  background-color: #262320; /* 方案卡片底色變深 */
+  border-color: rgba(255, 255, 255, 0.06);
+}
+
+/* 4. 確保黑夜下各級標題字體的可讀性與環境光比 */
+:host-context(.dark-mode) .amenity-item h4,
+:host-context(.dark-mode) .horizontal-intro h2,
+:host-context(.dark-mode) .section-header h2,
+:host-context(.dark-mode) .section-header-left h2,
+:host-context(.dark-mode) .region h3,
+:host-context(.dark-mode) .horizontal-card h3 {
+  color: #f5efe9 !important;
+}
+
+/* 副標題與說明短文改為高雅的 60% 透光白 */
+:host-context(.dark-mode) .horizontal-intro p,
+:host-context(.dark-mode) .amenity-item p,
+:host-context(.dark-mode) .section-header-left p,
+:host-context(.dark-mode) .network .section-header p,
+:host-context(.dark-mode) .horizontal-card .location {
+  color: rgba(245, 239, 233, 0.6) !important;
+}
+
+/* 5. 背景超大視差裝飾字體（AESTHETIC SPACES）微光弱化，避免在黑夜中過於突兀 */
+:host-context(.dark-mode) .horizontal-bg-typography {
+  color: rgba(255, 255, 255, 0.015) !important;
+}
+/* ==========================================================================
+   🎯 【全新追加】修復方案卡片按鈕在黑夜模式下白底白字的視覺盲點
+   ========================================================================== */
+
+/* 1. 剛性強置：熱門推薦卡片的白底按鈕，字體在黑夜中必須維持深黑色 */
+:host-context(.dark-mode) .visual-plan-card .btn-plan-action.premium {
+  color: #1d1b1a !important;            /* 強制反轉為深邃黑，在白底上拉開頂級清晰度 */
+  background-color: #ffffff !important;  /* 維持極簡純白底色 */
+}
+
+/* 2. 同步修復：普通卡片按鈕在滑鼠懸停（Hover）轉為白底時的字體顏色 */
+:host-context(.dark-mode) .visual-plan-card .btn-plan-action:hover {
+  background-color: #ffffff !important;
+  color: #1d1b1a !important;            /* 懸停轉為白底瞬間，字體同步極速切換為深邃黑 */
+}

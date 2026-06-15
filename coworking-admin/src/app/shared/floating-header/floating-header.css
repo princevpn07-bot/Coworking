@@ -1,0 +1,531 @@
+/* ==========================================================================
+   📐 策展學派：高階晶透毛玻璃縱向面版
+   ========================================================================== */
+
+.floating-header {
+  position: fixed;
+  top: 32px; 
+  left: 50%;
+  z-index: 99999; 
+  display: flex;
+  justify-content: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: all 0.75s cubic-bezier(0.16, 1, 0.3, 1); /* 高級超跑阻尼補間曲線 */
+}
+
+/* 拖曳中瞬間切斷過渡，達成毫秒級零延遲跟手感 */
+.floating-header.dragging {
+  transition: none !important;
+}
+
+.floating-header.show {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* ==========================================================================
+   🧱 幾何玻璃畫布主體 (Polymorphic Glass Canvas)
+   ========================================================================== */
+.menu-canvas {
+  width: 250px;          /* 縮小時的精緻藥丸寬度 */
+  height: 52px;          /* 縮小時的俐落膠囊高度 */
+  padding: 0 8px 0 18px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;      /* 完美看守收縮狀態下的超限溢出項目 */
+  cursor: grab;
+  
+  /* 縮小狀態下的「闇黑耀石毛玻璃」 */
+  background: rgba(14, 14, 16, 0.62); 
+  backdrop-filter: blur(20px) saturate(140%); 
+  -webkit-backdrop-filter: blur(20px) saturate(140%);
+  border-radius: 100px;
+  border: 1px solid rgba(255, 255, 255, 0.12); 
+  box-shadow: 
+    0 4px 12px rgba(0, 0, 0, 0.15),
+    0 16px 40px rgba(0, 0, 0, 0.2);
+  
+  transition: 
+    width 0.7s cubic-bezier(0.16, 1, 0.3, 1),
+    height 0.7s cubic-bezier(0.16, 1, 0.3, 1),
+    background-color 0.5s ease,
+    border-radius 0.7s cubic-bezier(0.16, 1, 0.3, 1),
+    padding 0.7s cubic-bezier(0.16, 1, 0.3, 1),
+    box-shadow 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* 🚀 點擊 Menu 展開後，向下滑動無縫蛻變為「極簡沙泥灰透光毛玻璃面版」 */
+.floating-header.is-expanded .menu-canvas {
+  width: 310px;          /* 修長雜誌級黃金面版寬度 */
+  height: 490px;         /* 緊湊內斂的高度設定 */
+  padding: 18px 24px 28px 24px;
+  
+  /* 降修透光率，完美釋放深層大光圈毛玻璃景深感 */
+  background: rgba(230, 226, 222, 0.68); 
+  backdrop-filter: blur(35px) saturate(120%); 
+  -webkit-backdrop-filter: blur(35px) saturate(120%);
+  border-radius: 28px;   /* 當代高階 Bento 圓角方盒 */
+  border: 1px solid rgba(105, 92, 78, 0.22); 
+  box-shadow: 
+    0 12px 30px rgba(29, 27, 26, 0.04),
+    0 35px 80px rgba(29, 27, 26, 0.12); 
+}
+
+/* 拖曳中的離地重力引力抬升高度感 */
+.floating-header.dragging .menu-canvas {
+  cursor: grabbing;
+  background-color: rgba(230, 226, 222, 0.75);
+  box-shadow: 
+    0 15px 35px rgba(29, 27, 26, 0.05),
+    0 50px 110px rgba(61, 48, 40, 0.16);
+}
+
+/* ==========================================================================
+   🎛️ 上層控制列 (Control Row)
+   ========================================================================== */
+.control-row {
+  width: 100%;
+  height: 52px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-shrink: 0;
+}
+.floating-header.is-expanded .control-row {
+  height: 32px;
+}
+
+.menu-toggle-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 0;
+  color: #ffffff; 
+  font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  transition: color 0.4s ease;
+}
+.floating-header.is-expanded .menu-toggle-btn {
+  color: #1d1b1a; 
+}
+
+.toggle-icon-wrap {
+  width: 16px;
+  height: 10px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  position: relative;
+}
+.burger-line {
+  width: 100%;
+  height: 1.2px;
+  background-color: currentColor;
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), top 0.4s ease;
+  position: absolute;
+}
+.line-1 { top: 0px; }
+.line-2 { bottom: 0px; width: 75%; }
+
+.floating-header.is-expanded .line-1 { top: 4px; transform: rotate(45deg); }
+.floating-header.is-expanded .line-2 { bottom: 4px; width: 100%; transform: rotate(-45deg); }
+
+.status-group { display: flex; align-items: center; gap: 6px; }
+
+.icon-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  color: #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  transition: all 0.3s ease;
+}
+.floating-header.is-expanded .icon-btn {
+  color: #1d1b1a;
+  border: 1px solid rgba(29, 27, 26, 0.15);
+}
+.icon-btn .material-symbols-outlined { font-size: 15px; }
+
+.status-pill {
+  font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: 11px;
+  font-weight: 600;
+  color: #ffffff;
+  background: rgba(255, 255, 255, 0.16);
+  padding: 5px 12px;
+  border-radius: 100px;
+  transition: all 0.4s ease;
+}
+.floating-header.is-expanded .status-pill {
+  color: #ffffff;
+  background: #1d1b1a;
+}
+
+/* ==========================================================================
+   📂 雜誌級垂直選單排版 (Typography System)
+   ========================================================================== */
+.drawer-content {
+  margin-top: 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  width: 262px;
+  will-change: transform, opacity;
+}
+
+.menu-section, .menu-divider {
+  opacity: 1;
+  transform: translateY(0);
+  filter: blur(0px);
+  will-change: transform, opacity, filter;
+  transition: 
+    opacity 0.65s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 0.65s cubic-bezier(0.16, 1, 0.3, 1),
+    filter 0.65s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.drawer-content.hidden .menu-section,
+.drawer-content.hidden .menu-divider {
+  opacity: 0;
+  transform: translateY(24px); 
+  filter: blur(8px);            
+  transition: opacity 0.2s ease, transform 0.2s ease, filter 0.2s ease;
+}
+
+.floating-header.is-expanded .menu-section:nth-child(1) { transition-delay: 0.15s; } 
+.floating-header.is-expanded .menu-divider { transition-delay: 0.22s; }             
+.floating-header.is-expanded .menu-section:nth-child(3) { transition-delay: 0.29s; } 
+.floating-header.is-expanded .menu-section:nth-child(4) { transition-delay: 0.36s; } 
+
+.section-tag {
+  font-size: 10px;
+  font-weight: 600;
+  color: rgba(105, 92, 78, 0.52); 
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-bottom: 12px;
+}
+
+.primary-links {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.primary-links a {
+  position: relative;
+  font-size: 16px;         
+  font-weight: 500;
+  color: #1d1b1a;          
+  text-decoration: none;
+  letter-spacing: 0.06em;  
+  padding: 4px 0 4px 12px;
+  transition: color 0.3s ease, transform 0.3s ease;
+  white-space: nowrap;     
+}
+
+.primary-links a::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%) scaleX(0);
+  width: 4px;
+  height: 1.2px;
+  background-color: #695c4e; 
+  transform-origin: left center;
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.primary-links a:hover, 
+.primary-links a.active {
+  color: #695c4e;          
+  transform: translateX(4px);
+}
+
+.primary-links a:hover::before,
+.primary-links a.active::before {
+  transform: translateY(-50%) scaleX(1);
+}
+
+.menu-divider {
+  height: 1px;
+  background-color: rgba(105, 92, 78, 0.08); 
+  width: 100%;
+}
+
+.secondary-links {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.secondary-links a {
+  font-size: 13px;
+  font-weight: 400;
+  color: #534434;          
+  text-decoration: none;
+  letter-spacing: 0.04em;
+  transition: color 0.3s ease, padding-left 0.3s ease;
+  white-space: nowrap;     
+}
+.secondary-links a:hover, 
+.secondary-links a.active {
+  color: #1d1b1a;
+  padding-left: 2px;
+}
+
+.social-links a {
+  font-size: 12px;
+  font-weight: 400;
+  color: #7e766d;          
+  text-decoration: none;
+  letter-spacing: 0.03em;
+  border-bottom: 1px solid rgba(126, 118, 109, 0.3);
+  padding-bottom: 2px;
+  width: max-content;
+  transition: color 0.3s, border-color 0.3s;
+  white-space: nowrap;     
+}
+.social-links a:hover { 
+  color: #1d1b1a; 
+  border-color: #1d1b1a; 
+}
+
+.btn-book-sm {
+  display: none !important; 
+}
+
+/* ==========================================================================
+   🌙 關燈模式下：選單面板自身的暗色化美學 (Prism Obsidian)
+   ========================================================================== */
+:host-context(.dark-mode) .floating-header.is-expanded .menu-canvas {
+  background: rgba(24, 22, 21, 0.78); 
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 40px 90px rgba(0, 0, 0, 0.5);
+}
+
+:host-context(.dark-mode) .primary-links a,
+:host-context(.dark-mode) .secondary-links a,
+:host-context(.dark-mode) .menu-toggle-btn,
+:host-context(.dark-mode) .icon-btn {
+  color: #f5efe9; 
+}
+
+:host-context(.dark-mode) .icon-btn {
+  border-color: rgba(255, 255, 255, 0.18);
+}
+
+:host-context(.dark-mode) .section-tag {
+  color: rgba(255, 255, 255, 0.35); 
+}
+
+:host-context(.dark-mode) .status-pill {
+  color: #1d1b1a;
+  background: #f5efe9; 
+}
+
+@media (max-width: 500px) {
+  .floating-header.is-expanded .menu-canvas {
+    width: calc(100vw - 32px);
+    height: 460px;
+  }
+}
+
+/* ==========================================================================
+   🚀 【真·極致冰霜毛玻璃】右側常駐「剛性吸附延伸」水晶手柄防線
+   ========================================================================== */
+
+.floating-header.minimized {
+  opacity: 0 !important;
+  pointer-events: none !important;
+}
+
+.capsule-close-btn {
+  margin-left: 2px;
+  background: rgba(105, 92, 78, 0.08) !important;
+  border-color: transparent !important;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+.capsule-close-btn:hover {
+  background: rgba(192, 57, 43, 0.15) !important; 
+  color: #c0392b !important;
+  transform: scale(1.05);
+}
+
+:host-context(.dark-mode) .capsule-close-btn { background: rgba(255, 255, 255, 0.1) !important; }
+:host-context(.dark-mode) .capsule-close-btn:hover { background: rgba(231, 76, 60, 0.2) !important; color: #e74c3c !important; }
+
+/* 🌟🌟🌟 【完美吸附核心】：全新調校超輕奢水晶毛玻璃鰭片 🌟🌟🌟 */
+.restore-trigger-tab {
+  position: fixed;
+  right: 0; /* 🔒 剛性看守固定在螢幕右壁 */
+  top: 50%;
+  transform: translateY(-50%) translateX(100%); 
+  z-index: 99999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  
+  /* 📐 幾何尺寸基準 */
+  width: 26px;
+  height: 150px; 
+  padding: 0;
+  box-sizing: border-box;
+  cursor: pointer;
+  opacity: 0;
+  pointer-events: none;
+  
+  /* 🌟🌟🌟 【毛玻璃核心調校】：調降不透明度至 0.32，拉大光圈至 40px，讓折射細節全量爆發！ 🌟🌟🌟 */
+  background: rgba(255, 255, 255, 0.32);
+  backdrop-filter: blur(40px) saturate(140%);
+  -webkit-backdrop-filter: blur(40px) saturate(140%);
+  
+  /* 🌟🌟🌟 【水晶高光線】：替換為純白環境高光，模擬頂級拉絲切面 */
+  border-radius: 20px 0 0 28px; 
+  border: 1px solid rgba(255, 255, 255, 0.45);
+  border-right: none; /* 右邊不設邊框，使其天衣無縫黏貼於右壁 */
+  box-shadow: -15px 0 45px rgba(29, 27, 26, 0.05);
+  
+  /* 剛性看守：務必將 width 加入過渡，拉伸才會有液態阻尼手感 */
+  transition: 
+    transform 0.65s cubic-bezier(0.16, 1, 0.3, 1), 
+    width 0.65s cubic-bezier(0.16, 1, 0.3, 1), 
+    background-color 0.4s ease,
+    border-color 0.4s ease,
+    box-shadow 0.65s cubic-bezier(0.16, 1, 0.3, 1),
+    opacity 0.4s ease;
+}
+
+.restore-trigger-tab.active {
+  transform: translateY(-50%) translateX(0); 
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.tab-internal-core {
+  position: relative; 
+  width: 100%;
+  height: 100%;
+}
+
+.tab-minimal-burger {
+  position: absolute;
+  top: 24px; 
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  width: 11px;
+  height: 6px;
+  transition: height 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.tab-minimal-burger span {
+  width: 100%;
+  height: 1.2px;
+  background-color: #695c4e; 
+  transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.tab-minimal-burger .bar-bottom {
+  width: 60%; 
+}
+
+.tab-editorial-tag {
+  position: absolute;
+  bottom: 28px; 
+  left: 50%;
+  transform: translateX(-50%) rotate(-90deg);
+  transform-origin: center center;
+  
+  font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: 9px;
+  font-weight: 600;
+  color: #695c4e; 
+  letter-spacing: 0.24em; 
+  white-space: nowrap;
+  user-select: none;
+  display: block;
+  transition: color 0.3s, transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* ==========================================================================
+   ⚡ 滑鼠懸停（Hover）：🔒 純寬度延伸，維持 100% 緊貼右邊緣，化解脫落 Bug
+   ========================================================================== */
+.restore-trigger-tab.active:hover {
+  /* 🚀 【核心拉伸】：寬度由 26px 柔順拓寬至 44px，極致流暢向左側吐出伸展 */
+  width: 44px; 
+  
+  /* 🚀 【全新調校】：Hover 時提高晶透度，讓玻璃反光更刺眼、更奢華 */
+  background: rgba(255, 255, 255, 0.52);
+  border-color: rgba(255, 255, 255, 0.65);
+  
+  /* 🔒 剛性鎖定：絕對不平移，右邊邊緣死死黏滯在牆壁上 */
+  transform: translateY(-50%) translateX(0); 
+  
+  box-shadow: -22px 10px 55px rgba(29, 27, 26, 0.12);
+}
+
+.restore-trigger-tab.active:hover .tab-editorial-tag {
+  color: #1d1b1a; 
+  transform: translateX(-50%) rotate(-90deg) scale(1.03); 
+}
+
+.restore-trigger-tab.active:hover .tab-minimal-burger {
+  height: 10px; 
+}
+.restore-trigger-tab.active:hover .tab-minimal-burger .bar-bottom {
+  width: 100%; 
+}
+
+/* 🌙 闇黑模式手柄曜石晶透化改造 */
+:host-context(.dark-mode) .restore-trigger-tab {
+  background: rgba(14, 14, 16, 0.38); /* 闇黑透光毛玻璃 */
+  border-color: rgba(255, 255, 255, 0.16);
+  box-shadow: -15px 0 45px rgba(0, 0, 0, 0.4);
+}
+:host-context(.dark-mode) .restore-trigger-tab.active:hover {
+  background: rgba(14, 14, 16, 0.55);
+  border-color: rgba(255, 255, 255, 0.28);
+}
+:host-context(.dark-mode) .tab-editorial-tag {
+  color: rgba(245, 239, 233, 0.6);
+}
+:host-context(.dark-mode) .restore-trigger-tab.active:hover .tab-editorial-tag {
+  color: #f5efe9;
+}
+:host-context(.dark-mode) .tab-minimal-burger span {
+  background-color: #f5efe9;
+}
+
+/* 環境微光呼吸環 */
+.restore-trigger-tab::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  box-shadow: 0 0 0 0 rgba(105, 92, 78, 0.25);
+  animation: tabPulse 3s infinite cubic-bezier(0.16, 1, 0.3, 1);
+  pointer-events: none;
+}
+@keyframes tabPulse {
+  0% { box-shadow: 0 0 0 0 rgba(105, 92, 78, 0.2); }
+  70% { box-shadow: -24px 0 35px 12px rgba(105, 92, 78, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(105, 92, 78, 0); }
+}
+:host-context(.dark-mode) .restore-trigger-tab::before { animation: tabPulseDark 3s infinite cubic-bezier(0.16, 1, 0.3, 1); }
+@keyframes tabPulseDark {
+  0% { box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.15); }
+  70% { box-shadow: -24px 0 35px 12px rgba(255, 255, 255, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(255, 255, 255, 0); }
+}

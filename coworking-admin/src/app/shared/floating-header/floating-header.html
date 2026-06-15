@@ -1,0 +1,78 @@
+<nav class="floating-header" 
+     [class.show]="isVisible" 
+     [class.dragging]="isDragging"
+     [class.is-expanded]="isExpanded"
+     [class.minimized]="isMinimized"
+     [style.transform]="getTransformStyle()">
+     
+  <div class="menu-canvas" (mousedown)="onMouseDown($event)">
+    
+    <div class="control-row">
+      <button class="menu-toggle-btn" (click)="toggleExpand()">
+        <span class="toggle-icon-wrap">
+          <span class="burger-line line-1"></span>
+          <span class="burger-line line-2"></span>
+        </span>
+        <span class="toggle-text">{{ isExpanded ? 'Close' : 'Menu' }}</span>
+      </button>
+
+      <div class="status-group">
+        <button class="icon-btn moon-btn" (click)="toggleTheme($event)" aria-label="Toggle Theme">
+          <span class="material-symbols-outlined">
+            {{ isDarkMode ? 'light_mode' : 'dark_mode' }}
+          </span>
+        </button>
+        <div class="status-pill">{{ scrollPercentage }}%</div>
+
+        <button *ngIf="!isExpanded" class="icon-btn capsule-close-btn" (click)="minimizeCapsule($event)" aria-label="Close Floating Island">
+          <span class="material-symbols-outlined">close</span>
+        </button>
+      </div>
+    </div>
+
+    <div class="drawer-content" [class.hidden]="!isExpanded">
+      <div class="menu-section">
+        <span class="section-tag">Menu</span>
+        <div class="primary-links">
+          <a routerLink="/all-spaces" routerLinkActive="active" (click)="isExpanded=false">瀏覽空間</a>
+          <a routerLink="/" fragment="rental-plans" (click)="isExpanded=false">企業方案</a>
+          <a routerLink="/partners" routerLinkActive="active" (click)="isExpanded=false">合作夥伴</a>
+          <a href="#" (click)="isExpanded=false">關於我們</a>
+        </div>
+      </div>
+
+      <div class="menu-divider"></div>
+
+      <div class="menu-section">
+        <span class="section-tag">Other</span>
+        <div class="secondary-links">
+          <a routerLink="/my-favorites" routerLinkActive="active" (click)="isExpanded=false">我的最愛</a>
+          <a routerLink="/my-orders" routerLinkActive="active" (click)="isExpanded=false">我的訂單</a>
+          <a routerLink="/user-profile" routerLinkActive="active" (click)="isExpanded=false">個人資料</a>
+        </div>
+      </div>
+
+      <div class="menu-section social-section">
+        <span class="section-tag">Social media</span>
+        <div class="social-links">
+          <a href="https://instagram.com" target="_blank" rel="noopener">Instagram</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<div class="restore-trigger-tab" 
+     [class.active]="isMinimized && isVisible" 
+     (click)="restoreCapsule()"
+     aria-label="Restore Navigation Menu">
+     
+  <div class="tab-internal-core">
+    <span class="tab-editorial-tag">EXPLORE</span>
+    
+    <div class="tab-minimal-burger">
+      <span class="bar-top"></span>
+      <span class="bar-bottom"></span>
+    </div>
+  </div>
+</div>

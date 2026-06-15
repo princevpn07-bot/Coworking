@@ -3,13 +3,14 @@ import { RouterLink } from '@angular/router';
 import Lenis from '@studio-freight/lenis';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { FloatingHeader } from '../../../shared/floating-header/floating-header';
 
 gsap.registerPlugin(ScrollTrigger);
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [RouterLink],
+  imports: [RouterLink,FloatingHeader],
   templateUrl: './home.html',
   styleUrl: './home.css',
 })
@@ -24,6 +25,8 @@ export class Home implements OnInit, AfterViewInit, OnDestroy {
   private isShaderVisible = false;
 
   isVideoPlaying = false;
+  isFloatingVisible = false;
+  scrollPercentage = 0;
   private userManuallyPaused = false; 
 
   private prefaceStartFrame = 1;  
@@ -930,6 +933,16 @@ private initHorizontalScroll() {
     
     this.lenis.on('scroll', () => {
       ScrollTrigger.update();
+      const scrollTop = window.scrollY || document.documentElement.scrollTop;
+      // 🚀 【即時點火】：每次滾動時，只要超過 200px（避開最頂部的 Cinematic Gate 大門間距），膠囊立刻進場
+  this.isFloatingVisible = window.scrollY > 100;
+  // 📐 精密計算數學公式：(當前高度 / (總高度 - 視窗高度)) * 100
+      const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+      if (docHeight > 0) {
+        this.scrollPercentage = Math.min(100, Math.max(0, Math.round((scrollTop / docHeight) * 100)));
+      } else {
+        this.scrollPercentage = 0;
+      }
     });
   }
 
