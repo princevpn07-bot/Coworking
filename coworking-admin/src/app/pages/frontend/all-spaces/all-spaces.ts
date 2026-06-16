@@ -23,6 +23,7 @@ import { FavoriteService } from '../../../services/favorite';
 export class AllSpaces implements OnInit, AfterViewInit {
 
   selectedSpaceId: number | null = null;
+  selectedCity: string = '';
   // 宣告空間陣列
   spaces: any[] = [];
 
@@ -109,9 +110,33 @@ export class AllSpaces implements OnInit, AfterViewInit {
         }
       });
       this.map.addLayer(this.markerLayer);
+      (this.markerLayer as any).on(
+        'clusterclick',
+        (e: any) => {
+          const markers =
+            e.layer.getAllChildMarkers();
+          if (!markers.length) return;
+          const cityCount: Record<string, number> = {};
+          markers.forEach((m: any) => {
+            const city =
+              m.spaceData?.city;
+            if (!city) return;
+            cityCount[city] =
+              (cityCount[city] || 0) + 1;
+          });
+          const city =
+            Object.entries(cityCount)
+              .sort((a, b) => b[1] - a[1])[0]?.[0];
+          if (!city) return;
+          this.ngZone.run(() => {
+            this.selectedCity = city;
+            this.selectedSpaceId = null;
+            this.prioritizeCity(city);
+          });
+        }
+      );
       this.ngZone.run(() => this.renderMarkers());
     });
-
     this.earthIcon = L.divIcon({
       className: '',
       html: `
@@ -272,29 +297,50 @@ export class AllSpaces implements OnInit, AfterViewInit {
 
       const marker = L.marker(latlng, {
         icon: this.earthIcon, riseOnHover: true
-      }).on('click', () => {
-        this.ngZone.run(() => {
-
-          this.selectedSpaceId = space.id;
-
-          const card = document.getElementById(`space-card-${space.id}`);
-
-          if (card) {
-            card.scrollIntoView({
-              behavior: 'smooth',
-              block: 'center'
-            });
-          }
-        });
       }).bindPopup(`
         <div class="map-popup">
           <div class="map-popup__title">${space.name}</div>
           <div class="map-popup__price">NT$ ${space.price} / 小時起</div>
         </div>
       `);
+      (marker as any).spaceData = space;
+      marker.on('click', () => {
+        this.ngZone.run(() => {
+          this.selectedCity = space.city;
+          this.selectedSpaceId = space.id;
+          this.prioritizeCity(space.city);
+          setTimeout(() => {
+            const card = document.getElementById(
+              `space-card-${space.id}`
+            );
+            card?.scrollIntoView({
+              behavior: 'smooth',
+              block: 'center'
+            });
+          }, 100);
+        });
+      });
       this.markerLayer.addLayer(marker);
     });
     if (bounds.isValid()) this.map.fitBounds(bounds, { padding: [50, 50] });
+  }
+
+  prioritizeCity(city: string): void {
+    const matched =
+      this.spaces.filter(x => x.city === city);
+    const others =
+      this.spaces.filter(x => x.city !== city);
+    this.spaces = [
+      ...matched,
+      ...others
+    ];
+    this.cdr.detectChanges();
+    setTimeout(() => {
+      const feed = document.querySelector(
+        '.listing-section__feed'
+      );
+
+    });
   }
 
   goToSpaceDetail(spaceId: any): void {
