@@ -5,6 +5,7 @@ import { AuthService } from '../../services/auth';
 import { ProfileService } from '../../services/profile';
 import { hasBackendAccess } from '../../models/role.model';
 
+
 @Component({
   selector: 'app-frontend-header',
   imports: [RouterLink, RouterLinkActive, CommonModule],

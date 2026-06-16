@@ -1,68 +1,80 @@
 <div class="favorites-page">
   <div class="container">
 
-    <!-- HEADER -->
     <header class="page-header">
       <h1 class="page-title">我的收藏</h1>
-      <p class="subtitle">
-        共收藏 {{ favorites.length }} 個空間
-      </p>
+      <p class="subtitle">靜謐空間，悉心挑選。</p>
     </header>
 
-    <!-- EMPTY STATE -->
     @if (favorites.length === 0) {
       <section class="empty-state">
-        <div class="empty-icon material-symbols-outlined">
-          favorite
+        <div class="empty-icon-wrap">
+          <span class="material-symbols-outlined empty-icon">favorite</span>
         </div>
-
         <h3 class="empty-title">尚未收藏任何空間</h3>
-
         <p class="empty-desc">
           立即搜尋探索，點選愛心收藏您喜歡的空間！
         </p>
+        <a class="btn-explore" [routerLink]="['/all-spaces']">
+          探索所有空間 <span class="explore-arrow">→</span>
+        </a>
       </section>
     } @else {
 
-    <!-- LIST -->
     <section class="favorite-list">
 
-      @for (space of favorites; track space.space_id) {
-      <article class="favorite-card">
+      @for (space of favorites; track space.id; let i = $index) {
+      <article class="favorite-card" [style.--card-idx]="i">
 
-        <!-- LEFT / INFO -->
-        <div class="card-main">
-
-          <div class="card-header">
-            <h3 class="space-number">
-              {{ space.space_number }}
-            </h3>
-
-            <span class="capacity-badge">
-              {{ space.capacity ?? '未知' }} 人
-            </span>
-          </div>
-
-          <p class="card-desc">
-            登入會員，立即預訂！
-          </p>
-
-        </div>
-
-        <!-- ACTION -->
-        <div class="card-actions">
-
-          <a
-            class="btn-detail"
-            [routerLink]="['/space-detail', space.space_id]">
-            查看詳情
-          </a>
-
+        <div class="card-image-wrap">
+          <img 
+            [src]="space.img" 
+            (error)="space.img = 'https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=600&q=80'"
+            class="space-img" 
+            alt="空間圖片"
+          >
+          
+          <span class="capacity-badge">
+            <span class="material-symbols-outlined icon-badge">groups</span>
+            {{ space.capacity }}人
+          </span>
+          
           <button
             class="btn-remove"
-            (click)="removeFavorite(space.space_id)">
+            (click)="removeFavorite(space.id)"
+            title="取消收藏">
             <span class="material-symbols-outlined">favorite</span>
           </button>
+        </div>
+
+        <div class="card-content">
+          
+          <h3 class="space-title">
+            <span class="name-text">{{ space.displayName }}</span>
+            <span class="title-divider">·</span>
+            <span class="code-text">{{ space.spaceNumber }}</span>
+          </h3>
+
+          <p class="space-location">
+            <span class="material-symbols-outlined icon-location">location_on</span>
+            <span class="location-text-wrap">{{ space.location }}</span>
+          </p>
+
+          <div class="card-footer">
+            
+            <div class="price-box">
+              <span class="price-currency">NT$ </span>
+              <span class="price-amount">{{ space.price | number }}</span>
+              <span class="price-unit"> / 時起</span>
+            </div>
+
+            <a
+              class="btn-detail"
+              [routerLink]="['/space-detail', space.id]">
+              查看詳情 <span class="arrow">→</span>
+            </a>
+
+          </div>
 
         </div>
 
