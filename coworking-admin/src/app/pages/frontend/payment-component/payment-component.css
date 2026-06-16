@@ -455,3 +455,32 @@ body {
   margin-top: 16px;
   line-height: 1.4;
 }
+
+.data-mode-toggle {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 16px;
+
+  button {
+    padding: 12px 0;
+    border: 1px solid #E2E8F0;
+    background: #FFFFFF;
+    border-radius: 8px;
+    font-weight: 600;
+    color: #64748B;
+    cursor: pointer;
+    transition: all 0.2s;
+    margin-bottom: 24px;
+
+    &.active {
+      background: #534434;
+      color: #FFFFFF;
+      border-color: #534434;
+      font-weight: 500;
+    }
+
+    &:last-child {
+      border-radius: none;
+    }
+  }
+}

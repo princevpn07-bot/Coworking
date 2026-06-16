@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Component, ChangeDetectorRef } from '@angular/core'; // 引入 ChangeDetectorRef
+import { Component, ChangeDetectorRef, Pipe, PipeTransform} from '@angular/core'; // 引入 ChangeDetectorRef
 import { AuthService } from '../../../services/auth';
 import { FormsModule } from '@angular/forms';
 import { ProfileService } from '../../../services/profile';
@@ -20,9 +20,16 @@ export interface AddBookingPayload {
   total_price: number;
 }
 
+@Pipe({ name: 'hourLabel', standalone: true})
+export class HourLabelPipe implements PipeTransform {
+  transform(hour: number): string {
+    return hour.toString().padStart(2, '0') + ':00';
+  }
+}
+
 @Component({
   selector: 'app-payment-component',
-  imports: [FormsModule],
+  imports: [FormsModule, HourLabelPipe],
   templateUrl: './payment-component.html',
   styleUrl: './payment-component.css',
 })
@@ -30,6 +37,11 @@ export class PaymentComponent {
   private readonly apiUrl = 'http://localhost:5193/api/Bookings/Add';
 
   today: string = new Date().toISOString().split('T')[0];
+  hourOptions = Array.from({ length: 14 }, (_, i) => i + 8); // 8~21點
+  dateMode = 'day';
+  tempStartDate = '';
+  startHour = '';
+  endHour = '';
   startDate = '';
   endDate = '';
   invoiceType = 'personal';
@@ -39,6 +51,9 @@ export class PaymentComponent {
   userEmail = '';
   companyName = '';
   taxId = '';
+  hourError = false;
+  diff: number = 0;
+
 
   constructor(
     private http: HttpClient,
@@ -48,6 +63,7 @@ export class PaymentComponent {
     private profileService: ProfileService,
     private cdr: ChangeDetectorRef // 注入 ChangeDetectorRef
   ) {}
+
 
   ngOnInit(): void {
     this.profileService.getProfile().subscribe({
@@ -63,12 +79,104 @@ export class PaymentComponent {
     });
   }
 
+  onModeChange(): void {
+    this.startDate = '';
+    this.endDate = '';
+    this.tempStartDate = '';
+    this.startHour = '';
+    this.endHour = '';
+    this.hourError = false;
+    // console.log(this.dateMode);
+  }
+
+  get Diff(): string {
+    if (!this.startDate || !this.endDate) {
+      return '';
+    }
+
+    if (this.dateMode === 'hour') {
+      const hour = Number(this.endHour) - Number(this.startHour);
+      this.diff = hour;
+      return `${this.tempStartDate} ${this.startHour}:00 ~ ${this.endHour}:00，共 ${hour} 小時`;
+    }
+
+    const start = new Date(this.startDate);
+    const end = new Date(this.endDate);
+
+    if (this.dateMode === 'day') {
+      const days = Math.round((end.getTime() - start.getTime()) / (1000 * 60 * 60 * 24)) + 1;
+      this.diff = days;
+      return `${this.startDate} ~ ${this.endDate}，共 ${days} 天`;
+    }
+
+    if (this.dateMode === 'month') {
+      const months = (end.getFullYear() - start.getFullYear()) * 12 + (end.getMonth() - start.getMonth()) + 1;
+      this.diff = months;
+      return `${this.startDate} ~ ${this.endDate}，共 ${months} 個月`;
+    }
+    return '';
+  }
+
+  onStartHourChange(event: Event): void {
+    if (this.tempStartDate === '' || this.tempStartDate === null) {
+      alert('請先選擇開始日期');
+      setTimeout(() => {this.startHour = '';});
+      return;
+    }
+    this.startDate = `${this.tempStartDate}T${this.startHour}:00:00`;
+
+    this.endHour = '';
+    this.endDate = '';
+    this.hourError = false;
+    console.log('開始日期與時間:', this.startDate);
+  }
+
+  onEndHourChange(event: Event): void {
+    if (this.tempStartDate === '' || this.tempStartDate === null) {
+      alert('請先選擇開始日期');
+      setTimeout(() => {this.endHour = '';});
+      return;
+    }
+    if (this.startHour === '' || this.startHour === null) {
+      alert('請先選擇開始時間');
+      setTimeout(() => {this.endHour = '';});
+      return;
+    }
+
+    if (Number(this.endHour) <= Number(this.startHour)) {
+      this.hourError = true;
+      alert('結束時間必須晚於開始時間');
+      setTimeout(() => {this.endHour = '';});
+      return;
+    }
+    this.endDate = `${this.tempStartDate}T${this.endHour}:00:00`;
+    this.hourError = false;
+    console.log('結束日期與時間:', this.endDate);
+  }
+
+
   onStartDateChange(event: Event): void {
+    if (this.dateMode === 'hour') {
+      this.startHour = '';
+      this.endHour = '';
+      this.tempStartDate = (event.target as HTMLInputElement).value;
+      return;
+    }
+    this.endDate = '';
     this.startDate = (event.target as HTMLInputElement).value;
+
+
+    console.log('開始日期:', this.startDate);
   }
 
   onEndDateChange(event: Event): void {
+    if (this.startDate === '' || this.startDate === null) {
+      alert('請先選擇開始日期');
+      (event.target as HTMLInputElement).value = '';
+      return;
+    }
     this.endDate = (event.target as HTMLInputElement).value;
+    console.log('結束日期:', this.endDate);
   }
 
   onInvoiceTypeChange(event: Event): void {
@@ -118,8 +226,8 @@ export class PaymentComponent {
       rent_id: rentId && Number.isFinite(rentId) ? rentId : null,
       employees_id: null,
       created_date: now.toISOString(),
-      start_date: `${this.startDate}T00:00:00`,
-      end_date: `${this.endDate}T23:59:59`,
+      start_date: this.startDate,
+      end_date: this.endDate,
       company_name: this.invoiceType === 'company' ? this.companyName : null,
       tax_id: this.invoiceType === 'company' ? this.taxId : null,
       status: 0,
@@ -141,6 +249,5 @@ export class PaymentComponent {
         alert('預訂失敗，請確認後端 API 是否啟動或資料是否正確');
       },
     });
-
   }
 }
