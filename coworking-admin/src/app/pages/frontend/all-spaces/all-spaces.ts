@@ -67,6 +67,7 @@ export class AllSpaces implements OnInit, AfterViewInit {
   map!: L.Map;
   markerLayer!: L.LayerGroup;
   earthIcon!: L.DivIcon;
+  isMapVisible = true;
 
   constructor(
     private locationService: LocationService,
@@ -80,6 +81,16 @@ export class AllSpaces implements OnInit, AfterViewInit {
   toggleFavorite(id: number, event: Event) {
     event.stopPropagation();
     this.favoriteService.toggleFavorite(id);
+  }
+
+  toggleMap(): void {
+    this.isMapVisible = !this.isMapVisible;
+
+    setTimeout(() => {
+      if (this.map) {
+        this.map.invalidateSize();
+      }
+    }, 300);
   }
 
   ngOnInit(): void {

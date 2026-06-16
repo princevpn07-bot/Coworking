@@ -13,18 +13,23 @@
 
 /* Listing Section */
 .listing-section {
-  width: 50%;
+  flex: 0 0 50%;
   display: flex;
   flex-direction: column;
   min-height: 0;
   border-right: 1px solid #cfc5bb;
   background-color: #ffffff;
+  transition: flex-basis .3s ease;
+}
+
+.listing-section.full {
+  flex-basis: 100%;
 }
 
 .listing-section__search-bar {
   padding: 1.5rem 2rem;
   border-bottom: 1px solid #cfc5bb;
-  z-index: 9999 !important;
+  /* z-index: 9999 !important;
   /* 確保層級高於右側地圖與下方列表 */
   overflow: visible !important;
   /* 絕對不能是 hidden，否則彈窗會被切斷看不見 */
@@ -48,6 +53,8 @@
 /* Search UI */
 .search-group {
   display: flex;
+  width: fit-content;
+  max-width: 720px;
   border: 1px solid #cfc5bb;
   border-radius: 4px;
   overflow: visible !important;
@@ -55,7 +62,8 @@
 }
 
 .search-group__item {
-  flex: 1;
+  flex: 1 1 0;
+  max-width: 220px;
   display: flex;
   align-items: center;
   padding: 0.98rem 1rem;
@@ -70,6 +78,14 @@
   margin-right: 0.5rem;
 }
 
+.search-group__item:first-child {
+  width: 220px;
+}
+
+.search-group__item:nth-child(2) {
+  width: 220px;
+}
+
 .search-group__item input,
 .search-group__item select {
   width: 100%;
@@ -81,7 +97,9 @@
 }
 
 .search-group__submit {
-  padding: 0 2rem;
+  flex: 0 0 90px;
+  width: 90px;
+  padding: 0;
   background-color: #e6d5c3;
   color: #695c4e;
   font-weight: 600;
@@ -127,7 +145,8 @@
 
 .capacity-filter {
   position: relative;
-  min-width: 140px;
+  width: 150px;
+  flex: 0 0 150px;
 }
 
 .capacity-trigger {
@@ -384,12 +403,22 @@
 
 /* Map Section */
 .map-section {
-  flex: 1;
+  width: 50%;
   min-width: 0;
   min-height: 0;
   position: relative;
+
+  z-index: 10;
+
   background-color: #e7e2d9;
   overflow: hidden;
+
+  transition: all .3s ease;
+}
+
+.map-section.hidden {
+  width: 0;
+  overflow: visible;
 }
 
 #map {
@@ -397,7 +426,7 @@
   width: 100%;
   display: block;
   position: relative;
-  z-index: 1;
+  z-index: 0;
 }
 
 .map-section__img {
@@ -408,12 +437,10 @@
   mix-blend-mode: multiply;
 }
 
+.map-section__toggle {
 
-.map-section__toggle,
-.map-section__fab {
-  pointer-events: auto;
   position: relative;
-  z-index: 9999;
+
 }
 
 .map-section__toggle-wrapper {
@@ -423,6 +450,9 @@
   position: absolute;
   top: 16px;
   right: 16px;
+
+  z-index: 99999;
+  width: max-content;
 }
 
 .map-section__toggle {
@@ -436,16 +466,26 @@
   border: 1px solid #cfc5bb;
   font-size: 0.85rem;
   font-weight: 600;
+
+  white-space: nowrap;
+  width: max-content;
+  flex-shrink: 0;
+
+  cursor: pointer;
 }
 
+/* switch 外框 */
 .map-section__toggle .switch {
   width: 32px;
   height: 16px;
   background-color: #e6d5c3;
   border-radius: 10px;
   position: relative;
+  transition:
+    background-color .25s ease;
 }
 
+/* 圓球 */
 .map-section__toggle .switch::after {
   content: '';
   position: absolute;
@@ -456,8 +496,24 @@
   background: #ffffff;
   border-radius: 50%;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+
+  transition:
+    transform .25s ease;
 }
 
+/* 開啟狀態 */
+.map-section__toggle .switch.on {
+
+  background-color: #8f664a;
+
+}
+
+/* 球滑到右邊 */
+.map-section__toggle .switch.on::after {
+
+  transform: translateX(-16px);
+
+}
 
 .map-section__fab {
   position: absolute;

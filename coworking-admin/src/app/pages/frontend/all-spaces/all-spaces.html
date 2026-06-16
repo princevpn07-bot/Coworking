@@ -1,6 +1,6 @@
 <main class="main-content">
   <!-- Left: Listing -->
-  <section class="listing-section">
+  <section class="listing-section" [class.full]="!isMapVisible">
     <div class="listing-section__search-bar">
       <div class="search-group">
 
@@ -158,13 +158,13 @@
   </section>
 
   <!-- Right: Map -->
-  <aside class="map-section">
+  <aside class="map-section" [class.hidden]="!isMapVisible">
     <div id="map"></div>
     <div class="map-section__overlay">
       <div class="map-section__toggle-wrapper">
-        <div class="map-section__toggle">
-          <span>地圖</span>
-          <div class="switch"></div>
+        <div class="map-section__toggle" (click)="toggleMap()">
+          <span>{{ isMapVisible ? '地圖' : '列表' }}</span>
+          <div class="switch" [class.on]="isMapVisible"></div>
         </div>
       </div>
       <!--<button class="map-section__fab">
