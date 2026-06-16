@@ -114,6 +114,8 @@ onDocumentClick(event: Event): void {
         }
         this.originalProfile = { ...this.profile }; // 儲存原始資料快照
          this.profileService.updateAvatarStream(this.profile.avatarUrl);
+        // ✨ 補上這行：讓網頁一打開時，Header 也能拿到正確的初始名字
+          this.profileService.updateNameStream(fullName);
         console.log('SQL 資料庫讀取成功，已同步至畫面！');
         this.cdr.markForCheck(); // 手動標記元件需要檢查，確保畫面更新
       },
@@ -142,6 +144,8 @@ onDocumentClick(event: Event): void {
       industry: this.profile.industry,
       twoFactorEnabled: this.profile.twoFactorEnabled
     };
+    // 🌟 加上這行，點擊儲存時在瀏覽器看看到底送出什麼
+    console.log('🚀 準備送給後端儲存的 DTO 資料：', dtoData);
 
     // 呼叫 Service 發送 PUT 請求給後端
     this.profileService.updateProfile(dtoData).subscribe({
@@ -153,7 +157,10 @@ onDocumentClick(event: Event): void {
       this.isEditMode = false;
       this.originalProfile = { ...this.profile };
       this.profileService.updateAvatarStream(this.profile.avatarUrl);
+      // ✨ 補上這行：名字儲存成功後，立刻把合體後的新名字廣播給全站的 Header！
+    this.profileService.updateNameStream(combinedName);
         this.saveProfile.emit(this.profile);
+
       },
       error: (err) => {
         alert('儲存失敗，請檢查後端 API 連線或登入狀態。');

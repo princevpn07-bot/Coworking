@@ -111,6 +111,7 @@ namespace CoworkingAPI.Controllers
 
             var claims = new[]
             {
+                new Claim(ClaimTypes.NameIdentifier, user.user_id.ToString()), // 用唯一 ID 代替 Email
                 new Claim(JwtRegisteredClaimNames.Sub, user.email!),
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
                 new Claim(ClaimTypes.Role, user.role.ToString()!),

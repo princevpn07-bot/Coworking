@@ -5,6 +5,7 @@ import { AuthService } from '../../../services/auth';
 import { Router, RouterLink } from '@angular/router';
 import { hasBackendAccess } from '../../../models/role.model';
 import { FrontendHeader } from '../../../shared/frontend-header/frontend-header';
+import { ProfileService } from '../../../services/profile';
 
 @Component({
   selector: 'app-login',
@@ -20,7 +21,12 @@ export class Login
     password: ''
   };
 
-  constructor(private authservices: AuthService, private router: Router){}
+  
+
+  constructor(private authservices: AuthService, 
+              private router: Router,
+              private profileService: ProfileService
+  ){}
 
   login()
   {
@@ -28,6 +34,8 @@ export class Login
       {
         next: (response) =>
         {
+          // ✨ 3. 關鍵修復：登入成功時，立刻清空舊快取串流，確保新頁面不會閃現舊名字
+          this.profileService.clearStreams();
           this.authservices.savetoken(response.token);
           const role = this.authservices.getrole();
           if (hasBackendAccess(role))

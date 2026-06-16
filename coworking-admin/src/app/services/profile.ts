@@ -15,6 +15,19 @@ export class ProfileService {
   updateAvatarStream(url: string): void {
     this.avatarSubject.next(url);
   }
+ // ✨ 名字串流
+  private nameSubject = new BehaviorSubject<string>('');
+  name$ = this.nameSubject.asObservable();
+  updateNameStream(name: string): void {
+    this.nameSubject.next(name);
+  }
+
+  // ✨ 登出時清空快取的方法
+  clearStreams(): void {
+    this.avatarSubject.next('');
+    this.nameSubject.next('');
+  }
+
 
   private authHeaders(): HttpHeaders {
     return new HttpHeaders({ Authorization: `Bearer ${this.authService.gettoken()}` });

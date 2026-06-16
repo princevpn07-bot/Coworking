@@ -25,10 +25,11 @@ namespace CoworkingAPI.Controllers
         public async Task<IActionResult> GetProfile()
         {
             //var email = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            var email = User.FindFirstValue(ClaimTypes.NameIdentifier)
-         ?? User.FindFirstValue(ClaimTypes.Email)
-         ?? User.FindFirstValue("email");
-            var user = await _context.Users.FirstOrDefaultAsync(u => u.email == email);
+            var userIdStr = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (string.IsNullOrEmpty(userIdStr) || !int.TryParse(userIdStr, out int userId))
+                return Unauthorized("無效的憑證");
+
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.user_id == userId);
             if (user == null) return NotFound("找不到使用者");
 
             // a. 跨表尋找員工資訊（從內建的 Employees DbSet 撈取小寫 job_title）
@@ -65,16 +66,17 @@ namespace CoworkingAPI.Controllers
         {
             if (dto == null) return BadRequest("傳送的資料不能為空");
 
-            // 套用防呆 Token 標籤抓取法
-            var email = User.FindFirstValue(ClaimTypes.NameIdentifier)
-                     ?? User.FindFirstValue(ClaimTypes.Email)
-                     ?? User.FindFirstValue("email");
+            // ✨ 改從 Token 拿 user_id
+            var userIdStr = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (string.IsNullOrEmpty(userIdStr) || !int.TryParse(userIdStr, out int userId))
+                return Unauthorized("無效的憑證");
 
-            var user = await _context.Users.FirstOrDefaultAsync(u => u.email == email);
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.user_id == userId);
             if (user == null) return NotFound("找不到使用者");
 
             // 將前端透過 DTO 帶過來的各欄位新數值，精準寫入資料庫
             user.name = dto.Name;
+            user.email = dto.Email; // 👈 如果漏了這行，SQL 永遠不會更新！
             user.phone = dto.Phone;
             user.line_id = dto.LineId;
             user.image = dto.Image;
@@ -102,12 +104,16 @@ namespace CoworkingAPI.Controllers
         [HttpPatch("updatename")]
         public async Task<IActionResult> UpdateName([FromBody] AdminUserProfileDto dto)
         {
-            var email = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            var user = await _context.Users.FirstOrDefaultAsync(u => u.email == email);
+            // ✨ 改從 Token 拿 user_id
+            var userIdStr = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (string.IsNullOrEmpty(userIdStr) || !int.TryParse(userIdStr, out int userId))
+                return Unauthorized("無效的憑證");
+
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.user_id == userId);
             if (user == null) return NotFound("找不到使用者");
 
             user.name = dto.Name;
-
+            user.email = dto.Email;
             user.phone = dto.Phone;
             user.line_id = dto.LineId;
             user.image = dto.Image;
@@ -117,7 +123,7 @@ namespace CoworkingAPI.Controllers
             user.industry = dto.Industry;
             user.two_factor_enabled = dto.TwoFactorEnabled; // 畫面上 2FA 切換開關會觸發這裡
 
-            // 跨表同步職稱與公司名稱
+            // 跨表同步更新員工表的 JobTitle
             var employee = await _context.Employees.FirstOrDefaultAsync(e => e.user_id == user.user_id);
             if (employee != null) employee.job_title = dto.JobTitle;
 
@@ -135,8 +141,12 @@ namespace CoworkingAPI.Controllers
         [HttpPatch("changepassword")]
         public async Task<IActionResult> ChangePassword([FromBody] AdminChangePasswordDto dto)
         {
-            var email = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            var user = await _context.Users.FirstOrDefaultAsync(u => u.email == email);
+            // ✨ 改從 Token 拿 user_id
+            var userIdStr = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (string.IsNullOrEmpty(userIdStr) || !int.TryParse(userIdStr, out int userId))
+                return Unauthorized("無效的憑證");
+
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.user_id == userId);
             if (user == null) return NotFound("找不到使用者");
 
             if (user.password != dto.CurrentPassword) return BadRequest("當前密碼錯誤");
