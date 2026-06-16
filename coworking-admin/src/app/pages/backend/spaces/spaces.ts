@@ -79,7 +79,7 @@ export class Spaces implements OnInit {
   readonly panelUpdating = signal(false);
   readonly panelUpdateError = signal('');
   readonly panelStatusError = signal('');
-  readonly editDraft = signal<{ name: string; locationId: number; capacity: number; status: SpaceStatus } | null>(null);
+  readonly editDraft = signal<{ name: string; locationId: number; capacity: number; status: SpaceStatus; introduction: string | null } | null>(null);
   readonly panelImages = signal<SpaceImageItem[]>([]);
   readonly imagesLoading = signal(false);
   readonly uploadingImage = signal(false);
@@ -198,7 +198,7 @@ export class Spaces implements OnInit {
   newSpace: CreateSpace = this.emptySpace();
 
   private emptySpace(): CreateSpace {
-    return { location_id: 0, space_number: '', capacity: 1, status: 0, hourly_price: null, daily_price: null, monthly_price: null };
+    return { location_id: 0, space_number: '', capacity: 1, status: 0, introduction: null, hourly_price: null, daily_price: null, monthly_price: null };
   }
 
   onFileSelected(event: Event): void {
@@ -234,6 +234,7 @@ export class Spaces implements OnInit {
       status: STATUS_MAP[d.status ?? 0] ?? '可用',
       assetCount: d.assetcount ?? 0,
       imagePath: d.imagePath ?? '',
+      introduction: d.introduction ?? null,
     };
   }
 
@@ -326,7 +327,7 @@ export class Spaces implements OnInit {
   openEditMode(): void {
     const s = this.selectedSpace();
     if (!s) return;
-    this.editDraft.set({ name: s.name, locationId: s.locationId, capacity: s.capacity, status: s.status });
+    this.editDraft.set({ name: s.name, locationId: s.locationId, capacity: s.capacity, status: s.status, introduction: s.introduction });
     this.panelUpdateError.set('');
     this.panelEditMode.set(true);
     if (this.locationOptions().length === 0) {
@@ -356,6 +357,7 @@ export class Spaces implements OnInit {
       space_number: draft.name,
       capacity: draft.capacity,
       status: STATUS_REVERSE[draft.status],
+      introduction: draft.introduction,
     };
     this.panelUpdating.set(true);
     this.panelUpdateError.set('');
@@ -368,6 +370,7 @@ export class Spaces implements OnInit {
           location: this.locationOptions().find(l => l.location_id === draft.locationId)?.city ?? s.location,
           capacity: draft.capacity,
           status: draft.status,
+          introduction: draft.introduction,
         };
         this.selectedSpace.set(updated);
         this.spaces.update(list => list.map(item => item.id === updated.id ? updated : item));

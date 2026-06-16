@@ -41,7 +41,8 @@ namespace CoworkingAPI.Controllers
                 capacity = s.capacity,
                 status = s.status,
                 assetcount = _context.spaceasserts.Count(sa => sa.space_id == s.space_id),
-                imagePath = _context.SpaceImages.Where(i => i.space_id == s.space_id).Select(i => i.image_path).FirstOrDefault()
+                imagePath = _context.SpaceImages.Where(i => i.space_id == s.space_id).Select(i => i.image_path).FirstOrDefault(),
+                introduction = s.introduction
             }).ToListAsync();
 
             return Ok(spaceinfo);
@@ -55,7 +56,8 @@ namespace CoworkingAPI.Controllers
                 location_id = dto.location_id,
                 space_number = dto.space_number,
                 capacity = dto.capacity,
-                status = dto.status
+                status = dto.status,
+                introduction = dto.introduction
             };
             _context.Spaces.Add(space);
             await _context.SaveChangesAsync();

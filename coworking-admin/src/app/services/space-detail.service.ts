@@ -7,6 +7,7 @@ export interface SpaceDetailDto {
   spaceNumber: string;
   capacity: number;
   status: number;
+  introduction: string | null;
 
   location: {
     country: string;

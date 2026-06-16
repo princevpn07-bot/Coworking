@@ -49,6 +49,7 @@ namespace CoworkingAPI.Controllers
             space.space_number = Space.space_number;
             space.capacity = Space.capacity;
             space.status = Space.status;
+            space.introduction = Space.introduction;
 
             await _context.SaveChangesAsync();
             return NoContent();

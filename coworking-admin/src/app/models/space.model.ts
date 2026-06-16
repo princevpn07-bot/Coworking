@@ -16,6 +16,7 @@ export interface Space {
   space_number: string | null;
   capacity: number | null;
   status: number | null;
+  introduction: string | null;
 }
 
 export interface CreateSpace {
@@ -23,6 +24,7 @@ export interface CreateSpace {
   space_number: string;
   capacity: number;
   status: number;
+  introduction: string | null;
   hourly_price: number | null;
   daily_price: number | null;
   monthly_price: number | null;
@@ -60,6 +62,7 @@ export interface SpaceView {
   status: SpaceStatus;
   assetCount: number;
   imagePath: string;
+  introduction: string | null;
 }
 
 export interface AdminSpaceInfoDto {
@@ -71,4 +74,5 @@ export interface AdminSpaceInfoDto {
   status: number | null;
   assetcount: number | null;
   imagePath: string | null;
+  introduction: string | null;
 }

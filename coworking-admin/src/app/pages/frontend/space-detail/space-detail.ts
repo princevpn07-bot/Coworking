@@ -1,4 +1,4 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, inject, ChangeDetectorRef } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { SpaceDetailService, SpaceDetailDto } from '../../../services/space-detail.service';
@@ -22,6 +22,7 @@ export class SpaceDetail implements OnInit {
   // =========================
   private route = inject(ActivatedRoute);
   private spaceDetailService = inject(SpaceDetailService);
+  private cdr = inject(ChangeDetectorRef);
 
 
   constructor(private sanitizer: DomSanitizer, public favoriteService: FavoriteService) { }
@@ -47,7 +48,6 @@ export class SpaceDetail implements OnInit {
     }
   }
 
-  protected detailService = inject(SpaceDetailService);
 
   // =========================
   // state
@@ -65,6 +65,11 @@ export class SpaceDetail implements OnInit {
   equipments: any[] = [];
   mapUrl: SafeResourceUrl | null = null;
   lowestPrice: number = 0;
+  selectedRent: any = null;
+
+  selectRent(rent: any) {
+    this.selectedRent = rent;
+  }
 
   priceTypeMap: Record<string, string> = {
     '1': '每小時',
@@ -107,6 +112,8 @@ export class SpaceDetail implements OnInit {
           ? Math.min(...data.rents.map(r => r.price))
           : 0;
 
+        this.selectedRent = data.rents?.[0] ?? null;
+
         this.mapUrl = data.location?.address
           ? this.sanitizer.bypassSecurityTrustResourceUrl(
             `https://www.google.com/maps?q=${encodeURIComponent(data.location.address)}&output=embed`
@@ -114,12 +121,14 @@ export class SpaceDetail implements OnInit {
           : null;
 
         this.loading = false;
+        this.cdr.detectChanges();
 
         console.log('space detail:', data);
       },
       error: (err) => {
         console.error(err);
         this.loading = false;
+        this.cdr.detectChanges();
       }
 
     });

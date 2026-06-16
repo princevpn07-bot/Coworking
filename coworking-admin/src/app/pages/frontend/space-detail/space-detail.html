@@ -108,15 +108,14 @@
 
       <div class="hero__booking-card">
         <div class="price-row">
-          <span class="price">NT$ {{ lowestPrice | number }}</span>
-          <span class="unit">/ 起</span>
-          <!--<div class="discount">
-            <span class="old-price">NT$ 20,000</span>
-            <span class="badge">8 折優惠</span>
-          </div>-->
+          <span class="price">NT$ {{ (selectedRent?.price ?? lowestPrice) | number }}</span>
+          <span class="unit">/ {{ selectedRent ? priceTypeMap[selectedRent.priceType] : '起' }}</span>
           <div class="price-types">
-            <div *ngFor="let rent of (space?.rents ?? [])">
-              <span>{{ priceTypeMap[rent.priceType]}}</span>
+            <div *ngFor="let rent of (space?.rents ?? [])"
+                 [class.selected]="selectedRent === rent"
+                 (click)="selectRent(rent)"
+                 style="cursor: pointer;">
+              <span>{{ priceTypeMap[rent.priceType] }}</span>
               <span>NT$ {{ rent.price | number }}</span>
             </div>
           </div>
@@ -167,11 +166,7 @@
         <!-- intro -->
         <section *ngSwitchCase="'intro'">
           <h2>空間介紹</h2>
-          <p>
-            本空間可容納 {{ space?.capacity }} 人使用，
-            適合會議討論、專案協作及商務簡報，
-            打造兼具效率與舒適感的共享辦公環境。
-          </p>
+          <p>{{ space?.introduction }}</p>
 
           <hr class="space-rules__divider">
 

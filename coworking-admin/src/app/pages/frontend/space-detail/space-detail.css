@@ -291,6 +291,21 @@
   background: #fff1e8;
 }
 
+.hero__booking-card .price-types div.selected {
+  background: #fde8d8;
+  border-color: #c8845a;
+  box-shadow: 0 2px 8px rgba(200, 132, 90, 0.25);
+  transform: translateY(-1px);
+}
+
+.hero__booking-card .price-types div.selected span:first-child {
+  color: #a05a2c;
+}
+
+.hero__booking-card .price-types div.selected span:last-child {
+  color: #7a3e10;
+}
+
 .hero__booking-card .price-types div span:first-child {
   font-weight: 600;
   color: #4c463e;

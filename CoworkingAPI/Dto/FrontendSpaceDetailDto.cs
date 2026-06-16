@@ -8,6 +8,7 @@
             public string? SpaceNumber { get; set; }
             public int? Capacity { get; set; }
             public int? Status { get; set; }
+            public string? Introduction { get; set; }
 
             public LocationDto? Location { get; set; }
 

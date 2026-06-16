@@ -10,6 +10,7 @@ namespace CoworkingAPI.Dto
         public int? status {get; set;}
         public int? assetcount {get; set;}
         public string? imagePath {get; set;}
+        public string? introduction {get; set;}
     }
 
     public class AdminSpaceAssertsDto
@@ -40,6 +41,7 @@ namespace CoworkingAPI.Dto
         public string space_number { get; set; } = "";
         public int capacity { get; set; }
         public int status { get; set; }
+        public string? introduction { get; set; }
         public decimal? hourly_price { get; set; }
         public decimal? daily_price { get; set; }
         public decimal? monthly_price { get; set; }

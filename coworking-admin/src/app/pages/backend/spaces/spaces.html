@@ -253,6 +253,11 @@
         </div>
       </div>
 
+      <div class="form-group">
+        <label>空間介紹</label>
+        <textarea [(ngModel)]="newSpace.introduction" rows="4" placeholder="請輸入空間介紹說明..."></textarea>
+      </div>
+
       <div class="form-section-title">租金方案</div>
       <div class="form-row">
         <div class="form-group">
@@ -349,6 +354,13 @@
             </select>
           </div>
         </div>
+        <div class="panel-form-group">
+          <label>空間介紹</label>
+          <textarea rows="4"
+            [ngModel]="draft.introduction"
+            (ngModelChange)="editDraft.update(d => d ? {...d, introduction: $event} : d)"
+            placeholder="請輸入空間介紹說明..."></textarea>
+        </div>
         @if (panelUpdateError()) {
           <p class="panel-update-error">
             <span class="material-symbols-outlined">error</span>
@@ -392,6 +404,12 @@
           <span class="material-symbols-outlined">error</span>
           {{ panelStatusError() }}
         </p>
+      }
+
+      @if (space.introduction) {
+        <div class="panel-intro">
+          <p>{{ space.introduction }}</p>
+        </div>
       }
     }
 

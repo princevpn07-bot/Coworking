@@ -28,6 +28,7 @@ namespace CoworkingAPI.Controllers
             SpaceNumber = s.space_number,
             Capacity = s.capacity,
             Status = s.status,
+            Introduction = s.introduction,
 
             Location = s.Location == null ? null : new LocationDto
             {
