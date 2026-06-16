@@ -1,178 +1,413 @@
+/* 修改頁面整體背景顏色和樣式 */
 .orders-page {
   min-height: calc(100vh - 80px);
-  background: #fef8f6;
+  background: #fdfaf9; /* 修改背景顏色，使其更米色/淺灰色 */
   padding: 60px 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; /* 統一字體 */
 }
 
+/* 調整容器最大寬度 */
 .container {
-  max-width: 900px;
+  max-width: 800px; /* 縮小容器寬度 */
   margin: 0 auto;
   padding: 0 24px;
 }
 
+/* 修改頁頭樣式 */
 .page-header {
-  margin-bottom: 40px;
+  margin-bottom: 32px;
 }
 
+/* 修改標題字體和樣式 */
 .page-header h1 {
-  font-size: 28px;
+  font-size: 32px; /* 增大字體大小 */
   font-weight: 700;
-  color: #3d3028;
-  margin: 0 0 6px;
+  color: #2c251d; /* 修改顏色 */
+  margin: 0 0 16px;
+  font-family: Playfair Display, Georgia, Times New Roman, serif; /* 使用襯線字體 */
 }
 
-.subtitle {
-  font-size: 15px;
-  color: #7e766d;
-  margin: 0;
+/* 靜態添加分頁標籤 HTML 結構，不修改功能 */
+/* 這需要在 HTML 中手動添加，但在 CSS 中定義樣式 */
+.page-tabs {
+  display: flex;
+  gap: 20px;
+  border-bottom: 1px solid #e9e5e1;
+  padding-bottom: 8px;
 }
 
-.empty-state {
-  text-align: center;
-  padding: 80px 20px;
-  background: #fff;
-  border-radius: 16px;
-  border: 1px solid rgba(126, 118, 109, 0.12);
+.tab-item {
+  font-size: 13px;
+  color: #7a736a;
+  cursor: pointer;
+  padding-bottom: 6px;
+  position: relative;
+  transition: color 0.3s;
 }
 
-.empty-icon {
-  font-size: 56px;
-  margin-bottom: 16px;
+.tab-item:hover {
+  color: #2c251d;
 }
 
-.empty-state h3 {
-  font-size: 20px;
+.tab-item.active {
+  color: #2c251d;
   font-weight: 600;
-  color: #3d3028;
-  margin: 0 0 8px;
 }
 
-.empty-state p {
-  font-size: 14px;
-  color: #7e766d;
-  margin: 0 0 28px;
+.tab-item.active::after {
+  content: "";
+  position: absolute;
+  bottom: -9px;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background-color: #2c251d;
 }
 
-.btn-browse {
-  display: inline-block;
-  background: #534434;
-  color: #fff;
-  padding: 12px 28px;
-  border-radius: 8px;
-  font-weight: 700;
-  font-size: 14px;
-  text-decoration: none;
-  transition: opacity 0.2s;
-}
-
-.btn-browse:hover { opacity: 0.9; }
-
+/* 修改訂單列表佈局 */
 .order-list {
   display: flex;
   flex-direction: column;
   gap: 16px;
 }
 
+/* 重新設計訂單卡片樣式，與圖片對齊 */
 .order-card {
   background: #fff;
-  border-radius: 16px;
-  border: 1px solid rgba(126, 118, 109, 0.12);
+  border-radius: 12px; /* 減小圓角 */
+  border: none; /* 移除邊框 */
+  box-shadow: 0 4px 12px rgba(44, 37, 29, 0.08); /* 添加微妙陰影 */
   overflow: hidden;
+  display: flex; /* 改為水平佈局 */
 }
 
-.order-card__header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 16px 24px;
-  border-bottom: 1px solid rgba(126, 118, 109, 0.1);
-  background: #faf6f3;
+/* 左側圖片區 */
+.order-card__image-section {
+  width: 260px; /* 設置圖片區域寬度 */
+  height: 200px; /* 設置圖片區域高度 */
+  overflow: hidden;
+  position: relative; /* 用於定位狀態標籤 */
 }
 
-.order-id {
-  font-size: 13px;
-  font-weight: 600;
-  color: #7e766d;
+/* 圖片樣式 */
+.order-card__image-section img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover; /* 確保圖片填充區域 */
 }
 
-.order-status {
-  font-size: 12px;
+/* 狀態標籤（覆蓋在圖片上） */
+.order-status-overlay {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  font-size: 10px;
   font-weight: 700;
-  padding: 4px 12px;
-  border-radius: 20px;
+  padding: 4px 8px;
+  border-radius: 4px;
+  background-color: rgba(0, 0, 0, 0.4); /* 半透明背景 */
+  color: #fff;
 }
 
-.status-0 { background: #fff4e0; color: #b07800; }
-.status-1 { background: #e6f4ea; color: #2e7d32; }
-.status-2 { background: #fce8e6; color: #c62828; }
-.status-3 { background: #e8eaf6; color: #3949ab; }
+/* 修改狀態顏色，與原代碼邏輯保持一致，但樣式更精確 */
+.status-0 { color: #f48a1d; } /* 待確認 */
+.status-1 { color: #2e7d32; } /* 已確認 */
+.status-2 { color: #c62828; } /* 已取消 */
+.status-3 { color: #3949ab; } /* 已完成 */
 
-.order-card__body {
+/* 右側資訊區 */
+.order-card__info-section {
+  flex: 1;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+/* 主要資訊塊（名稱、價格、描述） */
+.order-card__main-info {
+  margin-bottom: 20px;
+}
+
+/* 1. 修改名稱與價格組的對齊方式 */
+.name-price-group {
   display: flex;
   justify-content: space-between;
-  gap: 24px;
-  padding: 20px 24px;
+  align-items: baseline; /* 讓英文、中文字的底部基準線完美貼合 */
+  margin-bottom: 6px;
 }
 
-.order-info {
+/* 3. 修改描述文本樣式 */
+.space-meta {
+  font-size: 13px;
+  color: #7a736a;
+  margin: 0;
+  padding: 0;
+  /* ✨ 確保與上方標題套用完全相同的字體架構，讓內建邊距邏輯達到 100% 同步 */
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Microsoft JhengHei", sans-serif;
+}
+
+/* 修改總金額樣式，從底部移到右上角，並與圖片對齊 */
+.total-price {
+  font-size: 14px;
+  font-weight: 500;
+  color: #2c251d;
+  margin-left: 16px;
+  white-space: nowrap; /* 確保價格不換行 */
+}
+
+/* 修改描述文本樣式 */
+.space-meta {
+  font-size: 13px;
+  color: #7a736a;
+  margin: 0;
+  padding: 0; /* ✨ 確保與上方標題的左側基準完全一致 */
+}
+
+/* 日期和時間塊（水平排列） */
+.order-card__datetime-info {
+  display: flex;
+  gap: 24px;
+  margin-bottom: 16px;
+}
+
+/* 單個日期/時間塊 */
+.date-block,
+.time-block {
   flex: 1;
 }
 
-.space-name {
-  font-size: 17px;
-  font-weight: 700;
-  color: #3d3028;
-  margin: 0 0 6px;
+/* 標籤（日期、時間） */
+.info-label {
+  font-size: 10px;
+  color: #b1ada7;
+  text-transform: uppercase; /* 全大寫 */
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  display: block;
+  margin-bottom: 4px;
 }
 
-.location {
+/* 值（具體日期/時間） */
+.info-value {
   font-size: 13px;
-  color: #7e766d;
-  margin: 0 0 6px;
+  color: #2c251d;
+  display: block;
 }
 
-.price-type {
-  font-size: 13px;
-  color: #534434;
-  font-weight: 500;
-  margin: 0;
+/* 操作按鈕區 */
+.order-card__actions {
+  display: flex;
+  gap: 16px;
+  border-top: 1px solid #e9e5e1; /* 添加頂部邊框 */
+  padding-top: 16px;
 }
 
-.order-dates {
+/* 單個按鈕樣式（無背景，灰色，帶圖標） */
+.action-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: none;
+  border: none;
+  color: #7a736a;
+  font-size: 11px;
+  cursor: pointer;
+  padding: 0;
+  text-decoration: none;
+  transition: color 0.3s;
+}
+
+.action-btn:hover {
+  color: #2c251d;
+}
+
+/* 付款按鈕樣式（保留原功能，重新設計外觀） */
+.payment-btn {
+  color: #d26e47; /* 修改顏色，使其更突出 */
+}
+
+.payment-btn:hover {
+  color: #b05c3b;
+}
+
+/* 圖標樣式 */
+.icon-payment,
+.icon-navigate,
+.icon-modify,
+.icon-receipt,
+.icon-cancel {
+  width: 16px;
+  height: 16px;
+  fill: currentColor; /* 使用當前文本顏色 */
+}
+
+/* 優化卡片 hover 動態，符合極簡奢華感 */
+.order-card {
+  transition: transform 0.3s cubic-bezier(0.25, 0.8, 0.25, 1), box-shadow 0.3s ease;
+}
+
+.order-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(44, 37, 29, 0.12);
+}
+
+/* 統一操作按鈕中 SVG 圖標與文字的對齊與間距 */
+.action-btn svg {
+  width: 14px;
+  height: 14px;
+  stroke: currentColor;
+  display: inline-block;
+  vertical-align: middle;
+}
+
+/* 讓作用中的 Tab 下底線維持完美的絕對定位 */
+.tab-item {
+  transition: color 0.2s ease-in-out;
+}
+
+/* =========================================================
+   🚀 客製化彈窗（Luxury Modal Overlay）
+   ========================================================= */
+.luxury-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(29, 27, 26, 0.2);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100000;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+.luxury-modal-overlay.active {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.luxury-center-card {
+  background: #ffffff;
+  width: 90%;
+  max-width: 360px;
+  border-radius: 20px;
+  padding: 36px 28px 28px;
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
-  gap: 4px;
-  text-align: left;
-}
-
-.order-dates p {
-  font-size: 13px;
-  color: #3d3028;
-  margin: 0;
-  display: grid;
-  grid-template-columns: max-content max-content;
-  column-gap: 8px;
   align-items: center;
+  border: 1px solid rgba(255, 255, 255, 0.7);
+  box-shadow: 0 20px 40px rgba(44, 37, 29, 0.08), 0 0 1px rgba(105, 92, 78, 0.1);
+  transform: scale(0.94) translateY(10px);
+  transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
-.label {
-  font-size: 11px;
-  color: #7e766d;
-  background: #f0ebe6;
-  padding: 2px 7px;
-  border-radius: 4px;
+.luxury-modal-overlay.active .luxury-center-card {
+  transform: scale(1) translateY(0);
 }
 
-.order-card__footer {
-  padding: 14px 24px;
-  border-top: 1px solid rgba(126, 118, 109, 0.1);
+.luxury-icon-wrapper {
+  position: relative;
   display: flex;
-  justify-content: flex-end;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 24px;
 }
 
-.total-price {
-  font-size: 16px;
+.luxury-icon-glow {
+  position: absolute;
+  width: 48px;
+  height: 48px;
+  background: #a94442;
+  filter: blur(12px);
+  opacity: 0.12;
+  border-radius: 50%;
+}
+
+.luxury-icon-core {
+  position: relative;
+  width: 48px;
+  height: 48px;
+  background: #fdf6f6;
+  color: #a94442;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.luxury-text-package {
+  text-align: center;
+  margin-bottom: 28px;
+}
+
+.luxury-brand-title {
+  margin: 0;
+  font-size: 18px;
   font-weight: 700;
-  color: #534434;
+  color: #2c251d;
+  letter-spacing: 0.5px;
+}
+
+.luxury-divider-line {
+  width: 20px;
+  height: 2px;
+  background: #e9e5e1;
+  margin: 12px auto;
+}
+
+.luxury-brand-subtitle {
+  margin: 0;
+  font-size: 13px;
+  color: #7a736a;
+  line-height: 1.6;
+}
+
+/* 雙欄按鈕區佈局 */
+.luxury-modal-buttons {
+  display: flex;
+  width: 100%;
+  gap: 12px;
+}
+
+.btn-luxury-cancel {
+  flex: 1;
+  padding: 12px;
+  background: #fbf9f8; /* ✨ 修正這裡：把 h 改成 f */
+  border: 1px solid #e9e5e1;
+  color: #7a736a;
+  font-size: 13px;
+  font-weight: 600;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-luxury-cancel:hover {
+  background: #f5f1ee;
+  color: #2c251d;
+}
+
+.btn-luxury-action {
+  flex: 1;
+  padding: 12px;
+  background: #2c251d;
+  color: #ffffff;
+  border: none;
+  font-size: 13px;
+  font-weight: 600;
+  border-radius: 10px;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(44, 37, 29, 0.15);
+  transition: all 0.25s ease;
+}
+
+.btn-luxury-action:hover {
+  background: #a94442; /* 滑過轉為低飽和警告紅 */
+  box-shadow: 0 6px 16px rgba(169, 68, 66, 0.25);
 }
