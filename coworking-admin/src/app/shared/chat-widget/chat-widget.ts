@@ -136,7 +136,6 @@ catOptions: AnimationOptions = {
 
     this.aiService.ask(prompt, history).subscribe({
       next: (res) => {
-        this.messages.push({ role: 'assistant', content: res.reply });
         this.isLoading.set(false);
         // 💡 2. 呼叫外掛打字機函式，並把原本的路由跳轉功能包裹成回呼函式（onComplete）傳入
         this.typewriteMessage(res.reply, () => {
