@@ -237,7 +237,8 @@ export class AllSpaces implements OnInit, AfterViewInit {
   }
 
   loadSpacesFromDb(keyword?: string, capacity?: number): void {
-    // 1. 處理日期格式
+
+// 1. 處理日期格式
     let formattedDate = undefined;
     if (this.searchDate) {
       // 由於我們 UI 可能會傳 "2026/06/14 至 2026/06/16" 這種區間
@@ -252,23 +253,44 @@ export class AllSpaces implements OnInit, AfterViewInit {
 
     this.locationService.getFrontendSpaces(keyword, capacity, formattedDate, start, end).subscribe({
       next: (data: any[]) => {
-        this.allSpacesData = data.map(item => ({
-          id: item.space_id || item.id,
-          name: `${item.city || '共享空間'} · ${item.space_number || ''}`,
-          price: item.price || 15000,
-          capacity: `${item.capacity || 0}人`,
-          location: item.mrt_info || '捷運站步行可達',
-          img: item.image_path ? `http://localhost:5193${item.image_path}` : 'assets/Featured_space_01.png',
-          latitude: item.latitude,
-          longitude: item.longitude,
-          city: item.city || '',
-          dbAddress: item.address || ''
-        }));
+        this.allSpacesData = data.map(item => {
+
+          // 🌟 核心修正 1：同時相容「小駝峰 imagePath」與「底線 image_path」，防禦後端欄位轉換
+          let rawPath = item.imagePath || item.image_path;
+          let finalImg = '/assets/Featured_space_02.png'; // 預設的前端本地圖片 (最前面加上 / 確保路徑安全)
+
+          // 🌟 核心修正 2：如果後端有給圖片路徑，且不是後端填寫的錯誤預設字串
+          if (rawPath && !rawPath.includes('assets/Featured_space_01.png')) {
+            // 將 Windows 實體路徑的反斜線 \ 統一替換為網頁網址正斜線 /
+            rawPath = rawPath.replace(/\\/g, '/');
+            // 確保路徑開頭一定有 / (例如把 uploads/... 變成 /uploads/...)
+            const formattedPath = rawPath.startsWith('/') ? rawPath : '/' + rawPath;
+            // 組合出正確的後端圖片完整網址
+            finalImg = `http://localhost:5193${formattedPath}`;
+          }
+
+          return {
+            // 🌟 核心修正 3：所有後端欄位均加上「雙重相容」，同時防禦大寫、小寫與小駝峰命名轉換
+            id: item.spaceId || item.space_id || item.id,
+            name: `${item.city || '共享空間'} · ${(item.spaceNumber || item.space_number || '')}`,
+            price: item.price || 15000,
+            capacity: `${item.capacity || 0}人`,
+            location: item.mrtInfo || item.mrt_info || '捷運站步行可達',
+            img: finalImg, // 帶入上方完美解析後的圖片網址
+            latitude: item.latitude,
+            longitude: item.longitude,
+            city: item.city || '',
+            dbAddress: item.address || ''
+          };
+        });
+
+        // 💡 可以在瀏覽器 Console (主控台) 查看目前每張圖最後產生的網址長怎樣
+        console.log('圖片網址解析清單：', this.allSpacesData.map(s => s.img));
+
         this.applyFrontendFilters();
       }
     });
   }
-
   applyFrontendFilters(): void {
     const filterMin = Number(this.currentPriceRange.min);
     const filterMax = Number(this.currentPriceRange.max);

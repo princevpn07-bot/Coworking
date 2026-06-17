@@ -78,11 +78,12 @@ namespace CoworkingAPI.Controllers
                         .Select(r => r.price)
                           .FirstOrDefault() ?? (decimal)((s.capacity ?? 0) * 500),
 
-                     
+
+                        // 🔍 請把後端的 image_path 改成這樣：
                         image_path = _context.SpaceImages
-                            .Where(i => i.space_id == s.space_id)
-                            .Select(i => i.image_path)
-                            .FirstOrDefault() ?? "assets/Featured_space_01.png", // 💡 防破圖預設路徑
+                        .Where(i => i.space_id == s.space_id)
+                        .Select(i => i.image_path)
+                        .FirstOrDefault(), // 💡 拿掉後面的 ?? "assets/..."，讓它找不到就回傳 null
 
                         // 3. 填入來自 dbo.Locations 表的實體欄位 (若關聯為空則給予預設值防禦)
                         location_id = s.Location != null ? s.Location.location_id : 0,

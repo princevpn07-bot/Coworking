@@ -27,17 +27,17 @@ export class Home implements OnInit, AfterViewInit, OnDestroy {
   isVideoPlaying = false;
   isFloatingVisible = false;
   scrollPercentage = 0;
-  private userManuallyPaused = false; 
+  private userManuallyPaused = false;
 
-  private prefaceStartFrame = 1;  
-  private prefaceEndFrame = 60;  
-  private prefaceSpeed = 0.15;     
-  private prefaceCurrentFrame = 0; 
-  private prefaceDirection = 1;    
-  private lastPrefaceFrame = -1;    
+  private prefaceStartFrame = 1;
+  private prefaceEndFrame = 60;
+  private prefaceSpeed = 0.15;
+  private prefaceCurrentFrame = 0;
+  private prefaceDirection = 1;
+  private lastPrefaceFrame = -1;
 
   private lastLiquidIntensity = -1;
-  private lastMatrixValue = '';    
+  private lastMatrixValue = '';
 
   private mouse = { x: 0, y: 0, targetX: 0, targetY: 0, speed: 0 };
   private mouseMoveListener?: (e: MouseEvent) => void;
@@ -45,7 +45,7 @@ export class Home implements OnInit, AfterViewInit, OnDestroy {
   // 10張圓環卡片專屬變數
   private scrollRotation = { value: 0 };
   private entranceFactor = { value: 0 };
-  private idleRotation = 0; 
+  private idleRotation = 0;
   hoveredIndex: number | null = null;
 
   private trajectories = [
@@ -58,7 +58,7 @@ export class Home implements OnInit, AfterViewInit, OnDestroy {
     { from: { x: '-10vw', y: '-50vh', rX: -70, rY: 15,  rZ: -110,s: 0.2 } },
     { from: { x: '15vw',  y: '50vh',  rX: 50,  rY: -15, rZ: 85,  s: 0.3 } },
     { from: { x: '-30vw', y: '-45vh', rX: 40,  rY: -20, rZ: -25, s: 0.3 } },
-    { from: { x: '35vw',  y: '45vh',  rX: -30, rY: 40,  rZ: 55,  s: 0.2 } } 
+    { from: { x: '35vw',  y: '45vh',  rX: -30, rY: 40,  rZ: 55,  s: 0.2 } }
   ];
 
   @ViewChild('pinContainer') pinContainer!: ElementRef;
@@ -66,11 +66,11 @@ export class Home implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild('imageCanvas') canvasRef!: ElementRef<HTMLCanvasElement>;
   @ViewChild('heroVideo') heroVideoRef!: ElementRef<HTMLVideoElement>;
   @ViewChild('prefaceCanvas') prefaceCanvasRef!: ElementRef<HTMLCanvasElement>;
-  
+
   private prefaceImages: HTMLImageElement[] = [];
   private prefaceFrameCount = 60;
   private images: HTMLImageElement[] = [];
-  private frameCount = 300; 
+  private frameCount = 300;
 
   constructor(private el: ElementRef) {}
 
@@ -82,25 +82,25 @@ export class Home implements OnInit, AfterViewInit, OnDestroy {
 
   ngAfterViewInit() {
    this.initSmoothScroll();
-    this.initHeroCanvasEngine();      
-    this.initHorizontalScroll();      
-    this.initPhilosophyAnimation();   
-    this.initRentalPlansAnimation(); 
+    this.initHeroCanvasEngine();
+    this.initHorizontalScroll();
+    this.initPhilosophyAnimation();
+    this.initRentalPlansAnimation();
     this.initAmenitiesAnimation();   // 🚀【全量復原】：極致細節無憂辦公大視差彈跳引擎完美看守！
     this.initNetworkAnimation();     // 🚀【全量追加】：底部全球網絡雙向彈跳視差引擎就位！
     this.initTextRevealAnimation();  // 🚀【唯一新增點火】：全域文字滾動掃描揭露雷達啟動！
     this.prepareTypewriterTexts();
-    
+
     setTimeout(() => {
       this.initBackgroundShaderEngine();
-      ScrollTrigger.refresh(); 
+      ScrollTrigger.refresh();
     }, 200);
   }
 // 🚀【唯一全新追加方法】：基於 Scroll 滾動進場的文字不規則大光圈掃描揭露特效
   private initTextRevealAnimation() {
     const nativeElement = this.el.nativeElement;
     const targets = nativeElement.querySelectorAll('.reveal-text');
-    
+
     targets.forEach((text: any) => {
       gsap.fromTo(text,
         { opacity: 0, y: 32, filter: 'blur(8px)' }, // 初始埋入相機散景模糊與位移
@@ -125,7 +125,7 @@ export class Home implements OnInit, AfterViewInit, OnDestroy {
     if (!video) return;
 
     // 🔒 剛性上鎖：強制視訊完全靜音，去聲處理
-    video.muted = true; 
+    video.muted = true;
 
     if (video.paused) {
       this.isVideoPlaying = true;
@@ -146,7 +146,7 @@ export class Home implements OnInit, AfterViewInit, OnDestroy {
     const video = this.heroVideoRef?.nativeElement;
     if (video && video.paused && !this.isVideoPlaying && !this.userManuallyPaused) {
       video.muted = true; // 🔒 剛性上鎖靜音
-      this.isVideoPlaying = true; 
+      this.isVideoPlaying = true;
       video.play().catch(() => {
         this.isVideoPlaying = false;
       });
@@ -156,7 +156,7 @@ export class Home implements OnInit, AfterViewInit, OnDestroy {
   private updateHero3DParallax() {
     const nativeElement = this.el.nativeElement;
     const slidesWrapper = nativeElement.querySelector('.hero-slides-wrapper') as HTMLElement | null;
-    
+
     if (!slidesWrapper) return;
     const scrollAmount = slidesWrapper.scrollWidth - window.innerWidth;
     if (this.lenis && this.lenis.scroll > (scrollAmount + 1500)) return;
@@ -164,25 +164,25 @@ export class Home implements OnInit, AfterViewInit, OnDestroy {
     const canvas = this.canvasRef?.nativeElement;
     if (!canvas) return;
 
-    const rotateY = this.mouse.x * 6; 
+    const rotateY = this.mouse.x * 6;
     const rotateX = -this.mouse.y * 4;
-    const moveX = this.mouse.x * 15;  
-    const moveY = this.mouse.y * 15;  
+    const moveX = this.mouse.x * 15;
+    const moveY = this.mouse.y * 15;
 
     gsap.set(canvas, {
       rotationY: rotateY,
       rotationX: rotateX,
       x: moveX,
       y: moveY,
-      scale: 1.04 
+      scale: 1.04
     });
 
     const heroContent = nativeElement.querySelector('.hero-slide:first-child .hero-slide-content') as HTMLElement | null;
     if (heroContent) {
       gsap.set(heroContent, {
-        x: this.mouse.x * -20, 
+        x: this.mouse.x * -20,
         y: this.mouse.y * -12,
-        z: 45,                 
+        z: 45,
         transformPerspective: 1000
       });
     }
@@ -195,9 +195,9 @@ export class Home implements OnInit, AfterViewInit, OnDestroy {
 
       if (secondSlideContent) {
         gsap.set(secondSlideContent, {
-          x: this.mouse.x * -15, 
+          x: this.mouse.x * -15,
           y: this.mouse.y * -10,
-          z: 50,                 
+          z: 50,
           transformPerspective: 1000
         });
       }
@@ -206,9 +206,9 @@ export class Home implements OnInit, AfterViewInit, OnDestroy {
         gsap.set(playBtnUI, {
           xPercent: -50,
           yPercent: -50,
-          x: this.mouse.x * 25, 
+          x: this.mouse.x * 25,
           y: this.mouse.y * 18,
-          z: 70, 
+          z: 70,
           transformPerspective: 1000
         });
       }
@@ -246,7 +246,7 @@ export class Home implements OnInit, AfterViewInit, OnDestroy {
     ScrollTrigger.create({
       trigger: targetSection,
       start: 'top bottom',
-      end: 'bottom top',  
+      end: 'bottom top',
       onToggle: (self: ScrollTrigger) => {
         this.isShaderVisible = self.isActive;
       }
@@ -301,7 +301,7 @@ export class Home implements OnInit, AfterViewInit, OnDestroy {
     if (index !== this.lastPrefaceFrame) {
       if (this.prefaceImages[index] && this.prefaceImages[index].complete) {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
-        ctx.save(); ctx.scale(dpr, dpr);  
+        ctx.save(); ctx.scale(dpr, dpr);
         ctx.drawImage(this.prefaceImages[index], 0, 0, 1920, 1080);
         ctx.restore();
         this.lastPrefaceFrame = index;
@@ -375,10 +375,10 @@ export class Home implements OnInit, AfterViewInit, OnDestroy {
       scrollTrigger: {
         trigger: '.hero',
         start: 'top top',
-        end: () => `+=${getScrollAmount() + 2000}`, 
+        end: () => `+=${getScrollAmount() + 2000}`,
         pin: true,
         scrub: 0.5,
-        invalidateOnRefresh: true 
+        invalidateOnRefresh: true
       }
     });
 
@@ -398,12 +398,12 @@ export class Home implements OnInit, AfterViewInit, OnDestroy {
     masterTl.to(frameData, {
       frame: this.frameCount - 1,
       ease: 'none',
-      duration: 2.0, 
+      duration: 2.0,
       onUpdate: () => {
         const index = Math.floor(frameData.frame);
         if (this.images[index] && this.images[index].complete) {
           ctx.clearRect(0, 0, canvas.width, canvas.height);
-          ctx.save(); ctx.scale(dpr, dpr); 
+          ctx.save(); ctx.scale(dpr, dpr);
           ctx.drawImage(this.images[index], 0, 0, 1920, 1080);
           ctx.restore();
         }
@@ -427,9 +427,9 @@ export class Home implements OnInit, AfterViewInit, OnDestroy {
       // 🌌【真·電影級大光圈焦距過渡】：在 1.4s ～ 3.2s 滑移期間，為 Canvas 圖片序列注入非對稱大景深模糊轉場
       // 圖片一邊橫向視差滑開、一邊由清晰平滑暈染成 24px 散景迷霧，完全消隱分界硬線，空間穿透感極強！
       if (canvas) {
-        masterTl.fromTo(canvas, 
+        masterTl.fromTo(canvas,
           { x: 0, scale: 1.04, opacity: 1, filter: 'blur(0px)' },
-          { x: 180, scale: 1.14, opacity: 0.05, filter: 'blur(24px)', ease: 'power2.inOut', duration: 1.8 }, 
+          { x: 180, scale: 1.14, opacity: 0.05, filter: 'blur(24px)', ease: 'power2.inOut', duration: 1.8 },
           1.4
         );
       }
@@ -439,15 +439,15 @@ export class Home implements OnInit, AfterViewInit, OnDestroy {
         if (secondMedia) secondMedia.muted = true; // 🔒 確保影片節點原生完全靜音上鎖，絕不產生聲音
 
         masterTl.fromTo(secondBg,
-          { width: '84vw', height: '78vh', top: '11vh', left: '8vw', borderRadius: '24px' }, 
-          { width: '100vw', height: '100vh', top: '0vh', left: '0vw', borderRadius: '0px', boxShadow: 'none', ease: 'power2.inOut', duration: 0.6 }, 
+          { width: '84vw', height: '78vh', top: '11vh', left: '8vw', borderRadius: '24px' },
+          { width: '100vw', height: '100vh', top: '0vh', left: '0vw', borderRadius: '0px', boxShadow: 'none', ease: 'power2.inOut', duration: 0.6 },
           1.8
         );
 
         // 🌌 將影片本體的橫向錯流對流與 Canvas 結合，製造無界限的絲滑浮現
         masterTl.fromTo(secondMedia,
-          { xPercent: 32, scale: 1.25 }, 
-          { xPercent: 0, scale: 1.00, ease: 'power2.inOut', duration: 0.6 }, 
+          { xPercent: 32, scale: 1.25 },
+          { xPercent: 0, scale: 1.00, ease: 'power2.inOut', duration: 0.6 },
           1.8
         );
       }
@@ -462,9 +462,9 @@ export class Home implements OnInit, AfterViewInit, OnDestroy {
       // 離開第二幕收縮卡片 (對齊提早的時鐘刻度，由原先 3.4s 提前至 2.8s)
       if (secondBg && secondMedia) {
         masterTl.to(secondBg, {
-          width: '84vw', height: '78vh', top: '11vh', left: '8vw', 
-          borderRadius: '24px', boxShadow: '0 20px 50px rgba(0,0,0,0.15)', 
-          ease: 'power2.inOut', duration: 0.6 
+          width: '84vw', height: '78vh', top: '11vh', left: '8vw',
+          borderRadius: '24px', boxShadow: '0 20px 50px rgba(0,0,0,0.15)',
+          ease: 'power2.inOut', duration: 0.6
         }, 2.8);
         masterTl.to(secondMedia, { scale: 1.15, ease: 'power2.inOut', duration: 0.6 }, 2.8);
       }
@@ -476,11 +476,11 @@ export class Home implements OnInit, AfterViewInit, OnDestroy {
 
 private initHorizontalScroll() {
     const container = this.pinContainer?.nativeElement;
-    const wrapper = this.scrollWrapper?.nativeElement;      
+    const wrapper = this.scrollWrapper?.nativeElement;
     if (!container || !wrapper) return;
 
     const getScrollAmount = () => { return wrapper.scrollWidth - window.innerWidth; };
-    
+
     // 🚀【重鑄複合式橫向滾動時間軸】：實現前景橫向 wrapper 與背景巨幅長軌道大字體的非對稱對流大視差！
     const horizontalTl = gsap.timeline({
       scrollTrigger: {
@@ -526,8 +526,8 @@ private initHorizontalScroll() {
         // 當滑鼠靠近卡片時，文字層產生高階阻尼吸附引力，朝游標座標平滑漂移，展現強烈撕裂景深
         if (h3 && loc) {
           gsap.to([h3, loc], {
-            x: x * 26, 
-            y: y * 16, 
+            x: x * 26,
+            y: y * 16,
             ease: 'power2.out',
             duration: 0.4,
             overwrite: 'auto'
@@ -551,7 +551,7 @@ private initHorizontalScroll() {
           gsap.to([h3, loc], {
             x: 0,
             y: 0,
-            ease: 'back.out(1.5)', 
+            ease: 'back.out(1.5)',
             duration: 0.6,
             overwrite: 'auto'
           });
@@ -590,18 +590,18 @@ private initHorizontalScroll() {
 
     const horizontalIntro = container.querySelector('.horizontal-intro') as HTMLElement | null;
     const horizontalGrid = container.querySelector('.horizontal-grid') as HTMLElement | null;
-    
-    if (horizontalIntro) { 
-      gsap.fromTo(horizontalIntro, 
-        { y: 180, z: -100, rotationX: 15, opacity: 0, transformPerspective: 2000 }, 
+
+    if (horizontalIntro) {
+      gsap.fromTo(horizontalIntro,
+        { y: 180, z: -100, rotationX: 15, opacity: 0, transformPerspective: 2000 },
         { y: 0, z: 0, rotationX: 0, opacity: 1, ease: 'none', scrollTrigger: { trigger: container, start: 'top bottom', end: 'top center', scrub: true } }
-      ); 
+      );
     }
-    if (horizontalGrid) { 
-      gsap.fromTo(horizontalGrid, 
-        { y: 260, z: -60, rotationY: -10, opacity: 0.1, transformPerspective: 2000 }, 
+    if (horizontalGrid) {
+      gsap.fromTo(horizontalGrid,
+        { y: 260, z: -60, rotationY: -10, opacity: 0.1, transformPerspective: 2000 },
         { y: 0, z: 0, rotationY: 0, opacity: 1, ease: 'none', scrollTrigger: { trigger: container, start: 'top bottom', end: 'top top', scrub: true } }
-      ); 
+      );
     }
   }
   // ==========================================================================
@@ -613,22 +613,22 @@ private initHorizontalScroll() {
     if (!section) return;
 
     const tl = gsap.timeline({
-      scrollTrigger: { 
-        trigger: section, 
-        start: 'top top', 
-        end: '+=5500', 
-        pin: true, 
-        scrub: 1.5, // 🔒 完美留存
-        invalidateOnRefresh: true, 
-        onUpdate: (self: ScrollTrigger) => { this.scrollRotation.value = self.progress *180; } // 🔒 完美留存
+      scrollTrigger: {
+        trigger: section,
+        start: 'top top',
+        end: '+=5500',
+        pin: true,
+        scrub: 2, // 🔒 完美留存
+        invalidateOnRefresh: true,
+        onUpdate: (self: ScrollTrigger) => { this.scrollRotation.value = self.progress *130; } // 🔒 完美留存
       }
     });
 
-    tl.to(section, { 
-      backgroundColor: '#0e0e10', 
-      boxShadow: '0 -30px 60px rgba(0, 0, 0, 0.4)', 
-      ease: 'expo.out', 
-      duration: 0.08 
+    tl.to(section, {
+      backgroundColor: '#0e0e10',
+      boxShadow: '0 -30px 60px rgba(0, 0, 0, 0.4)',
+      ease: 'expo.out',
+      duration: 0.08
     });
 
     tl.to(this.entranceFactor, { value: 1, ease: 'power2.out', duration: 0.55 });
@@ -637,9 +637,9 @@ private initHorizontalScroll() {
 
     tl.to(section, {
       backgroundColor: '#ffffff', // 🔒 完美留存全白底色
-      boxShadow: '0 -30px 60px rgba(0, 0, 0, 0)', 
-      ease: 'power2.out', 
-      duration: 0.18      
+      boxShadow: '0 -30px 60px rgba(0, 0, 0, 0)',
+      ease: 'power2.out',
+      duration: 0.18
     });
   }
 
@@ -652,14 +652,14 @@ private initHorizontalScroll() {
     const header = section.querySelector('.section-header');
 
     if (header) {
-      gsap.fromTo(header, 
+      gsap.fromTo(header,
         { y: 50, opacity: 0 },
-        { 
+        {
           y: 0, opacity: 1, duration: 0.8, ease: 'power2.out',
-          scrollTrigger: { 
-            trigger: section, 
-            start: 'top 85%', 
-            toggleActions: 'play reverse play reverse' 
+          scrollTrigger: {
+            trigger: section,
+            start: 'top 85%',
+            toggleActions: 'play reverse play reverse'
           }
         }
       );
@@ -671,13 +671,13 @@ private initHorizontalScroll() {
         {
           y: 0, scale: 1, opacity: 1, rotationX: 0, z: 0,
           duration: 1.2,
-          ease: 'back.out(1.8)',  
-          stagger: 0.18,          
+          ease: 'back.out(1.8)',
+          stagger: 0.18,
           transformPerspective: 1200,
           scrollTrigger: {
             trigger: section,
-            start: 'top 75%',    
-            toggleActions: 'play reverse play reverse' 
+            start: 'top 75%',
+            toggleActions: 'play reverse play reverse'
           }
         }
       );
@@ -693,7 +693,7 @@ private initHorizontalScroll() {
                 trigger: card,
                 start: 'top bottom',
                 end: 'bottom top',
-                scrub: true 
+                scrub: true
               }
             }
           );
@@ -703,7 +703,7 @@ private initHorizontalScroll() {
   }
 
   // ==========================================================================
-  // 🔒【原汁原味全量復原】：極致細節無憂辦公 雙向 Back 彈跳登場與滾動 Scrub 
+  // 🔒【原汁原味全量復原】：極致細節無憂辦公 雙向 Back 彈跳登場與滾動 Scrub
   // ==========================================================================
   private initAmenitiesAnimation() {
     const nativeElement = this.el.nativeElement;
@@ -781,7 +781,7 @@ private initHorizontalScroll() {
   }
 
   // ==========================================================================
-  // 🔒【原汁原味全量復原】：全球網絡 雙向鏡像 Back 彈跳登場與滾動 Scrub 
+  // 🔒【原汁原味全量復原】：全球網絡 雙向鏡像 Back 彈跳登場與滾動 Scrub
   // ==========================================================================
  private initNetworkAnimation() {
     const nativeElement = this.el.nativeElement;
@@ -854,19 +854,19 @@ private initHorizontalScroll() {
     const cards = nativeElement.querySelectorAll('.floating-card');
     if (cards.length === 0) return;
 
-    this.idleRotation += 0.15; 
-    const totalRotation = this.scrollRotation.value + this.idleRotation; 
+    this.idleRotation += 0.15;
+    const totalRotation = this.scrollRotation.value + this.idleRotation;
     const radius = window.innerWidth > 768 ? 340 : 170;
-    const factor = this.entranceFactor.value; 
-    
+    const factor = this.entranceFactor.value;
+
     cards.forEach((card: any, index: number) => {
       const m = this.trajectories[index]; if (!m) return;
       const baseAngle = index * (360 / cards.length); const totalAngle = baseAngle + totalRotation; const angleRad = totalAngle * (Math.PI / 180);
       const targetX = Math.cos(angleRad) * radius; const targetY = Math.sin(angleRad) * radius;
       const fromXpx = (parseFloat(m.from.x) / 100) * window.innerWidth; const fromYpx = (parseFloat(m.from.y) / 100) * window.innerHeight;
       const currentX = fromXpx + (targetX - fromXpx) * factor; const currentY = fromYpx + (targetY - fromYpx) * factor;
-      const currentScale = m.from.s + (1.0 - m.from.s) * factor; const currentOpacity = 0 + (1.0 - 0) * factor; 
-      const depthBlur = ((radius - targetY) / (radius * 2)) * 2.8; const entryBlur = 12 * (1 - factor); let totalBlur = entryBlur + (depthBlur * factor); 
+      const currentScale = m.from.s + (1.0 - m.from.s) * factor; const currentOpacity = 0 + (1.0 - 0) * factor;
+      const depthBlur = ((radius - targetY) / (radius * 2)) * 2.8; const entryBlur = 12 * (1 - factor); let totalBlur = entryBlur + (depthBlur * factor);
       const isHovered = this.hoveredIndex === index; const finalScale = isHovered ? currentScale * 1.15 : currentScale; if (isHovered) { totalBlur = 0; }
       gsap.set(card, { x: currentX, y: currentY, scale: finalScale, opacity: currentOpacity, zIndex: isHovered ? 999 : 3 });
       const inner = card.querySelector('.card-inner') as HTMLElement | null; if (inner) { gsap.set(inner, { rotationZ: totalAngle + 90, rotationX: 18, rotationY: -8 }); }
@@ -876,17 +876,17 @@ private initHorizontalScroll() {
     const centerText = nativeElement.querySelector('.philosophy-center-text') as HTMLElement | null;
     if (centerText) {
       const breathingPulse = 1 + Math.sin(gsap.ticker.frame * 0.04) * 0.02;
-      const currentScale = (0.75 + (1.0 - 0.75) * factor) * breathingPulse; const currentOpacity = 0 + (1.0 - 0) * factor; const currentBlur = 15 * (1 - factor); 
+      const currentScale = (0.75 + (1.0 - 0.75) * factor) * breathingPulse; const currentOpacity = 0 + (1.0 - 0) * factor; const currentBlur = 15 * (1 - factor);
       gsap.set(centerText, { scale: currentScale, opacity: currentOpacity, filter: `blur(${currentBlur}px)` });
     }
   }
 
   private initSmoothScroll() {
     this.lenis = new Lenis({ duration: 1.2, easing: (t: number) => Math.min(1, 1.001 - Math.pow(2, -10 * t)), smoothWheel: true });
-    
+
     this.tickerHandler = (time: number) => {
       this.lenis?.raf(time * 1000);
-      
+
       this.mouse.x += (this.mouse.targetX - this.mouse.x) * 0.08;
       this.mouse.y += (this.mouse.targetY - this.mouse.y) * 0.08;
       const dx = this.mouse.targetX - this.mouse.x;
@@ -900,15 +900,15 @@ private initHorizontalScroll() {
       const slidesList = this.el.nativeElement.querySelectorAll('.hero-slide');
       const secondSlide = slidesList[1] as HTMLElement | undefined;
       const targetVideo = this.heroVideoRef?.nativeElement;
-      
+
       if (secondSlide && targetVideo) {
         const rect = secondSlide.getBoundingClientRect();
         const isVisible = rect.right > 0 && rect.left < window.innerWidth;
         const isInAutoplayZone = rect.left < window.innerWidth * 0.50 && rect.right > window.innerWidth * 0.10;
-        
+
         if (isInAutoplayZone) {
           if (!this.isVideoPlaying && !this.userManuallyPaused) {
-            this.isVideoPlaying = true; 
+            this.isVideoPlaying = true;
             targetVideo.play().catch((err) => {
               console.log('自動點火受阻:', err);
               this.isVideoPlaying = false;
@@ -926,11 +926,11 @@ private initHorizontalScroll() {
         }
       }
     };
-    
+
     // 🛠️【修復 VS Code 2774 警告】：移除原本有語法瑕疵的 ternary 判斷式，精密直接注入 high-frequency ticker 監聽
-    gsap.ticker.add(this.tickerHandler); 
+    gsap.ticker.add(this.tickerHandler);
     gsap.ticker.lagSmoothing(0);
-    
+
     this.lenis.on('scroll', () => {
       ScrollTrigger.update();
       const scrollTop = window.scrollY || document.documentElement.scrollTop;

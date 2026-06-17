@@ -21,41 +21,40 @@
  background: transparent; /* 💡 游標滑過去時也保持透明，不會冒出藍色 */
    transform: scale(1.1);   /* 💡 滑過去時貓咪會微微放大 1.1 倍，視覺互動感更好！ */
 }
-
 .chat-box {
   position: fixed;
-  bottom: 115px; /* 微調高度，留出優雅的喘息空間給大貓咪 */
+  bottom: 115px;
   right: 28px;
-  width: 360px;  
-  height: 500px; 
+  width: 360px;
+  height: 500px;
   background: #ffffff;
-  border-radius: 24px; /* 圓潤現代的倒角 */
-  /* 精緻低調的微陰影，營造出和主頁卡片一樣的懸浮輕盈感 */
-  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.08), 0 4px 14px rgba(0, 0, 0, 0.02);
+  border-radius: 24px;
+  /* 柔和的淺色微陰影 */
+  box-shadow: 0 12px 32px rgba(153, 216, 202, 0.12), 0 4px 12px rgba(0, 0, 0, 0.02);
   display: flex;
   flex-direction: column;
   z-index: 999;
   overflow: hidden;
-  border: 1px solid rgba(218, 214, 208, 0.5); /* 帶有暖色調的極細邊框 */
+  border: 1px solid rgba(153, 216, 202, 0.3); /* 帶有極淡粉綠色的外框 */
 }
 
-/* 標頭：對照 Menu 膠囊的深炭灰霧面漸層，呈現高階科技感 */
+/* 標頭：對照圖片風格，改為溫柔的文青粉綠色漸層 */
 .chat-header {
-  background: linear-gradient(135deg, #3a3a3c, #1c1c1e);
-  color: #f5f5f7;
-  padding: 18px 20px;
+  background: linear-gradient(135deg, #6ec9b3, #54b59e);
+  color: white;
+  padding: 16px 20px;
   font-weight: 500;
   font-size: 15px;
-  letter-spacing: 0.6px;
+  letter-spacing: 0.5px;
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
 
 .close-btn {
-  background: rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.18);
   border: none;
-  color: #e8e8ed;
+  color: white;
   font-size: 11px;
   width: 22px;
   height: 22px;
@@ -68,39 +67,70 @@
 }
 
 .close-btn:hover {
-  background: rgba(255, 255, 255, 0.25);
-  color: #ffffff;
+  background: rgba(255, 255, 255, 0.3);
 }
 
 /* 對話紀錄區塊 */
 .chat-messages {
   flex: 1;
   overflow-y: auto;
-  padding: 22px 16px;
+  padding: 16px;
   display: flex;
   flex-direction: column;
-  gap: 14px;
-  background: #faf9f6; /* 💡 完美融合：與主頁背景底色相同的暖洋洋灰白色 */
+  gap: 16px;
+  background: #f4faf7; /* 💡 核心：完美複製圖片中那層非常療癒、淡淡的粉綠色底面 */
+}
+
+/* 💡 新增：圖片左上角客製化的日期膠囊標籤樣式 */
+.chat-date-tag {
+  display: flex;
+  margin-bottom: 4px;
+}
+.chat-date-tag span {
+  background: #87d1c0; /* 稍微深一點的薄荷綠 */
+  color: white;
+  font-size: 11px;
+  padding: 3px 10px 4px 10px;
+  border-radius: 0 0 10px 0; /* 模擬圖片左上角的延伸感 */
+  font-weight: 500;
+  letter-spacing: 0.5px;
+}
+
+/* 💡 新增：頭像的基本樣式 */
+.avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: #ffffff;
+  border: 1px solid #e2f2ed;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  box-shadow: 0 2px 6px rgba(153, 216, 202, 0.1);
+  flex-shrink: 0;
 }
 
 /* 隱形現代滾動條 */
 .chat-messages::-webkit-scrollbar,
 .chat-input textarea::-webkit-scrollbar {
-  width: 5px;
+  width: 4px;
 }
 .chat-messages::-webkit-scrollbar-thumb,
 .chat-input textarea::-webkit-scrollbar-thumb {
-  background: #d1cbdc;
+  background: #cbdcd5;
   border-radius: 10px;
 }
 
 .message {
   display: flex;
-  animation: fadeInMessage 0.35s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+  align-items: flex-start; /* 讓頭像跟對話框頂部對齊 */
+  gap: 10px;               /* 頭像與對話框之間的精緻間距 */
+  animation: fadeInMessage 0.3s cubic-bezier(0.25, 1, 0.5, 1) forwards;
 }
 
 @keyframes fadeInMessage {
-  from { opacity: 0; transform: translateY(10px); }
+  from { opacity: 0; transform: translateY(6px); }
   to { opacity: 1; transform: translateY(0); }
 }
 
@@ -112,30 +142,32 @@
   justify-content: flex-start;
 }
 
-/* 訊息氣泡優化 */
+/* 訊息氣泡基礎設定 */
 .bubble {
-  max-width: 78%;
-  padding: 12px 16px;
+  max-width: 70%;
   font-size: 14px;
   line-height: 1.6;
   white-space: pre-wrap;
   word-break: break-word;
 }
 
-/* 使用者氣泡：改為與 Menu 選單一致的高級深色系 */
+/* 💡 完美複製：使用者氣泡（右側純白底色 + 細緻粉綠色邊框） */
 .message.user .bubble {
-  background: linear-gradient(135deg, #48484a, #1c1c1e);
-  color: #ffffff;
-  border-radius: 20px 20px 4px 20px;
-  box-shadow: 0 4px 12px rgba(28, 28, 30, 0.12);
+  background: #ffffff;
+  border: 1.5px solid #bce4d6; /* 💡 圖片中標誌性的粉綠色細外框 */
+  color: #2c3e35;              /* 深森林色文字，極具文青感 */
+  padding: 10px 14px;
+  border-radius: 16px 4px 16px 16px; /* 不對稱圓角 */
+  box-shadow: 0 3px 10px rgba(153, 216, 202, 0.06);
 }
 
-/* 機器人氣泡：採用主頁植物陰影下的「柔和暖灰色」，極具奢華雜誌感 */
+/* 💡 完美複製：AI 助理氣泡（左側無背景、無邊框，直接輕飄在綠底上） */
 .message.assistant .bubble {
-  background: #f2efeb; /* 💡 對照主頁暖灰底色 */
-  color: #2c2c2e;      /* 深炭灰文字，閱讀極為舒適 */
-  border-radius: 20px 20px 20px 4px;
-  border: 1px solid rgba(230, 225, 218, 0.7);
+  background: transparent; /* 💡 拿掉背景框 */
+  border: none;
+  box-shadow: none;
+  color: #2c3e35;
+  padding: 8px 4px; /* 貼合頭像的無框自然排版 */
 }
 
 /* 底部輸入區塊 */
@@ -145,38 +177,38 @@
   gap: 10px;
   padding: 14px 16px;
   background: #ffffff;
-  border-top: 1px solid #f2efeb;
+  border-top: 1px solid #eef7f4;
 }
 
 .chat-input textarea {
   flex: 1;
   resize: none;
-  border: 1px solid #e5e1da;
+  border: 1px solid #dbeee7;
   border-radius: 14px;
   padding: 11px 14px;
   font-size: 14px;
   font-family: inherit;
   outline: none;
   max-height: 80px;
-  background: #fcfbfa;
-  color: #1c1c1e;
+  background: #f7fbf9;
+  color: #2c3e35;
   transition: all 0.2s ease;
   overflow-y: auto;
 }
 
-/* 輸入框聚焦時：散發優雅的淡灰色微光，絕不突兀 */
+/* 輸入框聚焦時 */
 .chat-input textarea:focus {
-  border-color: #8e8e93;
+  border-color: #6ec9b3;
   background: #ffffff;
-  box-shadow: 0 0 0 3px rgba(142, 142, 147, 0.1);
+  box-shadow: 0 0 0 3px rgba(110, 201, 179, 0.12);
 }
 
-/* 發送按鈕：同樣對照主頁膠囊選單的霧面深炭灰 */
+/* 發送按鈕：同樣呼應文青粉綠色 */
 .chat-input button {
   width: 38px;
   height: 38px;
   border-radius: 50%;
-  background: linear-gradient(135deg, #3a3a3c, #1c1c1e);
+  background: linear-gradient(135deg, #6ec9b3, #4ca68f);
   color: #ffffff;
   border: none;
   cursor: pointer;
@@ -186,17 +218,17 @@
   align-items: center;
   flex-shrink: 0;
   transition: all 0.25s ease;
-  box-shadow: 0 3px 8px rgba(28, 28, 30, 0.15);
+  box-shadow: 0 3px 8px rgba(76, 166, 143, 0.15);
 }
 
 .chat-input button:hover:not(:disabled) {
   transform: scale(1.06);
-  box-shadow: 0 5px 14px rgba(28, 28, 30, 0.25);
+  box-shadow: 0 5px 14px rgba(76, 166, 143, 0.25);
 }
 
 .chat-input button:disabled {
-  background: #f2efeb;
-  color: #c7c7cc;
+  background: #eef7f4;
+  color: #b3cbd2;
   box-shadow: none;
   cursor: not-allowed;
 }

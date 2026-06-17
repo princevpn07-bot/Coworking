@@ -2,14 +2,16 @@ import { Component, ViewChild, ElementRef, AfterViewChecked, signal,effect } fro
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AiService, AIAction, ChatMessage } from '../../services/ai';
-import { LottieComponent, AnimationOptions } from 'ngx-lottie'; 
+
+import { LottieComponent, AnimationOptions } from 'ngx-lottie'
+
 
 @Component({
   selector: 'app-chat-widget',
   standalone: true,
   imports: [FormsModule, LottieComponent],
   templateUrl: './chat-widget.html',
-  styleUrl: './chat-widget.css'
+  styleUrl: './chat-widget.css',
 })
 export class ChatWidget implements AfterViewChecked {
   @ViewChild('messageContainer') messageContainer!: ElementRef;
@@ -46,12 +48,12 @@ catOptions: AnimationOptions = {
   onAnimationCreated(animationItem: any) {
     this.animationItem = animationItem;
     // 💡 2. 初始化成功後，預設進入待機狀態：速度放慢、只循環第 40~70 影格的眨眼動態
-  
+
   }
   // 💡 滑鼠移入：變超快
  onHover() {
     if (this.animationItem && !this.isLoading() && !this.isTyping()) {
-    this.animationItem.setSpeed(1.0); 
+    this.animationItem.setSpeed(1.0);
       this.animationItem.playSegments([0, 85], true);
     }
   }
@@ -60,7 +62,7 @@ catOptions: AnimationOptions = {
   onLeave() {
     if (this.animationItem && !this.isLoading() && !this.isTyping()) {
       // 寫法一（推薦，最乾淨）：直接讓貓咪回到第 0 影格（最乖的預設姿勢）並靜止
-      this.animationItem.setSpeed(0.3); 
+      this.animationItem.setSpeed(0.3);
       this.animationItem.playSegments([40, 70], true);
     }
   }
@@ -71,15 +73,15 @@ catOptions: AnimationOptions = {
     effect(() => {
       const loading = this.isLoading();
       const typing = this.isTyping();
-      
+
       if (this.animationItem) {
         if (loading || typing) {
           // 無論是 AI 還在動腦，還是正在輸出答案，貓咪都呈現忙碌狀態（2.0倍速，播全套手舞足蹈）
-          this.animationItem.setSpeed(2.0); 
-          this.animationItem.playSegments([0, 85], true); 
+          this.animationItem.setSpeed(2.0);
+          this.animationItem.playSegments([0, 85], true);
         } else {
           // 當不思考也不打字時，秒切回極簡溫潤的待機眨眼
-          this.animationItem.setSpeed(0.6); 
+          this.animationItem.setSpeed(0.6);
           this.animationItem.playSegments([40, 70], true);
       }
       }
@@ -99,11 +101,11 @@ catOptions: AnimationOptions = {
 // 💡 全新外掛的打字機絲滑吐字函式（100% 安全，完全不破壞既有架構）
   typewriteMessage(fullText: string, onComplete?: () => void) {
     this.isTyping.set(true);
-    
+
     // 先在陣列結尾塞入一個「初始為空字串」的助理對話泡泡
     this.messages.push({ role: 'assistant', content: '' });
     const targetIndex = this.messages.length - 1;
-    
+
     let charIndex = 0;
     const timer = setInterval(() => {
       if (charIndex < fullText.length) {
@@ -114,7 +116,7 @@ catOptions: AnimationOptions = {
         // 字元全部吐完，清除定時器
         clearInterval(timer);
         this.isTyping.set(false); // 變更訊號，自動將貓咪切回待機眨眼
-        
+
         // 執行吐字完成後的後續動作 (如：空間過濾的路由跳轉)
         if (onComplete) onComplete();
       }

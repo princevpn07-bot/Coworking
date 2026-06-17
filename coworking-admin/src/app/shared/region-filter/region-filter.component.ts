@@ -31,7 +31,7 @@ export class RegionFilterComponent {
     const targetElement = container.nativeElement ? container.nativeElement : container;
 
     // 每次點擊滑動該容器「可視寬度」的 75%，留一點點邊緣讓使用者有視覺連續感
-    const scrollAmount = targetElement.clientWidth * 0.75; 
+    const scrollAmount = targetElement.clientWidth * 0.75;
 
     // 使用標準且平滑的 scrollBy 動態位移
     targetElement.scrollBy({
@@ -58,41 +58,41 @@ export class RegionFilterComponent {
   taiwanRegionData: { [key: string]: any } = {
     '北部': {
       cities: [
-        { id: 'tw-tp', name: '台北市', imgUrl: 'assets/taipei.png', alt: '台北市景' },
-        { id: 'tw-ntpc', name: '新北市', imgUrl: 'assets/new_taipei.png', alt: '新北市景' },
-        { id: 'tw-keelung', name: '基隆市', imgUrl: 'assets/keelung.png', alt: '基隆市景' },
-        { id: 'tw-ty', name: '桃園市', imgUrl: 'assets/taoyuan.png', alt: '桃園市景' }
+        { id: 'tw-tp', name: '台北市', imgUrl: 'assets/area/taipei.png', alt: '台北市景' },
+        { id: 'tw-ntpc', name: '新北市', imgUrl: 'assets/area/new_taipei.png', alt: '新北市景' },
+        { id: 'tw-keelung', name: '基隆市', imgUrl: 'assets/area/keelung.png', alt: '基隆市景' },
+        { id: 'tw-ty', name: '桃園市', imgUrl: 'assets/area/taoyuan.png', alt: '桃園市景' }
       ],
       cityDetails: {
         'tw-tp': {
-          districts: ['中正區', '大同區', '中山區', '松山區', 
-            '大安區', '萬華區', '信義區', '士林區', 
+          districts: ['中正區', '大同區', '中山區', '松山區',
+            '大安區', '萬華區', '信義區', '士林區',
             '北投區', '內湖區', '南港區', '文山區'],
           mrtLines: [
-            { 
-              id: 'line-br', 
-              name: 'BR 文湖線', 
-              stations: ['南港展覽館', '內湖', '大直', '南京復興', '忠孝復興', '大安', '六張犁', '科技大樓', '萬芳醫院', '動物園'] 
+            {
+              id: 'line-br',
+              name: 'BR 文湖線',
+              stations: ['南港展覽館', '內湖', '大直', '南京復興', '忠孝復興', '大安', '六張犁', '科技大樓', '萬芳醫院', '動物園']
             },
-            { 
-              id: 'line-r', 
-              name: 'R 淡水信義線', 
-              stations: ['淡水', '北投', '士林', '圓山', '雙連', '中山', '台北車站', '東門', '大安', '信義安和', '台北101/世貿', '象山'] 
+            {
+              id: 'line-r',
+              name: 'R 淡水信義線',
+              stations: ['淡水', '北投', '士林', '圓山', '雙連', '中山', '台北車站', '東門', '大安', '信義安和', '台北101/世貿', '象山']
             },
-            { 
-              id: 'line-g', 
-              name: 'G 松山新店線', 
-              stations: ['松山', '南京三民', '南京復興', '松江南京', '中山', '西門', '中正紀念堂', '古亭', '公館', '大坪林', '新店'] 
+            {
+              id: 'line-g',
+              name: 'G 松山新店線',
+              stations: ['松山', '南京三民', '南京復興', '松江南京', '中山', '西門', '中正紀念堂', '古亭', '公館', '大坪林', '新店']
             },
-            { 
-              id: 'line-o', 
-              name: 'O 中和新蘆線', 
-              stations: ['蘆洲', '迴龍', '三重', '大橋頭', '民權西路', '松江南京', '忠孝新生', '東門', '古亭', '頂溪', '景安', '南勢角'] 
+            {
+              id: 'line-o',
+              name: 'O 中和新蘆線',
+              stations: ['蘆洲', '迴龍', '三重', '大橋頭', '民權西路', '松江南京', '忠孝新生', '東門', '古亭', '頂溪', '景安', '南勢角']
             },
-            { 
-              id: 'line-bl', 
-              name: 'BL 板南線', 
-              stations: ['南港展覽館', '南港', '昆陽', '市政府', '國父紀念館', '忠孝敦化', '忠孝復興', '忠孝新生', '台北車站', '西門', '龍山寺', '板橋', '府中', '頂埔'] 
+            {
+              id: 'line-bl',
+              name: 'BL 板南線',
+              stations: ['南港展覽館', '南港', '昆陽', '市政府', '國父紀念館', '忠孝敦化', '忠孝復興', '忠孝新生', '台北車站', '西門', '龍山寺', '板橋', '府中', '頂埔']
             }
           ]
         },
@@ -104,24 +104,24 @@ export class RegionFilterComponent {
     },
     '中部': {
       cities: [
-        { id: 'tw-tc', name: '台中市', imgUrl: 'assets/taichung.png', alt: '台中市景' },
-        { id: 'tw-ch', name: '彰化縣', imgUrl: 'assets/changhua.png', alt: '彰化縣景' },
-        { id: 'tw-nt', name: '南投縣', imgUrl: 'assets/nantou.png', alt: '南投縣景' },
-        { id: 'tw-ml', name: '苗栗縣', imgUrl: 'assets/miaoli.png', alt: '苗栗縣景' },
-        { id: 'tw-yl', name: '雲林縣', imgUrl: 'assets/yunlin.png', alt: '雲林縣景' }
+        { id: 'tw-tc', name: '台中市', imgUrl: 'assets/area/taichung.png', alt: '台中市景' },
+        { id: 'tw-ch', name: '彰化縣', imgUrl: 'assets/area/changhua.png', alt: '彰化縣景' },
+        { id: 'tw-nt', name: '南投縣', imgUrl: 'assets/area/nantou.png', alt: '南投縣景' },
+        { id: 'tw-ml', name: '苗栗縣', imgUrl: 'assets/area/miaoli.png', alt: '苗栗縣景' },
+        { id: 'tw-yl', name: '雲林縣', imgUrl: 'assets/area/yunlin.png', alt: '雲林縣景' }
       ],
       cityDetails: {
         'tw-tc': {
           districts: [
-            '西屯區', '南屯區', '北屯區', '西區', 
-            '北區', '中區', '東區', '南區', 
+            '西屯區', '南屯區', '北屯區', '西區',
+            '北區', '中區', '東區', '南區',
             '豐原區', '大里區', '太平區', '烏日區'
           ],
           mrtLines: [
-            { 
-              id: 'line-tc-green', 
-              name: '台中綠線', 
-              stations: ['北屯總站', '松竹', '文心崇德', '文華高中', '市政府', '水安宮', '文心森林公園', '豐樂公園', '大慶', '高鐵台中站'] 
+            {
+              id: 'line-tc-green',
+              name: '台中綠線',
+              stations: ['北屯總站', '松竹', '文心崇德', '文華高中', '市政府', '水安宮', '文心森林公園', '豐樂公園', '大慶', '高鐵台中站']
             }
           ]
         },
@@ -145,29 +145,29 @@ export class RegionFilterComponent {
     },
     '南部': {
       cities: [
-        { id: 'tw-kh', name: '高雄市', imgUrl: 'assets/kaohsiung.png', alt: '高雄市景' },
-        { id: 'tw-tn', name: '台南市', imgUrl: 'assets/tainan.png', alt: '台南市景' },
-        { id: 'tw-cyi', name: '嘉義市', imgUrl: 'assets/chiayi_city.png', alt: '嘉義市景' },
-        { id: 'tw-cyh', name: '嘉義縣', imgUrl: 'assets/chiayi_county.png', alt: '嘉義縣景' },
-        { id: 'tw-pt', name: '屏東縣', imgUrl: 'assets/pingtung.png', alt: '屏東縣景' }
+        { id: 'tw-kh', name: '高雄市', imgUrl: 'assets/area/kaohsiung.png', alt: '高雄市景' },
+        { id: 'tw-tn', name: '台南市', imgUrl: 'assets/area/tainan.png', alt: '台南市景' },
+        { id: 'tw-cyi', name: '嘉義市', imgUrl: 'assets/area/chiayi_city.png', alt: '嘉義市景' },
+        { id: 'tw-cyh', name: '嘉義縣', imgUrl: 'assets/area/chiayi_county.png', alt: '嘉義縣景' },
+        { id: 'tw-pt', name: '屏東縣', imgUrl: 'assets/area/pingtung.png', alt: '屏東縣景' }
       ],
       cityDetails: {
         'tw-kh': {
           districts: [
-            '左營區', '鼓山區', '三民區', '新興區', 
-            '前金區', '苓雅區', '前鎮區', '小港區', 
+            '左營區', '鼓山區', '三民區', '新興區',
+            '前金區', '苓雅區', '前鎮區', '小港區',
             '鳳山區', '楠梓區', '仁武區', '鳥松區'
           ],
           mrtLines: [
-            { 
-              id: 'line-kh-r', 
-              name: 'R 高雄紅線', 
-              stations: ['岡山車站', '楠梓科技園區', '左營/高鐵', '生態園區', '巨蛋', '後驛', '高雄車站', '美麗島', '中央公園', '三多商圈', '前鎮高中', '草衙', '小港'] 
+            {
+              id: 'line-kh-r',
+              name: 'R 高雄紅線',
+              stations: ['岡山車站', '楠梓科技園區', '左營/高鐵', '生態園區', '巨蛋', '後驛', '高雄車站', '美麗島', '中央公園', '三多商圈', '前鎮高中', '草衙', '小港']
             },
-            { 
-              id: 'line-kh-o', 
-              name: 'O 高雄橘線', 
-              stations: ['哈瑪星', '鹽埕埔', '市議會', '美麗島', '信義國小', '文化中心', '五塊厝', '技擊館', '衛武營', '鳳山', '大寮'] 
+            {
+              id: 'line-kh-o',
+              name: 'O 高雄橘線',
+              stations: ['哈瑪星', '鹽埕埔', '市議會', '美麗島', '信義國小', '文化中心', '五塊厝', '技擊館', '衛武營', '鳳山', '大寮']
             }
           ]
         },
@@ -191,12 +191,12 @@ export class RegionFilterComponent {
     },
     '東部與離島': {
       cities: [
-        { id: 'tw-il', name: '宜蘭縣', imgUrl: 'assets/yilan.png', alt: '宜蘭縣景' },
-        { id: 'tw-hl', name: '花蓮縣', imgUrl: 'assets/hualien.png', alt: '花蓮縣景' },
-        { id: 'tw-tt', name: '台東縣', imgUrl: 'assets/taitung.png', alt: '台東縣景' },
-        { id: 'tw-ph', name: '澎湖縣', imgUrl: 'assets/penghu.png', alt: '澎湖縣景' },
-        { id: 'tw-km', name: '金門縣', imgUrl: 'assets/kinmen.png', alt: '金門縣景' },
-        { id: 'tw-lc', name: '連江縣', imgUrl: 'assets/matsu.png', alt: '連江馬祖縣景' }
+        { id: 'tw-il', name: '宜蘭縣', imgUrl: 'assets/area/yilan.png', alt: '宜蘭縣景' },
+        { id: 'tw-hl', name: '花蓮縣', imgUrl: 'assets/area/hualien.png', alt: '花蓮縣景' },
+        { id: 'tw-tt', name: '台東縣', imgUrl: 'assets/area/taitung.png', alt: '台東縣景' },
+        { id: 'tw-ph', name: '澎湖縣', imgUrl: 'assets/area/penghu.png', alt: '澎湖縣景' },
+        { id: 'tw-km', name: '金門縣', imgUrl: 'assets/area/kinmen.png', alt: '金門縣景' },
+        { id: 'tw-lc', name: '連江縣', imgUrl: 'assets/area/matsu.png', alt: '連江馬祖縣景' }
       ],
       cityDetails: {
         'tw-il': {
@@ -230,12 +230,12 @@ export class RegionFilterComponent {
   // ==========================================
   // 2. 狀態控制變數
   // ==========================================
-  selectedRegion: string = '北部';       
-  selectedCityId: string = 'tw-tp';     
-  activeMrtLineId: string = 'line-br';   
+  selectedRegion: string = '北部';
+  selectedCityId: string = 'tw-tp';
+  activeMrtLineId: string = 'line-br';
 
-  selectedDistricts: string[] = [];      
-  selectedStations: string[] = [];       
+  selectedDistricts: string[] = [];
+  selectedStations: string[] = [];
 
   // ==========================================
   // 3. Getter 輔助器
@@ -271,7 +271,7 @@ export class RegionFilterComponent {
       this.clearSubSelection();
     }
   }
-  
+
   /**
  * 🌟 新增：重置行政區與捷運容器滾動條的核心防呆方法
  */
@@ -291,7 +291,7 @@ private resetScrollPositions(): void {
     this.selectedCityId = cityId;
     this.selectedDistricts = [];
     this.selectedStations = [];
-    
+
     // 💡 體驗大升級：換縣市時，把下方的行政區跟捷運捲軸拉回最左邊
   this.resetAllScrolls({ resetRegion: false, resetSub: true });
     const lines = this.currentCityDetails?.mrtLines || [];
@@ -318,7 +318,7 @@ private resetAllScrolls(options: { resetRegion: boolean; resetSub: boolean }): v
     if (options.resetSub) {
       const districtEl = document.getElementById('districtScrollContainer');
       const mrtEl = document.getElementById('mrtScrollContainer');
-      
+
       if (districtEl) districtEl.scrollLeft = 0;
       if (mrtEl) mrtEl.scrollLeft = 0;
     }
