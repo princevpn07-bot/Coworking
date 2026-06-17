@@ -114,7 +114,10 @@
       </p>
 
       <div class="card-grid" *ngIf="spaces && spaces.length > 0; else noDataBlock">
-        <article class="card" [id]="'space-card-' + space.id" [class.card--active]="selectedSpaceId === space.id" *ngFor="let space of spaces" (click)="goToSpaceDetail(space.id)" style="cursor: pointer;">
+        <article class="card" [id]="'space-card-' + space.id" [class.card--active]="selectedSpaceId === space.id" 
+        *ngFor="let space of spaces;let i = index" 
+          [style.--card-idx]="i"
+           (click)="goToSpaceDetail(space.id)" style="cursor: pointer;">
           <div class="card__image-wrapper">
             <img [src]="space?.img" [alt]="space?.name" />
             <span class="card__badge">{{ space?.capacity }}</span>

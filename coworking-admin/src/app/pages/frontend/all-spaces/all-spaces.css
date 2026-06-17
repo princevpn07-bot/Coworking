@@ -253,11 +253,30 @@
   display: flex;
   flex-direction: column;
   gap: 0.75rem;
-
   padding: 12px;
-  border-radius: 12px;
-}
+  border-radius: 16px; /* 增加大圓角提升高階精緻感 */
+  background-color: #ffffff;
+  border: 1px solid rgba(0, 0, 0, 0.03);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.02);
 
+  /* 💡 預設隱藏，啟用彈跳瀑布流進場動畫 */
+  opacity: 0;
+  animation: bounceInUp 0.65s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+  animation-delay: calc(var(--card-idx) * 0.05s);
+
+  /* 💡 高奢彈力曲線轉場：讓滑鼠 hover 抬升時帶有細微的 Q 彈物理感 */
+  transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275),
+              box-shadow 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275),
+              background-color 0.3s ease;
+}
+/* 滑鼠懸停（Hover）：完美展現 3D 彈性抬升效果 */
+.card:hover {
+  transform: translateY(-10px) scale(1.015); /* 微調向上拉伸 10px 並放大 */
+  box-shadow: 
+    0 20px 38px rgba(61, 48, 40, 0.08), 
+    0 6px 14px rgba(61, 48, 40, 0.03);
+  background-color: #fdfcfb; /* 懸停時帶點極淡的極簡溫暖色 */
+}
 .card__image-wrapper {
   position: relative;
   aspect-ratio: 4/3;
@@ -315,10 +334,13 @@
 }
 
 .card__fav {
-  color: #7e766d;
   background: none;
   border: none;
   cursor: pointer;
+  padding: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   transition: color 0.3s ease;
 }
 
@@ -329,6 +351,8 @@
 .card__fav .material-symbols-outlined {
   color: #7e766d;
   display: block;
+  /* 💡 讓愛心放大縮小轉場更滑順 */
+  transition: transform 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
   font-variation-settings:
     'FILL' 0,
     'wght' 400,
@@ -338,7 +362,6 @@
 
 .card__fav .material-symbols-outlined.filled {
   color: #d32f2f;
-
   font-variation-settings:
     'FILL' 1,
     'wght' 500,
@@ -346,15 +369,23 @@
     'opsz' 24;
 }
 
+/* 💡 當滑鼠移到愛心上方時，觸發與收藏頁一模一樣的心跳動畫 */
+.card__fav:hover .material-symbols-outlined {
+  animation: heartBeat 0.8s ease infinite;
+}
+
+/* 💡 當滑鼠點擊下去的瞬間，產生物理結構按壓回饋 */
+.card__fav:active .material-symbols-outlined {
+  transform: scale(0.85);
+}
+/* 地圖選中時的激活動態 */
 .card--active {
-  transform: translateY(-3px);
-
-  border-radius: 12px;
+  transform: translateY(-6px) scale(1.015);
+  border-radius: 16px;
   box-shadow:
-    0 4px 12px rgba(216, 187, 162, .25),
-    0 12px 32px rgba(216, 187, 162, .20);
-
-  transition: all .25s ease;
+    0 4px 14px rgba(216, 187, 162, .3),
+    0 16px 36px rgba(216, 187, 162, .25);
+  transition: all .3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
 .card--active .card__image-wrapper img {
@@ -653,4 +684,28 @@
     border-bottom: 1px solid #cfc5bb;
   }
 
+}
+/* 1. 物理 Q 彈進場動畫（帶輕微回彈） */
+@keyframes bounceInUp {
+  0% {
+    opacity: 0;
+    transform: translateY(45px) scale(0.96);
+  }
+  65% {
+    transform: translateY(-5px) scale(1.01); /* 衝過頭產生回彈 */
+  }
+  85% {
+    transform: translateY(2px) scale(0.995);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+@keyframes heartBeat {
+  0% { transform: scale(1); }
+  25% { transform: scale(1.18); } /* 稍微加強一點振幅，讓沒有底襯的裸圖心跳更明顯 */
+  40% { transform: scale(1); }
+  60% { transform: scale(1.12); }
+  100% { transform: scale(1); }
 }
