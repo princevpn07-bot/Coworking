@@ -17,6 +17,20 @@ namespace CoworkingAPI.Controllers
             _context = context;
         }
 
+        [HttpGet("{spaceId}/BookedSlots")]
+        public async Task<IActionResult> GetBookedSlots(int spaceId)
+        {
+            var now = DateTime.Now;
+            var slots = await _context.Bookings
+                .Where(b => b.status != 2 &&
+                            b.end_date > now &&
+                            _context.Rents.Any(r => r.rent_id == b.rent_id && r.space_id == spaceId))
+                .Select(b => new { startDate = b.start_date, endDate = b.end_date })
+                .OrderBy(b => b.startDate)
+                .ToListAsync();
+            return Ok(slots);
+        }
+
         [HttpGet("{spaceId}")]
         public async Task<IActionResult> GetSpaceDetail(int spaceId)
         {

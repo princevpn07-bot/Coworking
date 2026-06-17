@@ -40,7 +40,7 @@ namespace CoworkingAPI.Controllers
                     query = query.Where(s => !_context.Bookings.Any(b =>
                         // 💡 透過 Rents 表，把 Booking 訂單與目前這個 Space 串起來
                         _context.Rents.Any(r => r.rent_id == b.rent_id && r.space_id == s.space_id) &&
-                        b.status != 9 &&             // 排除已取消的訂單 (假設 9 是已取消)
+                        b.status != 2 &&             // 排除已取消的訂單 (status 2 = 已取消)
                         b.start_date < searchEnd &&  // 關鍵衝突判定：合約開始時間小於搜尋結束時間
                         b.end_date > searchStart     // 關鍵衝突判定：合約結束時間大於搜尋開始時間
                     ));
@@ -53,7 +53,8 @@ namespace CoworkingAPI.Controllers
                     query = query.Where(s =>
                         (s.space_number != null && s.space_number.ToLower().Contains(keyword)) ||
                         (s.Location != null && s.Location.city != null && s.Location.city.ToLower().Contains(keyword)) ||
-                        (s.Location != null && s.Location.mrt_info != null && s.Location.mrt_info.ToLower().Contains(keyword))
+                        (s.Location != null && s.Location.mrt_info != null && s.Location.mrt_info.ToLower().Contains(keyword)) ||
+                        (s.introduction != null && s.introduction.ToLower().Contains(keyword))
                     );
                 }
 
@@ -72,6 +73,7 @@ namespace CoworkingAPI.Controllers
                         space_number = s.space_number ?? "",
                         capacity = s.capacity ?? 0,
                         status = s.status ?? 0,
+                        introduction = s.introduction,
                         // 💡 用標準子查詢從 _context.rents 裡面撈出符合當前 space_id 且啟動中的價格
                         price = _context.Rents
                         .Where(r => r.space_id == s.space_id && r.is_active == true)

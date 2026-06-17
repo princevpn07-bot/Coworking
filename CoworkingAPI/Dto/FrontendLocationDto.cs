@@ -19,6 +19,8 @@
         public decimal? latitude { get; set; }
         public string mrt_info { get; set; } // 🌟 最關鍵的真捷運欄位
 
+        public string? introduction { get; set; }
+
         public string? image_path { get; set; }
 
         public decimal price { get; set; }

@@ -120,8 +120,102 @@
             </div>
           </div>
         </div>
+
+        <!-- 時段選擇 -->
+        <div class="booking-date-section">
+          <h4 class="booking-date-title">選擇時段</h4>
+
+          @if (dateMode === 'hour') {
+            <div class="booking-date-fields">
+              <div class="booking-date-field">
+                <label>日期</label>
+                <input type="date" class="booking-input" [min]="today" (change)="onStartDateChange($event)" />
+              </div>
+              <div class="booking-date-field-row">
+                <div class="booking-date-field">
+                  <label>開始</label>
+                  <select class="booking-input" [(ngModel)]="startHour" (ngModelChange)="onStartHourChange()">
+                    <option value="" disabled>選擇</option>
+                    @for (hour of hourOptions; track hour) {
+                      <option [value]="hour">{{ hour | hourLabel }}</option>
+                    }
+                  </select>
+                </div>
+                <span class="date-sep">～</span>
+                <div class="booking-date-field">
+                  <label>結束</label>
+                  <select class="booking-input" [(ngModel)]="endHour" (ngModelChange)="onEndHourChange()">
+                    <option value="" disabled>選擇</option>
+                    @for (hour of hourOptions; track hour) {
+                      <option [value]="hour">{{ hour | hourLabel }}</option>
+                    }
+                  </select>
+                </div>
+              </div>
+            </div>
+          }
+
+          @if (dateMode === 'day') {
+            <div class="booking-date-fields">
+              <div class="booking-date-field">
+                <label>開始日期</label>
+                <input type="date" class="booking-input" [min]="today" (change)="onStartDateChange($event)" />
+              </div>
+              <div class="booking-date-field">
+                <label>結束日期</label>
+                <input type="date" class="booking-input" [min]="startDate || today" (change)="onEndDateChange($event)" />
+              </div>
+            </div>
+          }
+
+          @if (dateMode === 'month') {
+            <div class="booking-date-fields">
+              <div class="booking-date-field">
+                <label>開始月份</label>
+                <input type="month" class="booking-input" [min]="curMonth" (change)="onStartDateChange($event)" />
+              </div>
+              <div class="booking-date-field">
+                <label>結束月份</label>
+                <input type="month" class="booking-input" [min]="startDate || curMonth" (change)="onEndDateChange($event)" />
+              </div>
+            </div>
+          }
+
+          @if (hasConflict) {
+            <div class="booking-conflict-warning">
+              <span class="material-symbols-outlined">warning</span>
+              此時段已被預訂，請選擇其他時間
+            </div>
+          }
+
+          @if (diff > 0 && !hasConflict) {
+            <div class="booking-price-preview">
+              <span>小計</span>
+              <span>NT$ {{ totalPrice | number }}</span>
+            </div>
+          }
+
+          @if (bookedSlots.length > 0) {
+            <details class="booked-slots-details">
+              <summary>已預訂時段 ({{ bookedSlots.length }})</summary>
+              <div class="booked-slots-list">
+                @for (slot of bookedSlots; track slot.startDate) {
+                  <div class="booked-slot-item">
+                    <span class="material-symbols-outlined">event_busy</span>
+                    <span>{{ slot.startDate | date:'MM/dd HH:mm' }} ~ {{ slot.endDate | date:'MM/dd HH:mm' }}</span>
+                  </div>
+                }
+              </div>
+            </details>
+          }
+        </div>
+
         <div class="actions">
-          <button class="btn-book" (click)="goBooking()">立即預約</button>
+          <button class="btn-book"
+                  [class.btn-book--disabled]="!computedStartDate || !computedEndDate || hasConflict"
+                  (click)="goBooking()">
+            立即預約
+          </button>
           <div *ngIf="space as s" class="btn-fav" [class.active]="favoriteService.isFavorite(s.spaceId)"
             (click)="toggleFavorite(s.spaceId, $event)">
             <span class="material-symbols-outlined favorite-icon"

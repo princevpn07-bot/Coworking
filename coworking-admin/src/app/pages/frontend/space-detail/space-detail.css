@@ -318,6 +318,140 @@
   font-size: 15px;
 }
 
+/* ── 時段選擇區塊 ── */
+.booking-date-section {
+  border-top: 1px solid #eadfd6;
+  padding-top: 20px;
+  margin-bottom: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.booking-date-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: #4c463e;
+  margin: 0;
+}
+
+.booking-date-fields {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.booking-date-field-row {
+  display: flex;
+  align-items: flex-end;
+  gap: 8px;
+}
+
+.booking-date-field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  flex: 1;
+}
+
+.booking-date-field label {
+  font-size: 12px;
+  color: #7a7268;
+  font-weight: 500;
+}
+
+.booking-input {
+  width: 100%;
+  padding: 8px 10px;
+  border: 1px solid #d6cec7;
+  border-radius: 8px;
+  font-size: 13px;
+  font-family: inherit;
+  background: #fff;
+  color: #1d1b1a;
+  outline: none;
+  transition: border-color 0.2s ease;
+}
+
+.booking-input:focus {
+  border-color: #695c4e;
+}
+
+.date-sep {
+  font-size: 14px;
+  color: #7a7268;
+  padding-bottom: 8px;
+  flex-shrink: 0;
+}
+
+.booking-conflict-warning {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 12px;
+  background: #fff0f0;
+  border: 1px solid #f5c6c6;
+  border-radius: 8px;
+  color: #c0392b;
+  font-size: 13px;
+}
+
+.booking-conflict-warning .material-symbols-outlined {
+  font-size: 16px;
+}
+
+.booking-price-preview {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 14px;
+  background: #f0ebe5;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #4c463e;
+}
+
+.booked-slots-details {
+  font-size: 13px;
+  color: #7a7268;
+}
+
+.booked-slots-details summary {
+  cursor: pointer;
+  padding: 4px 0;
+  user-select: none;
+}
+
+.booked-slots-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-top: 8px;
+  padding: 10px 12px;
+  background: #faf7f5;
+  border-radius: 8px;
+  border: 1px solid #eadfd6;
+}
+
+.booked-slot-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  color: #695c4e;
+}
+
+.booked-slot-item .material-symbols-outlined {
+  font-size: 14px;
+  color: #b0a090;
+}
+
+.btn-book--disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
 .hero__booking-card .actions {
   display: flex;
   gap: 16px;

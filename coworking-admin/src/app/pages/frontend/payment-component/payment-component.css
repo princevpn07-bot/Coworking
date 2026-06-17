@@ -456,6 +456,98 @@ body {
   line-height: 1.4;
 }
 
+/* ── 確認頁新增樣式 ── */
+.confirm-section {
+  margin-bottom: 48px;
+}
+.confirm-section h2 {
+  font-size: 20px;
+  font-weight: 700;
+  margin-bottom: 20px;
+}
+.confirm-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: 14px 0;
+  border-bottom: 1px solid #F1F5F9;
+  gap: 16px;
+}
+.confirm-row:last-child {
+  border-bottom: none;
+}
+.confirm-row .label {
+  font-size: 14px;
+  color: #64748B;
+  flex-shrink: 0;
+  min-width: 80px;
+}
+.confirm-row .value {
+  font-size: 14px;
+  color: #1A1A1A;
+  font-weight: 500;
+  text-align: right;
+}
+.confirm-row.total {
+  padding-top: 16px;
+  margin-top: 4px;
+}
+.confirm-row .price-highlight {
+  font-size: 20px;
+  font-weight: 700;
+  color: #534434;
+}
+
+.contact-note {
+  font-size: 13px;
+  color: #94A3B8;
+  margin-bottom: 16px;
+}
+.contact-info-card {
+  background: #F8F9FF;
+  border: 1px solid #E2E8F0;
+  border-radius: 12px;
+  padding: 20px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.contact-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.contact-row .material-symbols-outlined {
+  font-size: 20px;
+  color: #64748B;
+  flex-shrink: 0;
+}
+.contact-text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.contact-label {
+  font-size: 12px;
+  color: #94A3B8;
+}
+.contact-value {
+  font-size: 15px;
+  font-weight: 500;
+  color: #1A1A1A;
+}
+
+.sidebar .summary-card .summary-details .item-location {
+  font-size: 13px;
+  color: #94A3B8;
+  margin-bottom: 16px;
+}
+.sidebar .summary-card .summary-details .btn-confirm:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
 .data-mode-toggle {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;

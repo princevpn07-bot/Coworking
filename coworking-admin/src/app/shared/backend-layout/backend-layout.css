@@ -146,8 +146,7 @@
   margin-left: 260px;
   flex: 1;
   background-color: #FDFDFD;
-  height: 100vh;      /* 告訴他高度剛好切齊螢幕 */
-  overflow-y: auto;
+  min-height: 100vh;
   box-sizing: border-box;
 }
 

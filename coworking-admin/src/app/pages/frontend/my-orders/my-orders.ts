@@ -46,14 +46,18 @@ export class MyOrders implements OnInit {
   readonly filteredOrders = computed(() => {
     const allOrders = this.orders();
     const currentTab = this.activeTab();
-    
+    const now = new Date();
+
     return allOrders.filter(order => {
+      const isExpired = order.end_date ? new Date(order.end_date) < now : false;
+      const isCancelled = order.status === 2;
+
       if (currentTab === 'upcoming') {
-        return order.status === 0 || order.status === 1;
+        return !isCancelled && !isExpired;
       } else if (currentTab === 'completed') {
-        return order.status === 3;
+        return !isCancelled && isExpired;
       } else if (currentTab === 'cancelled') {
-        return order.status === 2;
+        return isCancelled;
       }
       return true;
     });

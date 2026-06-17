@@ -1,35 +1,42 @@
-import { Component, OnInit, inject, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, inject, ChangeDetectorRef, Pipe, PipeTransform } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { HttpClient } from '@angular/common/http';
 import { SpaceDetailService, SpaceDetailDto } from '../../../services/space-detail.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { FavoriteService } from '../../../services/favorite';
 
+@Pipe({ name: 'hourLabel', standalone: true })
+export class HourLabelPipe implements PipeTransform {
+  transform(hour: number): string {
+    return hour.toString().padStart(2, '0') + ':00';
+  }
+}
+
 @Component({
   selector: 'app-space-detail',
   standalone: true,
-  imports: [RouterLink, CommonModule],
+  imports: [RouterLink, CommonModule, FormsModule, HourLabelPipe],
   templateUrl: './space-detail.html',
   styleUrl: './space-detail.css',
-
 })
-
 export class SpaceDetail implements OnInit {
 
-  // =========================
-  // inject
-  // =========================
   private route = inject(ActivatedRoute);
   private spaceDetailService = inject(SpaceDetailService);
   private cdr = inject(ChangeDetectorRef);
+  private http = inject(HttpClient);
 
+  private readonly apiBase = 'http://localhost:5193';
 
   constructor(
     private sanitizer: DomSanitizer,
     public favoriteService: FavoriteService,
     private router: Router
-  ) { }
+  ) {}
+
   toggleFavorite(spaceId: number, event: Event) {
     event.stopPropagation();
     this.favoriteService.toggleFavorite(spaceId);
@@ -38,31 +45,22 @@ export class SpaceDetail implements OnInit {
   showShareModal = false;
   showCopySuccessToast = false;
   shareUrl = window.location.href;
+
   async copyLink() {
     try {
       await navigator.clipboard.writeText(this.shareUrl);
-
       this.showShareModal = false;
-
-      // 如果要再跳成功視窗
       this.showCopySuccessToast = true;
-
     } catch (error) {
       console.error(error);
     }
   }
 
-
-  // =========================
-  // state
-  // =========================
+  // ── space state ───────────────────────────────────────
   space: SpaceDetailDto | null = null;
   loading = true;
-
   imgBaseUrl = 'http://localhost:5193/';
 
-
-  // ✔ precomputed values（取代 template function）
   mainImage: string = '';
   galleryImages: any[] = [];
   galleryThumbs: any[] = [];
@@ -70,10 +68,6 @@ export class SpaceDetail implements OnInit {
   mapUrl: SafeResourceUrl | null = null;
   lowestPrice: number = 0;
   selectedRent: any = null;
-
-  selectRent(rent: any) {
-    this.selectedRent = rent;
-  }
 
   priceTypeMap: Record<string, string> = {
     '1': '每小時',
@@ -87,69 +81,234 @@ export class SpaceDetail implements OnInit {
     this.activeTab = tab;
   }
 
-  // =========================
-  // lifecycle
-  // =========================
+  // ── date selection state ──────────────────────────────
+  dateMode: 'hour' | 'day' | 'month' = 'hour';
+  today: string = new Date().toISOString().split('T')[0];
+  curMonth: string = new Date().toISOString().slice(0, 7);
+  hourOptions = Array.from({ length: 14 }, (_, i) => i + 8); // 8~21
+
+  tempStartDate = '';
+  startHour = '';
+  endHour = '';
+  startDate = '';
+  endDate = '';
+  hourError = false;
+
+  bookedSlots: { startDate: string; endDate: string }[] = [];
+
+  // ── computed ──────────────────────────────────────────
+  get computedStartDate(): string {
+    if (this.dateMode === 'hour') {
+      if (!this.tempStartDate || !this.startHour) return '';
+      return `${this.tempStartDate}T${String(this.startHour).padStart(2, '0')}:00:00`;
+    }
+    if (this.dateMode === 'day') return this.startDate ? `${this.startDate}T08:00:00` : '';
+    if (this.dateMode === 'month') return this.startDate ? `${this.startDate}-01T08:00:00` : '';
+    return '';
+  }
+
+  get computedEndDate(): string {
+    if (this.dateMode === 'hour') {
+      if (!this.tempStartDate || !this.endHour) return '';
+      return `${this.tempStartDate}T${String(this.endHour).padStart(2, '0')}:00:00`;
+    }
+    if (this.dateMode === 'day') return this.endDate ? `${this.endDate}T21:00:00` : '';
+    if (this.dateMode === 'month') return this.endDate ? `${this.theLastDay(this.endDate)}T21:00:00` : '';
+    return '';
+  }
+
+  get diff(): number {
+    if (!this.computedStartDate || !this.computedEndDate) return 0;
+    if (this.dateMode === 'hour') {
+      const h = Number(this.endHour) - Number(this.startHour);
+      return isFinite(h) && h > 0 ? h : 0;
+    }
+    if (this.dateMode === 'day') {
+      if (!this.startDate || !this.endDate) return 0;
+      const d = Math.round((new Date(this.endDate).getTime() - new Date(this.startDate).getTime()) / 86400000) + 1;
+      return isFinite(d) && d > 0 ? d : 0;
+    }
+    if (this.dateMode === 'month') {
+      if (!this.startDate || !this.endDate) return 0;
+      const s = new Date(this.startDate + '-01');
+      const e = new Date(this.endDate + '-01');
+      const m = (e.getFullYear() - s.getFullYear()) * 12 + (e.getMonth() - s.getMonth()) + 1;
+      return isFinite(m) && m > 0 ? m : 0;
+    }
+    return 0;
+  }
+
+  get totalPrice(): number {
+    return this.diff * (this.selectedRent?.price ?? 0);
+  }
+
+  get hasConflict(): boolean {
+    if (!this.computedStartDate || !this.computedEndDate) return false;
+    const selStart = new Date(this.computedStartDate).getTime();
+    const selEnd = new Date(this.computedEndDate).getTime();
+    return this.bookedSlots.some(s => {
+      const slotStart = new Date(s.startDate).getTime();
+      const slotEnd = new Date(s.endDate).getTime();
+      return slotStart < selEnd && slotEnd > selStart;
+    });
+  }
+
+  theLastDay(yearMonth: string): string {
+    const [year, month] = yearMonth.split('-');
+    const date = new Date(Number(year), Number(month), 0);
+    return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
+  }
+
+  // ── lifecycle ─────────────────────────────────────────
   ngOnInit(): void {
     const id = Number(this.route.snapshot.paramMap.get('id'));
 
     this.spaceDetailService.getSpaceDetail(id).subscribe({
       next: (data) => {
-
         this.space = data;
-
-        // ✅ 安全預處理（全部避免 template 做運算）
         this.galleryImages = data.images ?? [];
-
         this.mainImage = this.galleryImages[0]?.imagePath
           ? this.imgBaseUrl + this.galleryImages[0].imagePath
           : 'assets/no-image.png';
-
         this.galleryThumbs = this.galleryImages.slice(1).map(img => ({
           ...img,
           fullUrl: this.imgBaseUrl + img.imagePath
         }));
-
         this.equipments = data.equipments ?? [];
-
         this.lowestPrice = data.rents?.length
-          ? Math.min(...data.rents.map(r => r.price))
+          ? Math.min(...data.rents.map((r: any) => r.price))
           : 0;
-
         this.selectedRent = data.rents?.[0] ?? null;
+        if (this.selectedRent) this.syncDateMode(this.selectedRent.priceType);
 
         this.mapUrl = data.location?.address
           ? this.sanitizer.bypassSecurityTrustResourceUrl(
-            `https://www.google.com/maps?q=${encodeURIComponent(data.location.address)}&output=embed`
-          )
+              `https://www.google.com/maps?q=${encodeURIComponent(data.location.address)}&output=embed`
+            )
           : null;
 
         this.loading = false;
         this.cdr.detectChanges();
 
-        console.log('space detail:', data);
+        this.loadBookedSlots(id);
       },
       error: (err) => {
         console.error(err);
         this.loading = false;
         this.cdr.detectChanges();
       }
-
     });
-
   }
 
+  private loadBookedSlots(spaceId: number): void {
+    this.http.get<{ startDate: string; endDate: string }[]>(
+      `${this.apiBase}/api/FrontendSpaceDetail/${spaceId}/BookedSlots`
+    ).subscribe({
+      next: (slots) => {
+        this.bookedSlots = slots;
+        this.cdr.detectChanges();
+      },
+      error: () => {}
+    });
+  }
+
+  // ── rent & date handlers ──────────────────────────────
+  private syncDateMode(priceType: number): void {
+    if (priceType === 1) this.dateMode = 'hour';
+    else if (priceType === 2) this.dateMode = 'day';
+    else if (priceType === 3) this.dateMode = 'month';
+    this.resetDates();
+  }
+
+  private resetDates(): void {
+    this.startDate = '';
+    this.endDate = '';
+    this.tempStartDate = '';
+    this.startHour = '';
+    this.endHour = '';
+    this.hourError = false;
+  }
+
+  selectRent(rent: any) {
+    this.selectedRent = rent;
+    this.syncDateMode(rent.priceType);
+  }
+
+  onStartDateChange(event: Event): void {
+    const val = (event.target as HTMLInputElement).value;
+    if (this.dateMode === 'hour') {
+      this.tempStartDate = val;
+      this.startHour = '';
+      this.endHour = '';
+    } else {
+      this.startDate = val;
+      this.endDate = '';
+    }
+  }
+
+  onEndDateChange(event: Event): void {
+    if (!this.startDate) {
+      alert('請先選擇開始日期');
+      (event.target as HTMLInputElement).value = '';
+      return;
+    }
+    this.endDate = (event.target as HTMLInputElement).value;
+  }
+
+  onStartHourChange(): void {
+    if (!this.tempStartDate) {
+      alert('請先選擇日期');
+      setTimeout(() => { this.startHour = ''; });
+      return;
+    }
+    this.endHour = '';
+    this.hourError = false;
+  }
+
+  onEndHourChange(): void {
+    if (!this.tempStartDate) {
+      alert('請先選擇日期');
+      setTimeout(() => { this.endHour = ''; });
+      return;
+    }
+    if (!this.startHour) {
+      alert('請先選擇開始時間');
+      setTimeout(() => { this.endHour = ''; });
+      return;
+    }
+    if (Number(this.endHour) <= Number(this.startHour)) {
+      this.hourError = true;
+      alert('結束時間必須晚於開始時間');
+      setTimeout(() => { this.endHour = ''; });
+      return;
+    }
+    this.hourError = false;
+  }
+
+  // ── booking ───────────────────────────────────────────
   goBooking(): void {
-    if (!this.space) {
-      alert("空間選擇，請重新選擇");
+    if (!this.space || !this.selectedRent) {
+      alert('請選擇方案');
+      return;
+    }
+    if (!this.computedStartDate || !this.computedEndDate) {
+      alert('請選擇預約時段');
+      return;
+    }
+    if (this.hasConflict) {
+      alert('此時段已被預訂，請選擇其他時間');
       return;
     }
 
     this.router.navigate(['/payment'], {
       queryParams: {
-        spaceId: this.space.spaceId
+        spaceId: this.space.spaceId,
+        rentId: this.selectedRent.rentId,
+        startDate: this.computedStartDate,
+        endDate: this.computedEndDate,
+        totalPrice: this.totalPrice,
+        priceType: this.selectedRent.priceType
       }
     });
   }
-
 }

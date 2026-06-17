@@ -1,342 +1,133 @@
-<!doctype html>
-<html lang="zh-Hant">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>WorkspaceCollective Booking</title>
-    <!-- Lucide Icons CDN -->
-    <script src="https://unpkg.com/lucide@latest"></script>
-    <link rel="stylesheet" href="/src/styles/style.scss" />
-  </head>
-  <!-- Main Content -->
-  <main class="container main-content">
-    <!-- Left Column: Form -->
-    <div class="form-section">
-      <div class="section-header">
-        <h1>結帳預訂</h1>
-        <p>請填寫您的付款資訊以完成專屬固定辦公桌預訂。</p>
-        <p>( <span class="alert-message">*</span> 為必填欄位)</p>
-      </div>
+<main class="container main-content">
 
-      <section class="contact-section form-group">
-        <h2>日期資訊</h2>
-        <!-- date mode -->
-        <label>計費方式</label>
-        <div class="data-mode-toggle">
-          <button
-            [class.active]="dateMode === 'hour'"
-            (click)="dateMode = 'hour'; onModeChange()">
-            按時計費
-          </button>
-          <button
-            [class.active]="dateMode === 'day'"
-            (click)="dateMode = 'day'; onModeChange()">
-            按日計費
-          </button>
-          <button
-            [class.active]="dateMode === 'month'"
-            (click)="dateMode = 'month'; onModeChange()">
-            按月計費
-          </button>
-        </div>
-        <!-- date input -->
-        @if (dateMode === 'hour') {
-          <div class="date-picker">
-            <div class="date-field">
-              <label for="tempStartDate">開始日期與時間</label>
-              <div class="input-wrapper date-input">
-                <input
-                  id="tempStartDate"
-                  name="tempStartDate"
-                  type="date"
-                  aria-label="開始日期與時間"
-                  [min]="today"
-                  (change)="onStartDateChange($event)"
-                />
-              </div>
-            </div>
-            <div class="date-field">
-              <label for="startHour">開始時間</label>
-              <div class="input-wrapper date-input">
-                <select
-                  id="startHour"
-                  [(ngModel)]="startHour"
-                  name="startHour"
-                  (change)="onStartHourChange($event)"
-                >
-                  <option value="" disabled selected>選擇</option>
-                  @for (hour of hourOptions; track hour) {
-                    <option [value]="hour">{{ hour | hourLabel }}</option>
-                  }
-                </select>
-              </div>
-            </div>
-            <span class="date-separator">～</span>
-            <div class="date-field">
-              <label for="endHour">結束時間</label>
-              <div class="input-wrapper date-input">
-                <select
-                  id="endHour"
-                  [(ngModel)]="endHour"
-                  name="endHour"
-                  (change)="onEndHourChange($event)"
-                >
-                  <option value="" disabled selected>選擇</option>
-                  @for (hour of hourOptions; track hour) {
-                    <option [value]="hour">{{ hour | hourLabel }}</option>
-                  }
-                </select>
-              </div>
-            </div>
-          </div>
-        }
-        @if (dateMode === 'day') {
-          <div class="date-picker">
-            <div class="date-field">
-              <label for="startDate">開始日期</label>
-              <div class="input-wrapper date-input">
-                <input
-                  id="startDate"
-                  name="startDate"
-                  type="date"
-                  aria-label="開始日期"
-                  [min]="today"
-                  (change)="onStartDateChange($event)"
-                />
-              </div>
-            </div>
-            <span class="date-separator">～</span>
-            <div class="date-field">
-              <label for="endDate">結束日期</label>
-              <div class="input-wrapper date-input">
-                <input
-                  id="endDate"
-                  name="endDate"
-                  type="date"
-                  aria-label="結束日期"
-                  [min]="startDate || today"
-                  (change)="onEndDateChange($event)"
-                />
-              </div>
-            </div>
-          </div>
-        }
-        @if (dateMode === 'month') {
-          <div class="date-picker">
-            <div class="date-field">
-              <label for="startDate">開始月份</label>
-              <div class="input-wrapper date-input">
-                <input
-                  id="startDate"
-                  name="startDate"
-                  type="month"
-                  aria-label="開始月份"
-                  [min]="curMonth"
-                  (change)="onStartDateChange($event)"
-                />
-              </div>
-            </div>
-            <span class="date-separator">～</span>
-            <div class="date-field">
-              <label for="endDate">結束月份</label>
-              <div class="input-wrapper date-input">
-                <input
-                  id="endDate"
-                  name="endDate"
-                  type="month"
-                  aria-label="結束月份"
-                  [min]="startDate || today"
-                  (change)="onEndDateChange($event)"
-                />
-              </div>
-            </div>
-          </div>
-        }
-      </section>
-
-      <!-- Invoice Info -->
-      <section class="invoice-section">
-        <h2>發票資訊</h2>
-        <div class="form-group row">
-          <div>
-            <label>發票類型</label>
-            <div class="input-wrapper">
-              <select [value]="invoiceType" (change)="onInvoiceTypeChange($event)">
-                <option value="personal">二聯式 (個人)</option>
-                <option value="company">三聯式 (公司戶)</option>
-              </select>
-            </div>
-          </div>
-          @if (invoiceType === 'company') {
-            <div class="company-invoice-fields">
-              <div>
-                <label>公司名稱</label>
-                <div class="input-wrapper">
-                  <input
-                    type="text"
-                    [(ngModel)]="companyName"
-                    name="companyName"
-                    #companyNameRef="ngModel"
-                    required
-                    placeholder="請輸入公司名稱"
-                  />
-                </div>
-              </div>
-              <div>
-                <label>統一編號</label>
-                <div class="input-wrapper">
-                  <input
-                    type="text"
-                    [(ngModel)]="taxId"
-                    name="taxId"
-                    #taxIdRef="ngModel"
-                    required
-                    placeholder="請輸入統一編號"
-                  />
-                </div>
-              </div>
-            </div>
-          }
-        </div>
-      </section>
-
-      <!-- Personal Info -->
-      <section class="contact-section form-group">
-        <form #myForm="ngForm">
-          <h2>個人資訊</h2>
-          <div class="form-group">
-            <label>
-              姓名 (先生/小姐) <span class="alert-message">*</span>
-              @if (nameRef.invalid && nameRef.touched) {
-                <span class="alert-message">姓名為必填欄位</span>
-              }
-            </label>
-            <div class="input-wrapper personal-name-input">
-              <input
-                type="text"
-                [(ngModel)]="userName"
-                name="name"
-                #nameRef="ngModel"
-                required
-                placeholder="請輸入姓名"
-              />
-            </div>
-          </div>
-          <div class="form-group row">
-            <div>
-              <label>
-                電話號碼 <span class="alert-message">*</span>
-                @if (phoneRef.invalid && phoneRef.touched) {
-                  <span class="alert-message">電話號碼為必填欄位</span>
-                }
-              </label>
-              <div class="input-wrapper">
-                <input
-                  type="text"
-                  [(ngModel)]="userPhone"
-                  name="phone"
-                  #phoneRef="ngModel"
-                  required
-                  placeholder="請輸入電話號碼"
-                />
-              </div>
-            </div>
-            <div>
-              <label>
-                電子郵件 <span class="alert-message">*</span>
-                @if (emailRef.invalid && emailRef.touched) {
-                  <span class="alert-message">電子郵件為必填欄位</span>
-                }
-              </label>
-              <div class="input-wrapper">
-                <input
-                  type="email"
-                  [(ngModel)]="userEmail"
-                  name="email"
-                  #emailRef="ngModel"
-                  required
-                  placeholder="請輸入電子郵件"
-                />
-              </div>
-            </div>
-          </div>
-        </form>
-      </section>
+  <!-- 左欄：確認資訊 -->
+  <div class="form-section">
+    <div class="section-header">
+      <h1>確認預約</h1>
+      <p>請確認以下預約資訊，確認無誤後點擊「確認預約」完成預訂。</p>
     </div>
-    <!--
-    todo:
-    1.判斷使用者是否已經填入基本資訊:姓名 電話 電子郵件
-    2.已填入自動代入訂閱人訊息欄位
-  -->
 
-    <!-- Right Column: Sidebar -->
-    <aside class="sidebar">
-      <div class="summary-card">
-        <div class="hero-img">
-          <img
-            src="https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&q=80&w=600"
-            alt="Workspace"
-          />
-          <div class="tag">專屬固定辦公桌</div>
+    <!-- 預約資訊 -->
+    <section class="confirm-section form-group">
+      <h2>預約資訊</h2>
+      <div class="confirm-row">
+        <span class="label">空間</span>
+        <span class="value">{{ space?.spaceNumber ?? '載入中...' }}</span>
+      </div>
+      <div class="confirm-row">
+        <span class="label">地址</span>
+        <span class="value">{{ space?.location?.address ?? '-' }}</span>
+      </div>
+      <div class="confirm-row">
+        <span class="label">計費方式</span>
+        <span class="value">{{ priceTypeMap[priceType] }}</span>
+      </div>
+      <div class="confirm-row">
+        <span class="label">時段</span>
+        <span class="value">{{ diffLabel }}</span>
+      </div>
+      <div class="confirm-row total">
+        <span class="label">總金額</span>
+        <span class="value price-highlight">NT$ {{ totalPrice | number }}</span>
+      </div>
+    </section>
+
+    <!-- 發票資訊 -->
+    <section class="invoice-section form-group">
+      <h2>發票資訊</h2>
+      <div class="form-group row">
+        <div>
+          <label>發票類型</label>
+          <div class="input-wrapper">
+            <select [value]="invoiceType" (change)="onInvoiceTypeChange($event)">
+              <option value="personal">二聯式 (個人)</option>
+              <option value="company">三聯式 (公司戶)</option>
+            </select>
+          </div>
         </div>
-        <div class="summary-details">
-          <h3>訂單摘要</h3>
-          <p class="item-name">{{ this.space?.introduction }}</p>
-          <!-- 時間間距 -->
-          <div class="date-range">
-            @if (this.startDate !== '' && this.endDate !== '') {
-              <span>{{ Diff }}</span>
-            } @else {
-              <span>請選擇日期資訊</span>
-            }
-          </div>
-          <!-- 方案 -->
-          <div class="price-breakdown">
-            <h3>方案類型</h3>
-            @for (rent of space?.rents ?? []; track rent) {
-              <div class="line-item">
-                <span>{{ priceTypeMap[rent.priceType] }}</span>
-                <span>NT$ {{ rent.price | number }}</span>
+        @if (invoiceType === 'company') {
+          <div class="company-invoice-fields">
+            <div>
+              <label>公司名稱</label>
+              <div class="input-wrapper">
+                <input type="text" [(ngModel)]="companyName" name="companyName" placeholder="請輸入公司名稱" />
               </div>
-            }
-          </div>
-          <!-- 使用者最後確定的方案和日期 -->
-          <div class="price-breakdown">
-            <h3>訂單資訊</h3>
-            <div class="line-item">
-              <span>時長</span>
-              <span
-                >{{ diff }}
-                @if (dateMode === 'hour') {
-                  小時
-                }
-                @if (dateMode === 'day') {
-                  天
-                }
-                @if (dateMode === 'month') {
-                  個月
-                }
-              </span>
             </div>
-            <div class="line-item">
-              <span>金額</span>
-              <span>{{ perPrice | number }} 元</span>
+            <div>
+              <label>統一編號</label>
+              <div class="input-wrapper">
+                <input type="text" [(ngModel)]="taxId" name="taxId" placeholder="請輸入統一編號" />
+              </div>
             </div>
           </div>
+        }
+      </div>
+    </section>
 
-          <div class="total-row">
-            <span>總計</span>
-            <span class="total-price">NT$ {{ totalPrice | number }}</span>
-          </div>
-
-          <button class="btn-confirm" (click)="booking()">
-            確認預訂
-            <i data-lucide="arrow-right"></i>
-          </button>
-
-          <p class="disclaimer">點擊確認付款即表示您同意我們的服務條款與隱私政策。</p>
+    <!-- 聯絡資訊 -->
+    <section class="contact-section form-group">
+      <h2>聯絡資訊</h2>
+      <p class="contact-note">已自動帶入您的個人資料，如有需要可直接修改。</p>
+      <div class="form-group">
+        <label>姓名</label>
+        <div class="input-wrapper">
+          <input type="text" [(ngModel)]="userName" name="userName" placeholder="請輸入姓名" />
         </div>
       </div>
-    </aside>
-  </main>
-</html>
+      <div class="form-group row">
+        <div>
+          <label>電話</label>
+          <div class="input-wrapper">
+            <input type="text" [(ngModel)]="userPhone" name="userPhone" placeholder="請輸入電話" />
+          </div>
+        </div>
+        <div>
+          <label>Email</label>
+          <div class="input-wrapper">
+            <input type="email" [(ngModel)]="userEmail" name="userEmail" placeholder="請輸入 Email" />
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <!-- 右欄：訂單摘要 -->
+  <aside class="sidebar">
+    <div class="summary-card">
+      <div class="hero-img">
+        <img [src]="spaceImage" [alt]="space?.spaceNumber" />
+      </div>
+      <div class="summary-details">
+        <h3>訂單摘要</h3>
+        <p class="item-name">{{ space?.spaceNumber }}</p>
+        <p class="item-location">
+          <span class="material-symbols-outlined" style="font-size:14px;vertical-align:middle;">location_on</span>
+          {{ space?.location?.city }}
+        </p>
+
+        <div class="date-range">
+          <span>{{ diffLabel || '載入中...' }}</span>
+        </div>
+
+        <div class="price-breakdown">
+          <div class="line-item">
+            <span>計費方式</span>
+            <span>{{ priceTypeMap[priceType] }}</span>
+          </div>
+        </div>
+
+        <div class="total-row">
+          <span>總計</span>
+          <span class="total-price">NT$ {{ totalPrice | number }}</span>
+        </div>
+
+        <button class="btn-confirm" (click)="booking()" [disabled]="submitting">
+          {{ submitting ? '處理中...' : '確認預約' }}
+        </button>
+
+        <p class="disclaimer">點擊確認預約即表示您同意我們的服務條款與隱私政策。</p>
+      </div>
+    </div>
+  </aside>
+
+</main>
