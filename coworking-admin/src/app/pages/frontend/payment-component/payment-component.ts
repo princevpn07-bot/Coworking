@@ -55,7 +55,6 @@ export class PaymentComponent {
   companyName = '';
   taxId = '';
   hourError = false;
-  diff: number = 0;
   perPrice: number = 0;
   space: SpaceDetailDto | null = null;
 
@@ -80,6 +79,8 @@ export class PaymentComponent {
     const space_id = this.route.snapshot.queryParamMap.get('spaceId') ?? null;
     if (space_id == null) {
       console.log("[error] [payment-component.ts] space_id is null")
+      alert("獲取空間編號失敗")
+      return;
     }
     this.spaceDetailService.getSpaceDetail(Number(space_id)).subscribe({
       next: (data) => {
@@ -112,14 +113,35 @@ export class PaymentComponent {
     this.startHour = '';
     this.endHour = '';
     this.hourError = false;
+
     if (this.dateMode === 'hour') {this.perPrice = this.space?.rents?.[0]?.price ?? 0;}
     if (this.dateMode === 'day') {this.perPrice = this.space?.rents?.[1]?.price ?? 0;}
     if (this.dateMode === 'month') {this.perPrice = this.space?.rents?.[2]?.price ?? 0;}
     // console.log(this.dateMode);
   }
 
+  get diff(): number {
+    if (!this.startDate || !this.endDate) {
+      return 0;
+    }
+    if (this.dateMode === 'hour') {
+      const hour = Number(this.endHour) - Number(this.startHour);
+      return Number.isFinite(hour) ? hour : 0;
+    }
+    if (this.dateMode === 'day') {
+      const days = Math.round((new Date(this.endDate).getTime() - new Date(this.startDate).getTime()) / (1000 * 60 * 60 * 24)) + 1;
+      return Number.isFinite(days) ? days : 0;
+    }
+    if (this.dateMode === 'month') {
+      const months = (new Date(this.endDate).getFullYear() - new Date(this.startDate).getFullYear()) * 12 + (new Date(this.endDate).getMonth() - new Date(this.startDate).getMonth()) + 1;
+      return Number.isFinite(months) ? months : 0;
+    }
+    return 0;
+  }
+
   get totalPrice(): number {
-    return this.diff * this.perPrice;
+    const price = this.diff * this.perPrice;
+    return Number.isFinite(price) ? price : 0;
   }
 
   get Diff(): string {
@@ -127,27 +149,29 @@ export class PaymentComponent {
       return '';
     }
 
+    const d = this.diff;
+
     if (this.dateMode === 'hour') {
-      const hour = Number(this.endHour) - Number(this.startHour);
-      this.diff = hour;
-      return `${this.tempStartDate} ${this.startHour}:00 ~ ${this.endHour}:00，共 ${hour} 小時`;
+      return `${this.tempStartDate} ${this.startHour}:00 ~ ${this.endHour}:00，共 ${d} 小時`;
     }
-
-    const start = new Date(this.startDate);
-    const end = new Date(this.endDate);
-
     if (this.dateMode === 'day') {
-      const days = Math.round((end.getTime() - start.getTime()) / (1000 * 60 * 60 * 24)) + 1;
-      this.diff = days;
-      return `${this.startDate} ~ ${this.endDate}，共 ${days} 天`;
+      return `${this.startDate} ~ ${this.endDate}，共 ${d} 天`;
     }
-
     if (this.dateMode === 'month') {
-      const months = (end.getFullYear() - start.getFullYear()) * 12 + (end.getMonth() - start.getMonth()) + 1;
-      this.diff = months;
-      return `${this.startDate} ~ ${this.endDate}，共 ${months} 個月`;
+      return `${this.startDate} ~ ${this.endDate}，共 ${d} 個月`;
     }
     return '';
+  }
+
+  theLastDay(yearMonth: string): string {
+    const [year, month] = yearMonth.split('-');
+    const date = new Date(Number(year), Number(month), 0);
+
+    const y = date.getFullYear();
+    const m = (date.getMonth() + 1).toString().padStart(2, '0');
+    const d = date.getDate().toString().padStart(2, '0');
+    //console.log('最後一天:', `${y}-${m}-${d}`);
+    return `${y}-${m}-${d}`;
   }
 
   onStartHourChange(event: Event): void {
@@ -161,7 +185,7 @@ export class PaymentComponent {
     this.endHour = '';
     this.endDate = '';
     this.hourError = false;
-    console.log('開始日期與時間:', this.startDate);
+    //console.log('開始日期與時間:', this.startDate);
   }
 
   onEndHourChange(event: Event): void {
@@ -184,7 +208,7 @@ export class PaymentComponent {
     }
     this.endDate = `${this.tempStartDate}T${this.endHour}:00:00`;
     this.hourError = false;
-    console.log('結束日期與時間:', this.endDate);
+    //console.log('結束日期與時間:', this.endDate);
   }
 
 
@@ -197,9 +221,7 @@ export class PaymentComponent {
     }
     this.endDate = '';
     this.startDate = (event.target as HTMLInputElement).value;
-
-
-    console.log('開始日期:', this.startDate);
+    // console.log('開始日期:', this.startDate);
   }
 
   onEndDateChange(event: Event): void {
@@ -209,7 +231,7 @@ export class PaymentComponent {
       return;
     }
     this.endDate = (event.target as HTMLInputElement).value;
-    console.log('結束日期:', this.endDate);
+    //console.log('結束日期:', this.endDate);
   }
 
   onInvoiceTypeChange(event: Event): void {
@@ -224,13 +246,21 @@ export class PaymentComponent {
       return;
     }
 
-    const startDate = new Date(`${this.startDate}T00:00:00`);
-    const endDate = new Date(`${this.endDate}T23:59:59`);
-
-    if (endDate <= startDate) {
+    if (this.endDate <= this.startDate) {
       alert('結束日期必須晚於開始日期');
       return;
     }
+
+    if (this.dateMode === 'day') {
+      this.startDate = `${this.startDate}T${this.hourOptions[0]}:00:00`;
+      this.endDate = `${this.endDate}T${this.hourOptions[this.hourOptions.length - 1]}:00:00`;
+    }
+    if (this.dateMode === 'month') {
+      this.startDate = `${this.startDate}-01T${this.hourOptions[0]}:00:00`;
+      this.endDate = `${this.theLastDay(this.endDate)}T${this.hourOptions[this.hourOptions.length - 1]}:00:00`;
+    }
+
+    //console.log(`start: ${this.startDate}, end: ${this.endDate}`)
 
     if (this.invoiceType === 'company') {
       if (!this.companyName || !this.taxId) {
@@ -244,10 +274,6 @@ export class PaymentComponent {
       return;
     }
 
-    const rentIdValue =
-      this.route.snapshot.queryParamMap.get('rent_id') ??
-      this.route.snapshot.queryParamMap.get('rentId');
-    const rentId = rentIdValue ? Number(rentIdValue) : null;
     const now = new Date();
     const deadline = new Date(now);
     deadline.setDate(deadline.getDate() + 1);
@@ -255,7 +281,7 @@ export class PaymentComponent {
 // deadline 還需要重新計算
     const payload: AddBookingPayload = {
       user_id: this.auth.getUserId(),
-      rent_id: rentId && Number.isFinite(rentId) ? rentId : null,
+      rent_id: null,
       employees_id: null,
       created_date: now.toISOString(),
       start_date: this.startDate,

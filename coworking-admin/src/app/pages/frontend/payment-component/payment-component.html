@@ -23,16 +23,19 @@
         <!-- date mode -->
         <label>計費方式</label>
         <div class="data-mode-toggle">
-          <button [class.active]="dateMode === 'hour'" (click)="dateMode = 'hour'; onModeChange()">
+          <button
+            [class.active]="dateMode === 'hour'"
+            (click)="dateMode = 'hour'; onModeChange()">
             按時計費
           </button>
-          <button [class.active]="dateMode === 'day'" (click)="dateMode = 'day'; onModeChange()">
+          <button
+            [class.active]="dateMode === 'day'"
+            (click)="dateMode = 'day'; onModeChange()">
             按日計費
           </button>
           <button
             [class.active]="dateMode === 'month'"
-            (click)="dateMode = 'month'; onModeChange()"
-          >
+            (click)="dateMode = 'month'; onModeChange()">
             按月計費
           </button>
         </div>
@@ -278,7 +281,7 @@
         </div>
         <div class="summary-details">
           <h3>訂單摘要</h3>
-          <p class="item-name">{{ this.space?.introduction}}</p>
+          <p class="item-name">{{ this.space?.introduction }}</p>
           <!-- 時間間距 -->
           <div class="date-range">
             @if (this.startDate !== '' && this.endDate !== '') {
@@ -293,19 +296,26 @@
             @for (rent of space?.rents ?? []; track rent) {
               <div class="line-item">
                 <span>{{ priceTypeMap[rent.priceType] }}</span>
-                <span>NT$ {{ rent.price | number}}</span>
+                <span>NT$ {{ rent.price | number }}</span>
               </div>
             }
           </div>
-          <!--  -->
+          <!-- 使用者最後確定的方案和日期 -->
           <div class="price-breakdown">
             <h3>訂單資訊</h3>
             <div class="line-item">
               <span>時長</span>
-              <span>{{ diff }}
-                @if (dateMode === 'hour') {小時}
-                @if (dateMode === 'day') {天}
-                @if (dateMode === 'month') {個月}
+              <span
+                >{{ diff }}
+                @if (dateMode === 'hour') {
+                  小時
+                }
+                @if (dateMode === 'day') {
+                  天
+                }
+                @if (dateMode === 'month') {
+                  個月
+                }
               </span>
             </div>
             <div class="line-item">

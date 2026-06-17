@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Noto+Serif:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap');
+
 /* 🌟 1. 最外層定位與絲滑動畫 */
 .airbnb-price-dropdown {
  position: absolute;
@@ -5,7 +7,7 @@
   left: 0;            /* 🌟 靠左對齊，防止被左邊切掉 */
   width: 420px;       /* 鎖定總寬度 */
   z-index: 99999;
-  
+
   opacity: 0;
   pointer-events: none;
   /* 🌟 垂直置中，從左上角往下長 */
@@ -25,8 +27,6 @@
   font-family: inherit;
 }
 /* src/index.css - Custom Pure CSS Styling matching 'Natural Sanctuary v2' */
-
-@import url('https://fonts.googleapis.com/css2?family=Noto+Serif:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap');
 
 :root {
   --bg-color-main: #fef8f6;
@@ -65,7 +65,7 @@
      /* 📍 定位與層級（精準黏在價格按鈕下方 8px，不影響全域 body） */
 box-sizing: border-box;
   font-family: inherit;
- 
+
   width: 420px !;             /* 限制選單卡片寬度 */
   z-index: 9999 !important;            /* 層級全開，確保壓在卡片與地圖上方 */
  /* 🎨 完美對齊右圖：大地色調外貌 */
@@ -133,7 +133,7 @@ box-sizing: border-box;
   width: 100%;
   max-width: 420px;
   background-color: var(--surface-low);
- 
+
   border-radius: 16px;
   box-shadow: 0 10px 30px rgba(80, 69, 56, 0.08);
   display: flex;
@@ -532,7 +532,7 @@ background-color: #504538 !important;
 }
 
 .apply-submit-btn:hover {
- background-color: #695c4e; 
+ background-color: #695c4e;
   box-shadow: 0 6px 16px rgba(80, 69, 56, 0.15);
 }
 
