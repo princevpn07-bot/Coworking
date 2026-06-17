@@ -4,6 +4,8 @@ import { Component, ChangeDetectorRef, Pipe, PipeTransform} from '@angular/core'
 import { AuthService } from '../../../services/auth';
 import { FormsModule } from '@angular/forms';
 import { ProfileService } from '../../../services/profile';
+import { SpaceDetailDto, SpaceDetailService } from '../../../services/space-detail.service';
+import { CommonModule } from '@angular/common';
 
 export interface AddBookingPayload {
   user_id: number | null;
@@ -29,7 +31,7 @@ export class HourLabelPipe implements PipeTransform {
 
 @Component({
   selector: 'app-payment-component',
-  imports: [FormsModule, HourLabelPipe],
+  imports: [FormsModule, HourLabelPipe, CommonModule],
   templateUrl: './payment-component.html',
   styleUrl: './payment-component.css',
 })
@@ -37,8 +39,9 @@ export class PaymentComponent {
   private readonly apiUrl = 'http://localhost:5193/api/Bookings/Add';
 
   today: string = new Date().toISOString().split('T')[0];
-  hourOptions = Array.from({ length: 14 }, (_, i) => i + 8); // 8~21點
-  dateMode = 'day';
+  curMonth: string = new Date().toISOString().slice(0, 7);
+  hourOptions = Array.from({ length: 11 }, (_, i) => i + 8); // 8~21點
+  dateMode = 'hour';
   tempStartDate = '';
   startHour = '';
   endHour = '';
@@ -53,7 +56,14 @@ export class PaymentComponent {
   taxId = '';
   hourError = false;
   diff: number = 0;
+  perPrice: number = 0;
+  space: SpaceDetailDto | null = null;
 
+  priceTypeMap: Record<string, string> = {
+    '1': '每小時',
+    '2': '每日',
+    '3': '每月'
+  };
 
   constructor(
     private http: HttpClient,
@@ -61,11 +71,27 @@ export class PaymentComponent {
     private route: ActivatedRoute,
     private router: Router,
     private profileService: ProfileService,
+    private spaceDetailService: SpaceDetailService,
     private cdr: ChangeDetectorRef // 注入 ChangeDetectorRef
   ) {}
 
 
   ngOnInit(): void {
+    const space_id = this.route.snapshot.queryParamMap.get('spaceId') ?? null;
+    if (space_id == null) {
+      console.log("[error] [payment-component.ts] space_id is null")
+    }
+    this.spaceDetailService.getSpaceDetail(Number(space_id)).subscribe({
+      next: (data) => {
+        this.space = data;
+        this.cdr.detectChanges(); // 手動觸發檢查
+      },
+      error: (err) => {
+        console.error(err);
+        this.cdr.detectChanges(); // 手動觸發檢查
+      }
+    });
+
     this.profileService.getProfile().subscribe({
       next: (data: any) => {
         this.userName = data.name || '';
@@ -86,7 +112,14 @@ export class PaymentComponent {
     this.startHour = '';
     this.endHour = '';
     this.hourError = false;
+    if (this.dateMode === 'hour') {this.perPrice = this.space?.rents?.[0]?.price ?? 0;}
+    if (this.dateMode === 'day') {this.perPrice = this.space?.rents?.[1]?.price ?? 0;}
+    if (this.dateMode === 'month') {this.perPrice = this.space?.rents?.[2]?.price ?? 0;}
     // console.log(this.dateMode);
+  }
+
+  get totalPrice(): number {
+    return this.diff * this.perPrice;
   }
 
   get Diff(): string {
@@ -219,7 +252,6 @@ export class PaymentComponent {
     const deadline = new Date(now);
     deadline.setDate(deadline.getDate() + 1);
 
-
 // deadline 還需要重新計算
     const payload: AddBookingPayload = {
       user_id: this.auth.getUserId(),
@@ -233,7 +265,7 @@ export class PaymentComponent {
       status: 0,
       pay_deadline: deadline.toISOString(),
       cancelled_daedline: deadline.toISOString(),
-      total_price: 1,
+      total_price: this.totalPrice,
     };
 
     this.submitting = true;

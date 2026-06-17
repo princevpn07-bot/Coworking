@@ -23,16 +23,10 @@
         <!-- date mode -->
         <label>計費方式</label>
         <div class="data-mode-toggle">
-          <button
-            [class.active]="dateMode === 'hour'"
-            (click)="dateMode = 'hour'; onModeChange()"
-          >
+          <button [class.active]="dateMode === 'hour'" (click)="dateMode = 'hour'; onModeChange()">
             按時計費
           </button>
-          <button
-            [class.active]="dateMode === 'day'"
-            (click)="dateMode = 'day'; onModeChange()"
-          >
+          <button [class.active]="dateMode === 'day'" (click)="dateMode = 'day'; onModeChange()">
             按日計費
           </button>
           <button
@@ -61,7 +55,12 @@
             <div class="date-field">
               <label for="startHour">開始時間</label>
               <div class="input-wrapper date-input">
-                <select id="startHour" [(ngModel)]="startHour" name="startHour" (change)="onStartHourChange($event)">
+                <select
+                  id="startHour"
+                  [(ngModel)]="startHour"
+                  name="startHour"
+                  (change)="onStartHourChange($event)"
+                >
                   <option value="" disabled selected>選擇</option>
                   @for (hour of hourOptions; track hour) {
                     <option [value]="hour">{{ hour | hourLabel }}</option>
@@ -73,7 +72,12 @@
             <div class="date-field">
               <label for="endHour">結束時間</label>
               <div class="input-wrapper date-input">
-                <select id="endHour" [(ngModel)]="endHour" name="endHour" (change)="onEndHourChange($event)">
+                <select
+                  id="endHour"
+                  [(ngModel)]="endHour"
+                  name="endHour"
+                  (change)="onEndHourChange($event)"
+                >
                   <option value="" disabled selected>選擇</option>
                   @for (hour of hourOptions; track hour) {
                     <option [value]="hour">{{ hour | hourLabel }}</option>
@@ -124,7 +128,7 @@
                   name="startDate"
                   type="month"
                   aria-label="開始月份"
-                  [min]="today"
+                  [min]="curMonth"
                   (change)="onStartDateChange($event)"
                 />
               </div>
@@ -274,7 +278,7 @@
         </div>
         <div class="summary-details">
           <h3>訂單摘要</h3>
-          <p class="item-name">專屬固定辦公桌 - 玻璃中庭</p>
+          <p class="item-name">{{ this.space?.introduction}}</p>
           <!-- 時間間距 -->
           <div class="date-range">
             @if (this.startDate !== '' && this.endDate !== '') {
@@ -285,28 +289,34 @@
           </div>
           <!-- 方案 -->
           <div class="price-breakdown">
-            <span>方案類型</span>
-
+            <h3>方案類型</h3>
+            @for (rent of space?.rents ?? []; track rent) {
+              <div class="line-item">
+                <span>{{ priceTypeMap[rent.priceType] }}</span>
+                <span>NT$ {{ rent.price | number}}</span>
+              </div>
+            }
           </div>
-
+          <!--  -->
           <div class="price-breakdown">
+            <h3>訂單資訊</h3>
             <div class="line-item">
-              <span>小計</span>
-              <span>NT$ 18,500</span>
+              <span>時長</span>
+              <span>{{ diff }}
+                @if (dateMode === 'hour') {小時}
+                @if (dateMode === 'day') {天}
+                @if (dateMode === 'month') {個月}
+              </span>
             </div>
             <div class="line-item">
-              <span>稅額 (5%)</span>
-              <span>NT$ 925</span>
-            </div>
-            <div class="line-item discount">
-              <span>折扣 (秋季優惠)</span>
-              <span>- NT$ 1,500</span>
+              <span>金額</span>
+              <span>{{ perPrice | number }} 元</span>
             </div>
           </div>
 
           <div class="total-row">
             <span>總計</span>
-            <span class="total-price">NT$ 17,925</span>
+            <span class="total-price">NT$ {{ totalPrice | number }}</span>
           </div>
 
           <button class="btn-confirm" (click)="booking()">

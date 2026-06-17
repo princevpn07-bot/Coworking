@@ -2,7 +2,7 @@ import { Component, OnInit, inject, ChangeDetectorRef } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { SpaceDetailService, SpaceDetailDto } from '../../../services/space-detail.service';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { FavoriteService } from '../../../services/favorite';
 
@@ -25,7 +25,11 @@ export class SpaceDetail implements OnInit {
   private cdr = inject(ChangeDetectorRef);
 
 
-  constructor(private sanitizer: DomSanitizer, public favoriteService: FavoriteService) { }
+  constructor(
+    private sanitizer: DomSanitizer,
+    public favoriteService: FavoriteService,
+    private router: Router
+  ) { }
   toggleFavorite(spaceId: number, event: Event) {
     event.stopPropagation();
     this.favoriteService.toggleFavorite(spaceId);
@@ -133,6 +137,19 @@ export class SpaceDetail implements OnInit {
 
     });
 
+  }
+
+  goBooking(): void {
+    if (!this.space) {
+      alert("空間選擇，請重新選擇");
+      return;
+    }
+
+    this.router.navigate(['/payment'], {
+      queryParams: {
+        spaceId: this.space.spaceId
+      }
+    });
   }
 
 }
