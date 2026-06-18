@@ -2,20 +2,21 @@ import { Component, ViewChild, ElementRef, AfterViewChecked, signal,effect } fro
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AiService, AIAction, ChatMessage } from '../../services/ai';
-
+import { DatePipe } from '@angular/common';
 import { LottieComponent, AnimationOptions } from 'ngx-lottie'
 
 
 @Component({
   selector: 'app-chat-widget',
   standalone: true,
-  imports: [FormsModule, LottieComponent],
+  imports: [FormsModule, LottieComponent, DatePipe],
   templateUrl: './chat-widget.html',
   styleUrl: './chat-widget.css',
 })
 export class ChatWidget implements AfterViewChecked {
   @ViewChild('messageContainer') messageContainer!: ElementRef;
 
+  today = new Date(); // show current date on ai-chat bot
   isOpen = signal(false);
   isLoading = signal(false);
   isTyping = signal(false); // 💡 新增：獨立控制目前是否正在逐字打字吐字中

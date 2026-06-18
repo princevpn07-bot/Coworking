@@ -84,6 +84,8 @@ namespace CoworkingAPI.Services
         {
             var apiKey = configuration["AI:ApiKey"]
                 ?? throw new InvalidOperationException("AI:ApiKey is not configured.");
+            
+            // todo: when apiKey is empty, need to process
 
             var options = new OpenAIClientOptions
             {
