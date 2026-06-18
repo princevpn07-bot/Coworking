@@ -1,4 +1,4 @@
-import { Component, OnInit, AfterViewInit, OnDestroy, ElementRef, ViewChild } from '@angular/core';
+import { Component, OnInit, AfterViewInit, OnDestroy, ElementRef, ViewChild, NgZone } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import Lenis from '@studio-freight/lenis';
 import { gsap } from 'gsap';
@@ -72,7 +72,7 @@ export class Home implements OnInit, AfterViewInit, OnDestroy {
   private images: HTMLImageElement[] = [];
   private frameCount = 300;
 
-  constructor(private el: ElementRef) {}
+ constructor(private el: ElementRef, private zone: NgZone) {}
 
   ngOnInit() {
     this.slideInterval = setInterval(() => {
@@ -251,12 +251,14 @@ export class Home implements OnInit, AfterViewInit, OnDestroy {
         this.isShaderVisible = self.isActive;
       }
     });
-
+// 🚀【效能提升】：將高頻滑鼠監聽移出 Angular 監測區，阻斷全域重繪
+    this.zone.runOutsideAngular(() => {
     this.mouseMoveListener = (e: MouseEvent) => {
       this.mouse.targetX = (e.clientX / window.innerWidth) * 2 - 1;
       this.mouse.targetY = (e.clientY / window.innerHeight) * 2 - 1;
     };
     window.addEventListener('mousemove', this.mouseMoveListener);
+  });
   }
 
   private updateBackgroundShaderLoop() {
@@ -280,9 +282,10 @@ export class Home implements OnInit, AfterViewInit, OnDestroy {
 
     gsap.set(canvas, { rotationY: this.mouse.x * 5, rotationX: -this.mouse.y * 3, x: this.mouse.x * 20, y: this.mouse.y * 20, scale: 1.05 });
 
+    // 🚀【核心重構】：引進微小變動閾值過濾，阻斷 SVG 圖形樹每幀高頻重新繪製引起的效能雪崩
     if (displacementMap) {
       const liquidIntensity = Math.round(Math.min(this.mouse.speed * 100, 45));
-      if (liquidIntensity !== this.lastLiquidIntensity) {
+      if (Math.abs(liquidIntensity - this.lastLiquidIntensity) > 1.5) {
         displacementMap.setAttribute('scale', liquidIntensity.toString());
         this.lastLiquidIntensity = liquidIntensity;
       }
@@ -328,12 +331,24 @@ export class Home implements OnInit, AfterViewInit, OnDestroy {
 
     if (!slidesWrapper || !titleNode) return;
 
+    // 🚀【分排非同步延遲優化】：先初始化快取前 30 幀，防範 300 張 WebP 瞬間併發連線癱瘓瀏覽器管道
+    const initialWarmFrames = 30;
+
     for (let i = 0; i < this.frameCount; i++) {
       const img = new Image();
+      if (i < initialWarmFrames) {
       const paddedIndex = String(i).padStart(5, '0');
       img.src = `assets/office_light2/office_light_${paddedIndex}.webp`;
+    }
       this.images.push(img);
     }
+    // 首幕完成渲染後，空閒時間偷偷在後台補齊剩餘 270 張序列圖片
+    setTimeout(() => {
+      for (let i = initialWarmFrames; i < this.frameCount; i++) {
+        const paddedIndex = String(i).padStart(5, '0');
+        this.images[i].src = `assets/office_light2/office_light_${paddedIndex}.webp`;
+      }
+    }, 1200);
 
     // 🔒 雙開門初始合攏面狀態看守
     gsap.set('.left-door', { xPercent: 0 });
@@ -882,6 +897,8 @@ private initHorizontalScroll() {
   }
 
   private initSmoothScroll() {
+    // 🚀【全域動態效能點火】：將高阻尼滾動主核心、每幀更新循環（Ticker）、自動撥放判定完全包裹在 runOutsideAngular 中，阻斷 Angular 進行每秒數百次無意義的全網頁檢查
+    this.zone.runOutsideAngular(() => {
     this.lenis = new Lenis({ duration: 1.2, easing: (t: number) => Math.min(1, 1.001 - Math.pow(2, -10 * t)), smoothWheel: true });
 
     this.tickerHandler = (time: number) => {
@@ -905,13 +922,13 @@ private initHorizontalScroll() {
         const rect = secondSlide.getBoundingClientRect();
         const isVisible = rect.right > 0 && rect.left < window.innerWidth;
         const isInAutoplayZone = rect.left < window.innerWidth * 0.50 && rect.right > window.innerWidth * 0.10;
-
-        if (isInAutoplayZone) {
-          if (!this.isVideoPlaying && !this.userManuallyPaused) {
-            this.isVideoPlaying = true;
-            targetVideo.play().catch((err) => {
-              console.log('自動點火受阻:', err);
-              this.isVideoPlaying = false;
+          if (isInAutoplayZone) {
+            if (!this.isVideoPlaying && !this.userManuallyPaused) {
+              // 🚀 僅在 UI 狀態切換的關鍵節點，才返回 Zone 內觸發變更偵測，大幅釋放 CPU 壓力
+              this.zone.run(() => { this.isVideoPlaying = true; });
+              targetVideo.play().catch((err) => {
+                console.log('自動點火受阻:', err);
+                this.zone.run(() => { this.isVideoPlaying = false; });
             });
           }
         } else {
@@ -935,17 +952,21 @@ private initHorizontalScroll() {
       ScrollTrigger.update();
       const scrollTop = window.scrollY || document.documentElement.scrollTop;
       // 🚀 【即時點火】：每次滾動時，只要超過 200px（避開最頂部的 Cinematic Gate 大門間距），膠囊立刻進場
-  this.isFloatingVisible = window.scrollY > 100;
-  // 📐 精密計算數學公式：(當前高度 / (總高度 - 視窗高度)) * 100
-      const docHeight = document.documentElement.scrollHeight - window.innerHeight;
-      if (docHeight > 0) {
-        this.scrollPercentage = Math.min(100, Math.max(0, Math.round((scrollTop / docHeight) * 100)));
-      } else {
-        this.scrollPercentage = 0;
-      }
+ // 精密計算膠囊進場與滾動進度條
+        const nextFloatingVisible = scrollTop > 100;
+        const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+        const nextScrollPercentage = docHeight > 0 ? Math.min(100, Math.max(0, Math.round((scrollTop / docHeight) * 100))) : 0;
+
+        // 🚀 優化防線：只有當畫面綁定變數真正發生狀態扭轉時，才導流回 Angular 區域內，避免滾動時後台瘋狂空轉
+        if (this.isFloatingVisible !== nextFloatingVisible || this.scrollPercentage !== nextScrollPercentage) {
+          this.zone.run(() => {
+            this.isFloatingVisible = nextFloatingVisible;
+            this.scrollPercentage = nextScrollPercentage;
+      });
+        }
+      });
     });
   }
-
   ngOnDestroy() {
     if (this.slideInterval) clearInterval(this.slideInterval);
     if (this.tickerHandler) { gsap.ticker.remove(this.tickerHandler); }

@@ -41,15 +41,14 @@
 .horizontal-card { flex-shrink: 0; width: 380px; cursor: pointer; transform-style: preserve-3d; perspective: 1000px; }
 .horizontal-card.alt-offset { transform: translateY(48px); }
 
-.horizontal-card .image-box { 
-  aspect-ratio: 4/5.2; border-radius: 16px; overflow: hidden; margin-bottom: 20px; border: 1px solid #cfc5bb; box-shadow: 0 10px 40px -15px rgba(0, 0, 0, 0.12); 
+.horizontal-card .image-box {
+  aspect-ratio: 4/5.2; border-radius: 16px; overflow: hidden; margin-bottom: 20px; border: 1px solid #cfc5bb; box-shadow: 0 10px 40px -15px rgba(0, 0, 0, 0.12);
   /* 🔒 轉場加速機制：移除 Transform 原生 CSS 補間，改由 GSAP 與跨頁面 Morph 識別碼進行毫秒級接管 */
-  transition: box-shadow 0.6s cubic-bezier(0.16, 1, 0.3, 1); 
+  transition: box-shadow 0.6s cubic-bezier(0.16, 1, 0.3, 1);
   will-change: transform, view-transition-name;
 }
 .horizontal-card:hover .image-box { box-shadow: 0 25px 55px -10px rgba(105, 92, 78, 0.22); }
 .horizontal-card .image-box img { width: 112%; height: 112%; position: relative; top: -6%; left: -6%; object-fit: cover; pointer-events: none; transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1); }
-.floating-card .card-inner, .horizontal-card .image-box img { transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1) !important; }
 .horizontal-card:hover .image-box img { transform: scale(1.05); }
 
 /* 🔒 高階磁吸：為文字圖層註冊硬體加速圖層 */
@@ -83,17 +82,17 @@
    🌌 Hero Banner 第一幕與第二幕布局 (🔒 3D 圖層與防穿透圓角隔離防線)
    ========================================================================== */
 .hero { position: relative; height: 100vh; width: 100%; overflow: hidden; z-index: 1; background: #ffffff; perspective: 2000px; transform-style: preserve-3d; }
-.hero-slides-wrapper { display: flex; flex-wrap: nowrap; height: 100%; width: 200vw; will-change: transform; transform-style: preserve-3d; } 
+.hero-slides-wrapper { display: flex; flex-wrap: nowrap; height: 100%; width: 200vw; will-change: transform; transform-style: preserve-3d; }
 .hero-slide { position: relative; width: 100vw; height: 100vh; display: flex; align-items: center; justify-content: center; flex-shrink: 0; box-sizing: border-box; perspective: 1500px; transform-style: preserve-3d; }
-.hero-slide:first-child .hero-bg { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 0; transform-style: preserve-3d; } 
+.hero-slide:first-child .hero-bg { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 0; transform-style: preserve-3d; }
 .hero-slide:first-child .hero-bg canvas { transform-origin: center center; will-change: transform; }
 
-.hero-slide:not(:first-child) .hero-bg { 
-  position: absolute; width: 92vw; height: 86vh; top: 7vh; left: 4vw; border-radius: 32px; overflow: hidden; box-shadow: 0 30px 70px rgba(0, 0, 0, 0.25); z-index: 0; transform-style: preserve-3d; will-change: transform, width, height, top, left, border-radius, box-shadow; 
+.hero-slide:not(:first-child) .hero-bg {
+  position: absolute; width: 92vw; height: 86vh; top: 7vh; left: 4vw; border-radius: 32px; overflow: hidden; box-shadow: 0 30px 70px rgba(0, 0, 0, 0.25); z-index: 0; transform-style: preserve-3d; will-change: transform, width, height, top, left, border-radius, box-shadow;
   transform: translateZ(0); -webkit-backface-visibility: hidden; backface-visibility: hidden;
 }
-.hero-slide:not(:first-child) .hero-bg img, .hero-slide:not(:first-child) .hero-bg video { 
-  position: absolute; top: 0; left: -20%; width: 140%; height: 100%; object-fit: cover; will-change: transform; 
+.hero-slide:not(:first-child) .hero-bg img, .hero-slide:not(:first-child) .hero-bg video {
+  position: absolute; top: 0; left: -20%; width: 140%; height: 100%; object-fit: cover; will-change: transform;
   border-radius: inherit; overflow: hidden;
 }
 
@@ -117,17 +116,17 @@
 /* ==========================================================================
    🌌 策展理念 3D 圓環卡片飛入輪盤核心樣式 (🔒 鎖定開關燈升級)
    ========================================================================== */
-.philosophy { 
-  position: relative; 
-  height: 100vh; 
-  background: var(--surface-container-low); 
-  color: white; 
-  display: flex; 
-  align-items: center; 
-  justify-content: center; 
-  padding: 100px 0; 
-  z-index: 3; 
-  box-shadow: 0 -30px 60px rgba(0, 0, 0, 0); 
+.philosophy {
+  position: relative;
+  height: 100vh;
+  background: var(--surface-container-low);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 100px 0;
+  z-index: 3;
+  box-shadow: 0 -30px 60px rgba(0, 0, 0, 0);
 }
 .philosophy-3d-wrapper { width: 100%; height: 700px; display: flex; align-items: center; justify-content: center; perspective: 1200px; }
 .philosophy-center-text { text-align: center; z-index: 10; pointer-events: none; }
@@ -136,10 +135,26 @@
 .philosophy-center-text span { font-size: 18px; color: rgba(255, 255, 255, 0.4); font-weight: 400; letter-spacing: 0.05em; }
 
 .floating-card { position: absolute; width: 260px; aspect-ratio: 1 / 1; border-radius: 24px; background: transparent; will-change: transform, opacity; transform-style: preserve-3d; left: 50%; top: 50%; margin-left: -130px; margin-top: -130px; }
-.floating-card .card-inner { position: relative; width: 100%; height: 100%; border-radius: 24px; overflow: hidden; border: 1px solid rgba(255, 255, 255, 0.08); box-shadow: 0 40px 90px rgba(0, 0, 0, 0.6); will-change: transform; -webkit-backface-visibility: hidden; backface-visibility: hidden; transform: translateZ(0); transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.5s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.5s cubic-bezier(0.16, 1, 0.3, 1); }
+
+/* 🚀【核心排卡優化】：徹底移除 transform 補間聲明，全權交給 GSAP.ticker 管理，根除雙向拉扯造成的頁面抖動與影格遺失 */
+.floating-card .card-inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  border-radius: 24px;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 40px 90px rgba(0, 0, 0, 0.6);
+  will-change: transform;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+  transform: translateZ(0);
+  transition: border-color 0.5s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
 .floating-card img { width: 100%; height: 100%; object-fit: cover; }
 .floating-card .card-caption { position: absolute; bottom: 24px; left: 24px; background: rgba(14, 14, 16, 0.6); backdrop-filter: blur(15px); color: white; padding: 8px 18px; border-radius: 100px; font-size: 14px; font-weight: 600; border: 1px solid rgba(255, 255, 255, 0.1); letter-spacing: 0.05em; z-index: 5; }
-.floating-card:hover .card-inner { transform: scale(1.15) translateZ(0); border-color: rgba(255, 255, 255, 0.25); box-shadow: 0 50px 100px rgba(0, 0, 0, 0.8), 0 0 40px rgba(105, 92, 78, 0.55); }
+.floating-card:hover .card-inner { border-color: rgba(255, 255, 255, 0.25); box-shadow: 0 50px 100px rgba(0, 0, 0, 0.8), 0 0 40px rgba(105, 92, 78, 0.55); }
 .floating-card .hover-description-box { position: absolute; top: 50%; width: 250px; background: rgba(14, 14, 16, 0.85); border: 1px solid rgba(255, 255, 255, 0.1); backdrop-filter: blur(16px); padding: 20px; border-radius: 16px; box-shadow: 0 30px 60px rgba(0, 0, 0, 0.5); pointer-events: none; opacity: 0; z-index: 999; transform: translateY(-50%) scale(0.9); transition: opacity 0.5s cubic-bezier(0.16, 1, 0.3, 1), transform 0.5s cubic-bezier(0.16, 1, 0.3, 1); }
 .card-1 .hover-description-box, .card-3 .hover-description-box, .card-5 .hover-description-box, .card-7 .hover-description-box, .card-9 .hover-description-box { left: 120%; }
 .card-2 .hover-description-box, .card-4 .hover-description-box, .card-6 .hover-description-box, .card-8 .hover-description-box, .card-10 .hover-description-box { right: 120%; }
@@ -152,7 +167,7 @@
 .rental-plans { padding: var(--section-gap) 0; background: white; position: relative; z-index: 5; }
 .plans-visual-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--gutter); margin-top: 60px; }
 
-.visual-plan-card { 
+.visual-plan-card {
   position: relative; height: 580px; border-radius: 28px; overflow: hidden; background: #1d1b1a; display: flex; align-items: flex-end; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.03); transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.8s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.8s cubic-bezier(0.16, 1, 0.3, 1);
   will-change: transform, opacity; transform: translateZ(0); -webkit-backface-visibility: hidden; backface-visibility: hidden;
 }
@@ -224,7 +239,7 @@
   inset: 0;
   width: 100%;
   height: 100%;
-  z-index: 99; 
+  z-index: 99;
   pointer-events: none;
   display: flex;
   overflow: hidden;
@@ -233,7 +248,7 @@
 .gate-door {
   flex: 1;
   height: 100%;
-  background: #1d1b1a; 
+  background: #1d1b1a;
   will-change: transform;
 }
 .gate-text-center {
@@ -314,6 +329,7 @@
 :host-context(.dark-mode) .horizontal-bg-typography {
   color: rgba(255, 255, 255, 0.015) !important;
 }
+
 /* ==========================================================================
    🎯 【全新追加】修復方案卡片按鈕在黑夜模式下白底白字的視覺盲點
    ========================================================================== */
