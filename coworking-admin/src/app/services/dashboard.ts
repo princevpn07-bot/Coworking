@@ -15,8 +15,8 @@ export class DashboardService {
     return this.http.get<DashboardSummary>(`${this.apiUrl}/summary`);
   }
 
-  getExpiringContracts(): Observable<ExpiringContract[]> {
-    return this.http.get<ExpiringContract[]>(`${this.apiUrl}/expiring`);
+  getExpiringContracts(days: number = 7): Observable<ExpiringContract[]> {
+    return this.http.get<ExpiringContract[]>(`${this.apiUrl}/expiring?days=${days}`);
   }
 
   getPendingPayments(): Observable<PendingPayment[]> {

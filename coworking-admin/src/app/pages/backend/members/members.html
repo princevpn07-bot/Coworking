@@ -82,24 +82,28 @@
               <span class="status suspended">🔴 已停權 (Suspended)</span>
             }
           </td>
-          <td>
-            <div class="actions">
-              <button class="btn-icon btn-manage" [title]="isSelf(member) ? '無法操作自己的帳號' : '更改權限'"
-                      [disabled]="isSelf(member)" (click)="openRoleModal(member)">
-                <span class="material-symbols-outlined">manage_accounts</span>
+          <td class="text-right">
+            <div class="action-menu-wrap">
+              <button class="btn-menu-trigger" (click)="toggleMenu(member.userId, $event)" [title]="'操作選單'">
+                <span class="material-symbols-outlined">more_vert</span>
               </button>
-              <button class="btn-icon btn-reset" [title]="isSelf(member) ? '無法操作自己的帳號' : '重置密碼'"
-                      [disabled]="isSelf(member)" (click)="openResetModal(member)">
-                <span class="material-symbols-outlined">lock_reset</span>
-              </button>
-              <button class="btn-icon btn-block" [title]="isSelf(member) ? '無法操作自己的帳號' : (member.status ? '封鎖帳戶' : '解除封鎖')"
-                      [disabled]="isSelf(member)" (click)="openBlockModal(member)">
-                <span class="material-symbols-outlined">{{ member.status ? 'block' : 'lock_open' }}</span>
-              </button>
-              <button class="btn-icon" [title]="'設定 LINE ID'" (click)="openLineModal(member)"
-                      [style.color]="member.lineId ? '#06c755' : ''">
-                <span class="material-symbols-outlined">chat</span>
-              </button>
+              @if (openMenuUserId() === member.userId) {
+                <div class="action-dropdown" (click)="$event.stopPropagation()">
+                  <button [disabled]="isSelf(member)" (click)="openRoleModal(member); closeMenu()">
+                    <span class="material-symbols-outlined">manage_accounts</span>更改權限
+                  </button>
+                  <button [disabled]="isSelf(member)" (click)="openResetModal(member); closeMenu()">
+                    <span class="material-symbols-outlined">lock_reset</span>重置密碼
+                  </button>
+                  <button [disabled]="isSelf(member)" (click)="openBlockModal(member); closeMenu()" [class.danger]="member.status">
+                    <span class="material-symbols-outlined">{{ member.status ? 'block' : 'lock_open' }}</span>
+                    {{ member.status ? '封鎖帳戶' : '解除封鎖' }}
+                  </button>
+                  <button (click)="openLineModal(member); closeMenu()" [class.line-linked]="member.lineId">
+                    <span class="material-symbols-outlined">chat</span>設定 LINE ID
+                  </button>
+                </div>
+              }
             </div>
           </td>
         </tr>
@@ -133,8 +137,10 @@
         <select [(ngModel)]="pendingRole">
           <option [ngValue]="20">客戶</option>
           <option [ngValue]="60">合作夥伴</option>
-          <option [ngValue]="80">員工</option>
-          <option [ngValue]="99">管理員</option>
+          @if (!currentUserIsStaff) {
+            <option [ngValue]="80">員工</option>
+            <option [ngValue]="99">管理員</option>
+          }
         </select>
       </div>
       @if (isPartnerRole) {

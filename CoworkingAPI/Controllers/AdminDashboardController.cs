@@ -60,10 +60,10 @@ namespace CoworkingAPI.Controllers
         }
 
         [HttpGet("expiring")]
-        public async Task<IActionResult> GetExpiringContracts()
+        public async Task<IActionResult> GetExpiringContracts([FromQuery] int days = 7)
         {
             var now = DateTime.Today;
-            var sevenDaysLater = now.AddDays(7);
+            var sevenDaysLater = now.AddDays(days);
             var locationId = GetLocationFilter();
 
             var query = _context.Bookings.AsQueryable();

@@ -929,3 +929,144 @@
   color: var(--on-surface-variant);
   margin: 0;
 }
+
+/* ── Dark Mode ───────────────────────────────────────────────────────────── */
+.admin-wrapper.dark .content-card,
+.admin-wrapper.dark .stat-card {
+  background: #1e2433;
+  border-color: #2a3244;
+}
+
+.admin-wrapper.dark .data-table th {
+  background-color: #161b27;
+  color: #8892a4;
+  border-bottom-color: #2a3244;
+}
+
+.admin-wrapper.dark .data-table td {
+  color: #e2e8f0;
+  border-bottom-color: #2a3244;
+}
+
+.admin-wrapper.dark .table-row:hover {
+  background-color: rgba(99, 142, 116, 0.12);
+}
+
+.admin-wrapper.dark .table-loading {
+  color: #8892a4;
+}
+
+.admin-wrapper.dark .name { color: #e2e8f0; }
+.admin-wrapper.dark .id   { color: #8892a4; }
+
+.admin-wrapper.dark .badge.badge-available { background: #1a3320; color: #6fcf8e; }
+.admin-wrapper.dark .badge.badge-occupied  { background: #0e1e2e; color: #64b5f6; }
+.admin-wrapper.dark .badge.badge-disabled  { background: #2a3244; color: #8892a4; }
+.admin-wrapper.dark .badge.badge-cleaning  { background: #2a1e0e; color: #f0c040; }
+
+.admin-wrapper.dark .pagination-bar {
+  border-top-color: #2a3244;
+}
+
+.admin-wrapper.dark .btn-page {
+  background: #1e2433;
+  border-color: #2a3244;
+  color: #e2e8f0;
+}
+
+.admin-wrapper.dark .btn-page:hover  { background: #2a3244; }
+.admin-wrapper.dark .btn-page.active { background: #6fcf8e; color: #0f1117; border-color: #6fcf8e; }
+
+.admin-wrapper.dark .filter-bar {
+  background: #1e2433;
+  border-color: #2a3244;
+}
+
+.admin-wrapper.dark .filter-field label { color: #8892a4; }
+
+.admin-wrapper.dark .filter-field input,
+.admin-wrapper.dark .filter-field select {
+  background: #161b27;
+  border-color: #2a3244;
+  color: #e2e8f0;
+}
+
+.admin-wrapper.dark .btn-secondary {
+  background: #1e2433;
+  border-color: #2a3244;
+  color: #c4cdd8;
+}
+
+.admin-wrapper.dark .btn-secondary:hover          { background: #2a3244; }
+.admin-wrapper.dark .btn-secondary.filter-active  { background: #1a3320; border-color: #6fcf8e; color: #6fcf8e; }
+
+.admin-wrapper.dark .detail-panel {
+  background: #1e2433;
+  border-left-color: #2a3244;
+}
+
+.admin-wrapper.dark .panel-space-name  { color: #e2e8f0; }
+.admin-wrapper.dark .panel-space-id    { color: #8892a4; }
+.admin-wrapper.dark .panel-status-label { color: #8892a4; }
+.admin-wrapper.dark .panel-section-title { color: #e2e8f0; }
+
+.admin-wrapper.dark .panel-close-btn,
+.admin-wrapper.dark .panel-edit-btn {
+  color: #8892a4;
+}
+
+.admin-wrapper.dark .panel-close-btn:hover,
+.admin-wrapper.dark .panel-edit-btn:hover {
+  background: #2a3244;
+  color: #e2e8f0;
+}
+
+.admin-wrapper.dark .panel-divider { background: #2a3244; }
+.admin-wrapper.dark .meta-item     { color: #8892a4; }
+
+.admin-wrapper.dark .panel-form-group label { color: #8892a4; }
+
+.admin-wrapper.dark .panel-form-group input,
+.admin-wrapper.dark .panel-form-group select {
+  background: #161b27;
+  border-color: #2a3244;
+  color: #e2e8f0;
+}
+
+.admin-wrapper.dark .asset-item {
+  background: #161b27;
+  border-color: #2a3244;
+}
+
+.admin-wrapper.dark .asset-name   { color: #e2e8f0; }
+.admin-wrapper.dark .asset-amount { background: #2a3244; color: #c4cdd8; }
+
+.admin-wrapper.dark .btn-transfer { border-color: #2a3244; color: #8892a4; }
+.admin-wrapper.dark .btn-transfer:hover { background: #2a3244; color: #6fcf8e; }
+
+.admin-wrapper.dark .modal-dialog { background: #1e2433; }
+.admin-wrapper.dark .modal-header { border-bottom-color: #2a3244; }
+.admin-wrapper.dark .modal-header h4 { color: #e2e8f0; }
+.admin-wrapper.dark .modal-footer { border-top-color: #2a3244; }
+
+.admin-wrapper.dark .form-group label { color: #8892a4; }
+
+.admin-wrapper.dark .form-group input,
+.admin-wrapper.dark .form-group select {
+  background: #161b27;
+  border-color: #2a3244;
+  color: #e2e8f0;
+}
+
+.admin-wrapper.dark .btn-cancel { background: #1e2433; border-color: #2a3244; color: #c4cdd8; }
+.admin-wrapper.dark .btn-cancel:hover { background: #2a3244; }
+
+.admin-wrapper.dark .space-thumb { background-color: #2a3244; }
+
+.admin-wrapper.dark .scrap-mode-banner {
+  background: #3d1515;
+  border-color: #c53030;
+  color: #f87171;
+}
+
+.admin-wrapper.dark .assets-loading { color: #8892a4; }

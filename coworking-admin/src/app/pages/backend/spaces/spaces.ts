@@ -1,4 +1,4 @@
-import { Component, OnInit, inject, signal, computed } from '@angular/core';
+import { Component, OnInit, inject, signal, computed, ViewEncapsulation } from '@angular/core';
 import { NgClass } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { AdminSpaceAssertsDto, AdminSpaceInfoDto, CreateSpace, Location, SpaceAsset, SpaceImageItem, SpaceStatus, SpaceView } from '../../../models/space.model';
@@ -17,6 +17,7 @@ const STATUS_MAP: Record<number, SpaceStatus> = {
   imports: [NgClass, FormsModule],
   templateUrl: './spaces.html',
   styleUrl: './spaces.css',
+  encapsulation: ViewEncapsulation.None,
 })
 export class Spaces implements OnInit {
   private spaceService = inject(SpaceService);

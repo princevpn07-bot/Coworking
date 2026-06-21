@@ -1,5 +1,10 @@
 /* You can add global styles to this file, and also import other style files */
 
+html, body {
+  margin: 0;
+  padding: 0;
+}
+
 :root {
   --primary: #3D5A35;
   --surface-container: #FFFFFF;
@@ -355,6 +360,48 @@
   background: #161b27;
   color: #c4cdd8;
 }
+
+/* ── Dark Mode: Dashboard tables ───────────────────────────────────────── */
+.admin-wrapper.dark .expiring-table th {
+  color: #8892a4;
+  border-bottom-color: #2a3244;
+}
+
+.admin-wrapper.dark .expiring-table td {
+  color: #e2e8f0;
+  border-bottom-color: #2a3244;
+}
+
+.admin-wrapper.dark .expiring-table tbody tr:hover {
+  background: rgba(99, 142, 116, 0.12);
+}
+
+.admin-wrapper.dark .stats-trend {
+  color: #8892a4;
+}
+
+.admin-wrapper.dark .stats-trend.positive {
+  color: #6fcf8e;
+}
+
+.admin-wrapper.dark .stats-trend.alert {
+  color: #f87171;
+}
+
+.admin-wrapper.dark .section-hint {
+  color: #8892a4;
+}
+
+.admin-wrapper.dark .empty-row {
+  color: #8892a4;
+}
+
+.admin-wrapper.dark .days-badge.urgent  { background: #3d1515; color: #f87171; }
+.admin-wrapper.dark .days-badge.warning { background: #2a1e0e; color: #f0c040; }
+.admin-wrapper.dark .days-badge.normal  { background: #1a3320; color: #6fcf8e; }
+
+.admin-wrapper.dark .status-badge.paid    { background: #1a3320; color: #6fcf8e; }
+.admin-wrapper.dark .status-badge.pending { background: #2a3244; color: #c4cdd8; }
 
 /* ── Dark Mode: Booking status badges ──────────────────────────────────── */
 .admin-wrapper.dark .event-chip.paid,

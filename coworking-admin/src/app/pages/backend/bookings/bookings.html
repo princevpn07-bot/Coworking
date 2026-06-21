@@ -33,20 +33,12 @@
         >
           <span class="day-number" [class.today]="day.isToday">{{ day.date.getDate() }}</span>
           @for (booking of getBookingsForDay(day).slice(0, 2); track booking.contract_id) {
-            <div class="event-chip"
-                 [class.paid]="booking.status === 1"
-                 [class.pending]="booking.status === 0"
-                 [class.cancelled]="booking.status !== 0 && booking.status !== 1">
+            <div [class]="'event-chip ' + bookingClass(booking)">
               {{ formatTime(booking.start_date) }} {{ booking.spacename ?? '未知空間' }} · {{ booking.username ?? '未知會員' }}
             </div>
           }
           @for (entry of getCoverageForDay(day).slice(0, 2); track entry.booking.contract_id) {
-            <div class="event-bar"
-                 [class.paid]="entry.booking.status === 1"
-                 [class.pending]="entry.booking.status === 0"
-                 [class.cancelled]="entry.booking.status !== 0 && entry.booking.status !== 1"
-                 [class.round-left]="entry.roundLeft"
-                 [class.round-right]="entry.roundRight">
+            <div [class]="'event-bar ' + bookingClass(entry.booking) + (entry.roundLeft ? ' round-left' : '') + (entry.roundRight ? ' round-right' : '')">
               {{ entry.booking.spacename ?? '未知空間' }}
             </div>
           }
@@ -61,13 +53,16 @@
 
     <footer class="calendar-legend">
       <div class="legend-item paid">
-        <span class="dot"></span>已付款預約
+        <span class="dot"></span>已付款
       </div>
       <div class="legend-item pending">
-        <span class="dot"></span>待處理預約
+        <span class="dot"></span>待處理
+      </div>
+      <div class="legend-item expired">
+        <span class="dot"></span>已結束
       </div>
       <div class="legend-item cancelled">
-        <span class="dot"></span>已取消/過期
+        <span class="dot"></span>已取消
       </div>
     </footer>
   </section>
@@ -91,10 +86,7 @@
               <div class="booking-item">
                 <div class="booking-item-header">
                   <span class="booking-space">{{ detail.username ?? '未知會員' }}</span>
-                  <span class="booking-status-badge"
-                        [class.paid]="detail.status === 1"
-                        [class.pending]="detail.status === 0"
-                        [class.cancelled]="detail.status !== 0 && detail.status !== 1">{{ statusLabel(detail.status ?? -1) }}</span>
+                  <span [class]="'booking-status-badge ' + detailClass(detail)">{{ detailLabel(detail) }}</span>
                 </div>
                 @if (detail.email) {
                   <div class="booking-item-meta">

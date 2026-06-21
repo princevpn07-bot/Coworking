@@ -7,6 +7,7 @@ import { SpaceDetailService, SpaceDetailDto } from '../../../services/space-deta
 import { ActivatedRoute, Router } from '@angular/router';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { FavoriteService } from '../../../services/favorite';
+import { ToastService } from '../../../services/toast';
 
 @Pipe({ name: 'hourLabel', standalone: true })
 export class HourLabelPipe implements PipeTransform {
@@ -28,6 +29,7 @@ export class SpaceDetail implements OnInit {
   private spaceDetailService = inject(SpaceDetailService);
   private cdr = inject(ChangeDetectorRef);
   private http = inject(HttpClient);
+  private toast = inject(ToastService);
 
   private readonly apiBase = 'http://localhost:5193';
 
@@ -248,7 +250,7 @@ export class SpaceDetail implements OnInit {
 
   onEndDateChange(event: Event): void {
     if (!this.startDate) {
-      alert('請先選擇開始日期');
+      this.toast.warning('請先選擇開始日期');
       (event.target as HTMLInputElement).value = '';
       return;
     }
@@ -257,7 +259,7 @@ export class SpaceDetail implements OnInit {
 
   onStartHourChange(): void {
     if (!this.tempStartDate) {
-      alert('請先選擇日期');
+      this.toast.warning('請先選擇日期');
       setTimeout(() => { this.startHour = ''; });
       return;
     }
@@ -267,18 +269,18 @@ export class SpaceDetail implements OnInit {
 
   onEndHourChange(): void {
     if (!this.tempStartDate) {
-      alert('請先選擇日期');
+      this.toast.warning('請先選擇日期');
       setTimeout(() => { this.endHour = ''; });
       return;
     }
     if (!this.startHour) {
-      alert('請先選擇開始時間');
+      this.toast.warning('請先選擇開始時間');
       setTimeout(() => { this.endHour = ''; });
       return;
     }
     if (Number(this.endHour) <= Number(this.startHour)) {
       this.hourError = true;
-      alert('結束時間必須晚於開始時間');
+      this.toast.error('結束時間必須晚於開始時間');
       setTimeout(() => { this.endHour = ''; });
       return;
     }
@@ -288,15 +290,15 @@ export class SpaceDetail implements OnInit {
   // ── booking ───────────────────────────────────────────
   goBooking(): void {
     if (!this.space || !this.selectedRent) {
-      alert('請選擇方案');
+      this.toast.warning('請選擇方案');
       return;
     }
     if (!this.computedStartDate || !this.computedEndDate) {
-      alert('請選擇預約時段');
+      this.toast.warning('請選擇預約時段');
       return;
     }
     if (this.hasConflict) {
-      alert('此時段已被預訂，請選擇其他時間');
+      this.toast.error('此時段已被預訂，請選擇其他時間');
       return;
     }
 

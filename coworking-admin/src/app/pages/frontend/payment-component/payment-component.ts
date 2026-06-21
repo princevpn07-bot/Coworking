@@ -6,6 +6,7 @@ import { FormsModule } from '@angular/forms';
 import { ProfileService } from '../../../services/profile';
 import { SpaceDetailDto, SpaceDetailService } from '../../../services/space-detail.service';
 import { CommonModule } from '@angular/common';
+import { ToastService } from '../../../services/toast';
 
 export interface AddBookingPayload {
   user_id: number | null;
@@ -69,7 +70,8 @@ export class PaymentComponent implements OnInit {
     private router: Router,
     private profileService: ProfileService,
     private spaceDetailService: SpaceDetailService,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private toast: ToastService
   ) {}
 
   ngOnInit(): void {
@@ -82,7 +84,7 @@ export class PaymentComponent implements OnInit {
     this.priceType  = Number(params.get('priceType')) || 1;
 
     if (!this.spaceId || !this.rentId || !this.startDate || !this.endDate) {
-      alert('預約資訊不完整，請重新選擇');
+      this.toast.warning('預約資訊不完整，請重新選擇');
       this.router.navigate(['/all-spaces']);
       return;
     }
@@ -137,12 +139,12 @@ export class PaymentComponent implements OnInit {
     if (this.submitting) return;
 
     if (this.invoiceType === 'company' && (!this.companyName || !this.taxId)) {
-      alert('請填寫公司名稱與統一編號');
+      this.toast.warning('請填寫公司名稱與統一編號');
       return;
     }
 
     if (!this.userName || !this.userPhone || !this.userEmail) {
-      alert('您的個人資料未填寫完整，請先至會員中心完善資料');
+      this.toast.warning('您的個人資料未填寫完整，請先至會員中心完善資料');
       return;
     }
 
@@ -171,7 +173,7 @@ export class PaymentComponent implements OnInit {
         const contractId = booking?.contract_id;
         if (!contractId) {
           this.submitting = false;
-          alert('取得訂單編號失敗，請稍後再試');
+          this.toast.error('取得訂單編號失敗，請稍後再試');
           return;
         }
         this.redirectToECPay(contractId);
@@ -179,7 +181,7 @@ export class PaymentComponent implements OnInit {
       error: (err) => {
         console.error(err);
         this.submitting = false;
-        alert('預訂失敗，請稍後再試');
+        this.toast.error('預訂失敗，請稍後再試');
       },
     });
   }
@@ -217,7 +219,7 @@ export class PaymentComponent implements OnInit {
       error: (err) => {
         console.error(err);
         this.submitting = false;
-        alert('建立支付失敗，請稍後再試');
+        this.toast.error('建立支付失敗，請稍後再試');
       }
     });
   }

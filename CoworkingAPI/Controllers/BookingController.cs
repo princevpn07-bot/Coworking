@@ -110,6 +110,7 @@ namespace CoworkingAPI.Controllers
                 .Select(b => new FrontendMyOrderDto
                 {
                     contract_id = b.contract_id,
+                    space_id = b.Rent != null && b.Rent.Space != null ? b.Rent.Space.space_id : (int?)null,
                     space_name = b.Rent != null && b.Rent.Space != null ? b.Rent.Space.space_number : null,
                     location_city = b.Rent != null && b.Rent.Space != null && b.Rent.Space.Location != null ? b.Rent.Space.Location.city : null,
                     location_address = b.Rent != null && b.Rent.Space != null && b.Rent.Space.Location != null ? b.Rent.Space.Location.address : null,
@@ -125,6 +126,18 @@ namespace CoworkingAPI.Controllers
                 .OrderByDescending(b => b.created_date)
                 .ToListAsync();
             return Ok(orders);
+        }
+
+        [HttpPut("Cancel/{id}")]
+        public async Task<IActionResult> Cancel(int id)
+        {
+            var booking = await _context.Bookings.FirstOrDefaultAsync(b => b.contract_id == id);
+            if (booking == null) return NotFound($"找不到合約 {id}");
+            if (booking.status == 2) return BadRequest("此訂單已取消");
+
+            booking.status = 2;
+            await _context.SaveChangesAsync();
+            return NoContent();
         }
 
         [HttpDelete("Delete/{id}")]

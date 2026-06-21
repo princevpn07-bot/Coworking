@@ -3,6 +3,7 @@ import { RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { AuthService } from '../../../services/auth';
+import { ToastService } from '../../../services/toast';
 import { FrontendMyOrderDto } from '../../../models/user.model';
 
 const STATUS_MAP: Record<number, string> = {
@@ -39,7 +40,7 @@ export class MyOrders implements OnInit {
   private paymentApiUrl = 'http://localhost:5193/api/Payment/CreatePayment';
   private readonly defaultPaymentUrl = 'https://payment-stage.ecpay.com.tw/Cashier/AioCheckOut/V5';
 
-  constructor(private auth: AuthService, private http: HttpClient) {
+  constructor(private auth: AuthService, private http: HttpClient, private toast: ToastService) {
     this.username = this.auth.getUsername();
   }
 
@@ -105,10 +106,16 @@ getSpaceName(order: any): string {
     return `${typeLabel} · ${diffHours} 小時`;
   }
 
-  navigateToSpace(spaceName: string | null): void {
-    if (!spaceName) return;
-    const url = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(spaceName)}`;
-    window.open(url, '_blank');
+  isPayable(order: FrontendMyOrderDto): boolean {
+    if (order.status !== 0) return false;
+    if (!order.pay_deadline) return true;
+    return new Date(order.pay_deadline) >= new Date();
+  }
+
+  navigateToSpace(order: FrontendMyOrderDto): void {
+    const query = [order.location_address, order.location_city].filter(Boolean).join(' ');
+    if (!query) return;
+    window.open(`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(query)}`, '_blank');
   }
 
   // ✨ 彈窗操作方法 1：打開確認視窗
@@ -133,19 +140,17 @@ getSpaceName(order: any): string {
 
     this.http.put(`${this.apiUrl}/Cancel/${order.contract_id}`, {}).subscribe({
       next: () => {
-        this.orders.update(prev => 
+        this.orders.update(prev =>
           prev.map(o => o.contract_id === order.contract_id ? { ...o, status: 2 } : o)
         );
         this.loading.set(false);
         this.orderToCancel.set(null);
       },
       error: (err) => {
-        console.error('取消失敗，改採本地模擬測試', err);
-        this.orders.update(prev => 
-          prev.map(o => o.contract_id === order.contract_id ? { ...o, status: 2 } : o)
-        );
+        console.error('取消失敗', err);
         this.loading.set(false);
         this.orderToCancel.set(null);
+        this.toast.error('取消失敗，請稍後再試。');
       }
     });
   }
@@ -158,11 +163,11 @@ getSpaceName(order: any): string {
   // ... 保留原本完好無損的 payment 與 submitForm 程式碼 ...
   payment(order: FrontendMyOrderDto): void {
     if (!order || order.total_price == null || order.total_price <= 0) {
-      alert('此訂單金額無效，無法進行付款。');
+      this.toast.error('此訂單金額無效，無法進行付款。');
       return;
     }
     const userId = this.auth.getUserId();
-    if (!userId) { alert('請重新登入後再進行付款。'); return; }
+    if (!userId) { this.toast.error('請重新登入後再進行付款。'); return; }
     const payload = {
       contractId: order.contract_id,
       userId,
@@ -174,7 +179,7 @@ getSpaceName(order: any): string {
       next: (response) => {
         this.loading.set(false);
         if (!response?.success || !response?.data || typeof response.data !== 'object') {
-          alert(response?.message || '建立支付參數失敗，請稍後再試。');
+          this.toast.error(response?.message || '建立支付參數失敗，請稍後再試。');
           return;
         }
         const fields = response.data as Record<string, string>;
@@ -183,14 +188,14 @@ getSpaceName(order: any): string {
       error: (err) => {
         console.error('CreatePayment failed', err);
         this.loading.set(false);
-        alert('無法建立付款連線，請稍後再試。');
+        this.toast.error('無法建立付款連線，請稍後再試。');
       }
     });
   }
 
   private submitForm(fields: Record<string, string>): void {
     const action = this.defaultPaymentUrl;
-    if (!action) { alert('收不到金流網址，請稍後再試。'); return; }
+    if (!action) { this.toast.error('收不到金流網址，請稍後再試。'); return; }
     const form = document.createElement('form');
     form.method = 'POST';
     form.action = action;

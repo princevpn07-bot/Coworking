@@ -54,19 +54,24 @@
               </div>
 
               <div class="order-card__actions">
-                @if (order.status === 0) {
+                @if (isPayable(order)) {
                   <button class="action-btn payment-btn" (click)="payment(order)">
                     <svg class="icon-payment" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>
-                    付款
+                    去付款
                   </button>
+                } @else if (order.status === 0) {
+                  <span class="overdue-hint">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                    付款已逾期（{{ order.pay_deadline | date:'MM/dd' }}）
+                  </span>
                 }
                 
-                <button class="action-btn" (click)="navigateToSpace(order.space_name)">
+                <button class="action-btn" (click)="navigateToSpace(order)">
                   <svg class="icon-navigate" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="3 11 22 2 13 21 11 13 3 11"/></svg>
                   導航
                 </button>
 
-                <button class="action-btn" routerLink="/all-spaces">
+                <button class="action-btn" [routerLink]="order.space_id ? ['/space', order.space_id] : ['/all-spaces']">
                   <svg class="icon-modify" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                     <path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"/>
                   </svg>

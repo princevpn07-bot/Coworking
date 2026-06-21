@@ -2,7 +2,9 @@
   <div class="stats-card">
     <div class="stats-info">
       <span class="stats-label">本月營收</span>
-      <h3 class="stats-value">{{ summary ? ('NT$ ' + (summary.monthlyRevenue | number)) : 'NT$ -' }}</h3>
+      <h3 class="stats-value">
+        {{ summary ? ('NT$ ' + ((isPartner ? summary.monthlyRevenue * 0.8 : summary.monthlyRevenue) | number:'1.0-0')) : 'NT$ -' }}
+      </h3>
       <p class="stats-trend positive">
         <span class="material-symbols-outlined">trending_up</span>
         本月累計
@@ -48,8 +50,15 @@
 
 <section class="card expiring-section">
   <div class="section-header">
-    <h4 class="section-title">即將到期合約</h4>
-    <span class="section-hint">未來 7 天內到期</span>
+    <div class="section-title-group">
+      <h4 class="section-title">即將到期合約</h4>
+      <span class="section-count">共 {{ expiringContracts.length }} 筆</span>
+    </div>
+    <div class="filter-tabs">
+      <button class="filter-tab" [class.active]="expiringDays === 7" (click)="setExpiringDays(7)">7 天</button>
+      <button class="filter-tab" [class.active]="expiringDays === 30" (click)="setExpiringDays(30)">1 個月</button>
+      <button class="filter-tab" [class.active]="expiringDays === 180" (click)="setExpiringDays(180)">半年</button>
+    </div>
   </div>
   <table class="expiring-table">
     <thead>
@@ -64,7 +73,7 @@
     </thead>
     <tbody>
       @if (expiringContracts.length === 0) {
-        <tr><td colspan="6" class="empty-row">目前無即將到期合約</td></tr>
+        <tr><td colspan="6" class="empty-row">此期間內無即將到期合約</td></tr>
       }
       @for (contract of expiringContracts; track contract.customerEmail) {
         <tr>
@@ -82,8 +91,15 @@
 
 <section class="card pending-section">
   <div class="section-header">
-    <h4 class="section-title">待付款訂單</h4>
-    <span class="section-hint">尚未完成付款</span>
+    <div class="section-title-group">
+      <h4 class="section-title">待付款訂單</h4>
+      <span class="section-count">共 {{ filteredPendingPayments.length }} 筆</span>
+    </div>
+    <div class="filter-tabs">
+      <button class="filter-tab" [class.active]="pendingFilter === 'all'" (click)="setPendingFilter('all')">全部</button>
+      <button class="filter-tab" [class.active]="pendingFilter === 'soon'" (click)="setPendingFilter('soon')">即將逾期</button>
+      <button class="filter-tab overdue-tab" [class.active]="pendingFilter === 'overdue'" (click)="setPendingFilter('overdue')">已逾期</button>
+    </div>
   </div>
   <table class="expiring-table">
     <thead>
@@ -97,17 +113,19 @@
       </tr>
     </thead>
     <tbody>
-      @if (pendingPayments.length === 0) {
-        <tr><td colspan="6" class="empty-row">目前無待付款訂單</td></tr>
+      @if (filteredPendingPayments.length === 0) {
+        <tr><td colspan="6" class="empty-row">此條件無待付款訂單</td></tr>
       }
-      @for (payment of pendingPayments; track payment.customerEmail) {
+      @for (payment of filteredPendingPayments; track payment.customerEmail) {
         <tr>
           <td>{{ payment.customerName ?? '-' }}</td>
           <td>{{ payment.customerEmail ?? '-' }}</td>
           <td>{{ payment.spaceNumber ?? '-' }}</td>
           <td>{{ payment.payDeadline | date:'yyyy-MM-dd' }}</td>
           <td>NT$ {{ payment.totalPrice | number }}</td>
-          <td><span class="status-badge pending">待付款</span></td>
+          <td><span [class]="pendingBadgeClass(payment.payDeadline)">
+            {{ pendingBadgeLabel(payment.payDeadline) }}
+          </span></td>
         </tr>
       }
     </tbody>

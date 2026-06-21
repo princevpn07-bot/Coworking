@@ -11,6 +11,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
+builder.Services.AddMemoryCache();
 builder.Services.AddScoped<IAIService, AIService>();
 builder.Services.AddScoped<ILineService, LineService>();
 builder.Services.AddScoped<IECPayService, ECPayService>();

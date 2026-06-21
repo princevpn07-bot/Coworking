@@ -1,4 +1,4 @@
-import { Component, OnInit, inject, signal, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, inject, signal, ChangeDetectorRef, ViewEncapsulation, HostListener } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MemberService } from '../../../services/member';
 import { AuthService } from '../../../services/auth';
@@ -9,6 +9,7 @@ import { CreateUserPayload, LocationOption, MemberItem, MemberPageData } from '.
   imports: [FormsModule],
   templateUrl: './members.html',
   styleUrl: './members.css',
+  encapsulation: ViewEncapsulation.None,
 })
 export class Members implements OnInit {
   private memberService = inject(MemberService);
@@ -106,6 +107,20 @@ export class Members implements OnInit {
     if (!/[A-Z]/.test(password)) return '密碼需包含大寫字母';
     if (!/[^a-zA-Z0-9]/.test(password)) return '密碼需包含特殊符號（如 !@#$%）';
     return '';
+  }
+
+  // ── Row action dropdown menu ─────────────────────────────────────────────────
+  readonly openMenuUserId = signal<number | null>(null);
+
+  toggleMenu(userId: number | null, event: MouseEvent): void {
+    event.stopPropagation();
+    if (userId == null) return;
+    this.openMenuUserId.update(cur => cur === userId ? null : userId);
+  }
+
+  @HostListener('document:click')
+  closeMenu(): void {
+    this.openMenuUserId.set(null);
   }
 
   // ── Shared action state ──────────────────────────────────────────────────────

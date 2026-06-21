@@ -4,60 +4,98 @@
   <div class="bg-image"></div>
   <div class="overlay"></div>
 
-  <main class="login-card">
-  <header class="header">
-    <h1>WorkspaceCollective</h1>
-    <p>Return to your sanctuary.</p>
-  </header>
+  @if (step === 1) {
+    <main class="login-card">
+      <header class="header">
+        <h1>WorkspaceCollective</h1>
+        <p>Return to your sanctuary.</p>
+      </header>
 
-  <form (ngSubmit)="login()">
-    <div class="input-group">
-      <label for="email">電子信箱 Email Address</label>
-      <input
-        [(ngModel)]="credentials.email"
-        name="email"
-        id="email"
-        type="email"
-        placeholder="name@example.com"
-        required
-      />
-    </div>
+      <form (ngSubmit)="login()">
+        <div class="input-group">
+          <label for="email">電子信箱 Email Address</label>
+          <input
+            [(ngModel)]="credentials.email"
+            name="email"
+            id="email"
+            type="email"
+            placeholder="name@example.com"
+            required
+          />
+        </div>
 
-    <div class="input-group">
-      <div class="label-row">
-        <label for="password">密碼 Password</label>
-        <a href="#">忘記密碼 Forgot Password?</a>
+        <div class="input-group">
+          <div class="label-row">
+            <label for="password">密碼 Password</label>
+            <a href="#">忘記密碼 Forgot Password?</a>
+          </div>
+          <input
+            [(ngModel)]="credentials.password"
+            name="password"
+            id="password"
+            type="password"
+            placeholder="••••••"
+            required
+          />
+        </div>
+
+        <button type="submit" class="btn-signin">登  入</button>
+      </form>
+
+      <div class="divider">
+        <span>更多登入方式  or continue with</span>
       </div>
-      <input
-        [(ngModel)]="credentials.password"
-        name="password"
-        id="password"
-        type="password"
-        placeholder="••••••"
-        required
-      />
-    </div>
 
-    <button type="submit" class="btn-signin">登  入</button>
-  </form>
+      <div class="social-btns">
+        <button type="button">
+          <span class="material-symbols-outlined icon">mail</span>
+          Google
+        </button>
+        <button type="button">
+          <span class="material-symbols-outlined icon">phone_iphone</span>
+          Apple
+        </button>
+      </div>
 
-  <div class="divider">
-    <span>更多登入方式  or continue with</span>
-  </div>
+      <footer class="footer">
+        還不是會員？ <a routerLink="/register">Join the Collective</a>
+      </footer>
+    </main>
+  } @else {
+    <main class="login-card otp-card">
+      <header class="header">
+        <div class="otp-shield-icon">
+          <span class="material-symbols-outlined">shield_lock</span>
+        </div>
+        <h1>安全驗證</h1>
+        <p>驗證碼已發送至<br><span class="otp-email">{{ pendingEmail }}</span></p>
+      </header>
 
-  <div class="social-btns">
-    <button type="button">
-      <span class="material-symbols-outlined icon">mail</span>
-      Google
-    </button>
-    <button type="button">
-      <span class="material-symbols-outlined icon">phone_iphone</span>
-      Apple
-    </button>
-  </div>
+      <form (ngSubmit)="verifyOtp()">
+        <div class="input-group">
+          <label for="otp">驗證碼 Verification Code</label>
+          <input
+            [(ngModel)]="otp"
+            name="otp"
+            id="otp"
+            type="text"
+            inputmode="numeric"
+            placeholder="000000"
+            maxlength="6"
+            autocomplete="one-time-code"
+            required
+          />
+        </div>
 
-  <footer class="footer">
-    還不是會員？ <a routerLink="/register">Join the Collective</a>
-  </footer>
-</main>
+        <button type="submit" class="btn-signin">驗  證</button>
+      </form>
+
+      <div class="otp-links">
+        <span>沒有收到？</span>
+        <a (click)="resendOtp()" href="#" (click)="$event.preventDefault()">重新發送</a>
+        <span class="otp-divider">·</span>
+        <a (click)="backToLogin()" href="#" (click)="$event.preventDefault()">返回登入</a>
+      </div>
+    </main>
+  }
 </div>

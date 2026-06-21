@@ -216,3 +216,63 @@ form {
 @media (max-width: 640px) {
   .social-btns { flex-direction: column; }
 }
+
+/* OTP step */
+.otp-card { text-align: center; }
+
+.otp-shield-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 64px;
+  height: 64px;
+  margin: 0 auto 20px;
+  background: rgba(105, 92, 78, 0.1);
+  border-radius: 50%;
+}
+
+.otp-shield-icon .material-symbols-outlined {
+  font-size: 32px;
+  color: #695c4e;
+}
+
+.otp-email {
+  font-weight: 600;
+  color: #1d1b1a;
+  word-break: break-all;
+}
+
+.otp-card form { text-align: left; }
+
+.otp-card input {
+  font-size: 24px;
+  letter-spacing: 8px;
+  text-align: center;
+}
+
+.otp-links {
+  margin-top: 24px;
+  font-size: 14px;
+  color: #4c463e;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+}
+
+.otp-links a {
+  color: #1d1b1a;
+  font-weight: 600;
+  text-decoration: none;
+  border-bottom: 1px solid #1d1b1a;
+  padding-bottom: 1px;
+  cursor: pointer;
+  transition: color 0.2s, border-color 0.2s;
+}
+
+.otp-links a:hover {
+  color: #6c5c4a;
+  border-color: #6c5c4a;
+}
+
+.otp-divider { opacity: 0.4; }

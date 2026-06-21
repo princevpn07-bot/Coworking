@@ -7,8 +7,10 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using System.Security.Claims;
 using System.IdentityModel.Tokens.Jwt;
-using System.ComponentModel;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.Extensions.Caching.Memory;
+using System.Net.Mail;
+using System.Net;
 
 namespace CoworkingAPI.Controllers
 {
@@ -18,13 +20,15 @@ namespace CoworkingAPI.Controllers
     {
         private readonly AppDbContext _context;
         private readonly IConfiguration _config;
+        private readonly IMemoryCache _cache;
 
-        public UsersController(AppDbContext context, IConfiguration config)
+        public UsersController(AppDbContext context, IConfiguration config, IMemoryCache cache)
         {
             _context = context;
             _config = config;
+            _cache = cache;
         }
-        
+
         [HttpGet("GetAll")]
         public async Task<IActionResult> GetAll()
         {
@@ -82,36 +86,62 @@ namespace CoworkingAPI.Controllers
         }
 
         [HttpPost("Login")]
-        public async Task<IActionResult> Login([FromBody]Login login)
+        public async Task<IActionResult> Login([FromBody] Login login)
         {
             var user = await _context.Users.FirstOrDefaultAsync(u => u.email == login.email && u.password == login.password);
             if (user == null) return Unauthorized("帳號或密碼錯誤");
+
+            if (user.two_factor_enabled)
+            {
+                var otp = Random.Shared.Next(100000, 999999).ToString();
+                _cache.Set($"otp:{user.email}", otp, TimeSpan.FromMinutes(5));
+                SendOtpEmail(user.email!, otp);
+                return Ok(new { require2fa = true });
+            }
+
+            return Ok(new { token = GenerateJwt(user) });
+        }
+
+        [HttpPost("VerifyOtp")]
+        public async Task<IActionResult> VerifyOtp([FromBody] VerifyOtpDto dto)
+        {
+            var cachedOtp = _cache.Get<string>($"otp:{dto.Email}");
+            if (cachedOtp == null) return BadRequest("驗證碼已過期，請重新登入");
+            if (cachedOtp != dto.Otp) return Unauthorized("驗證碼錯誤");
+
+            _cache.Remove($"otp:{dto.Email}");
+
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.email == dto.Email);
+            if (user == null) return Unauthorized();
+
+            return Ok(new { token = GenerateJwt(user) });
+        }
+
+        private string GenerateJwt(User user)
+        {
             var jwtsetting = _config.GetSection("JwtSettings");
-            var issuer = jwtsetting.GetValue<string>("Issuer");
-            var audience = jwtsetting.GetValue<string>("Audience");
-            var secretkey = jwtsetting.GetValue<string>("Key");
-            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretkey!));
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtsetting["Key"]!));
             var crypt = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
             string? locationIdClaim = null;
             if (user.role == 80 || user.role == 99)
             {
-                var employee = await _context.Employees
-                    .FirstOrDefaultAsync(e => e.user_id == user.user_id && e.is_active == true);
+                var employee = _context.Employees
+                    .FirstOrDefault(e => e.user_id == user.user_id && e.is_active == true);
                 if (employee?.location_id != null)
                     locationIdClaim = employee.location_id.ToString();
             }
             else if (user.role == 60)
             {
-                var ownedLocation = await _context.Locations
-                    .FirstOrDefaultAsync(l => l.owner_user_id == user.user_id);
+                var ownedLocation = _context.Locations
+                    .FirstOrDefault(l => l.owner_user_id == user.user_id);
                 if (ownedLocation != null)
                     locationIdClaim = ownedLocation.location_id.ToString();
             }
 
             var claims = new[]
             {
-                new Claim(ClaimTypes.NameIdentifier, user.user_id.ToString()), // 用唯一 ID 代替 Email
+                new Claim(ClaimTypes.NameIdentifier, user.user_id.ToString()),
                 new Claim(JwtRegisteredClaimNames.Sub, user.email!),
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
                 new Claim(ClaimTypes.Role, user.role.ToString()!),
@@ -120,14 +150,53 @@ namespace CoworkingAPI.Controllers
             };
 
             var token = new JwtSecurityToken(
-                issuer: issuer,
-                audience: audience,
+                issuer: jwtsetting["Issuer"],
+                audience: jwtsetting["Audience"],
                 claims: claims,
                 expires: DateTime.Now.AddHours(1),
                 signingCredentials: crypt
             );
-            return Ok(new {token = new JwtSecurityTokenHandler().WriteToken(token)});
 
+            return new JwtSecurityTokenHandler().WriteToken(token);
+        }
+
+        private void SendOtpEmail(string toEmail, string otp)
+        {
+            try
+            {
+                var settings = _config.GetSection("EmailSettings");
+                var host = settings["SmtpHost"] ?? "smtp.gmail.com";
+                var port = int.Parse(settings["SmtpPort"] ?? "587");
+                var senderEmail = settings["SenderEmail"]!;
+                var senderPassword = settings["SenderPassword"]!;
+
+                using var client = new SmtpClient(host, port)
+                {
+                    Credentials = new NetworkCredential(senderEmail, senderPassword),
+                    EnableSsl = true
+                };
+
+                var mail = new MailMessage
+                {
+                    From = new MailAddress(senderEmail, "WorkspaceCollective"),
+                    Subject = "【WorkspaceCollective】登入驗證碼",
+                    IsBodyHtml = true,
+                    Body = $@"
+                        <div style='font-family: serif; max-width: 480px; margin: 0 auto; padding: 40px; background: #fef8f6; border: 1px solid #cfc5bb; border-radius: 8px;'>
+                          <h2 style='color: #1d1b1a; margin-bottom: 8px;'>安全驗證</h2>
+                          <p style='color: #4c463e;'>您正在登入 WorkspaceCollective，請輸入以下驗證碼：</p>
+                          <div style='font-size: 40px; letter-spacing: 12px; font-weight: 700; color: #695c4e; text-align: center; padding: 24px 0;'>{otp}</div>
+                          <p style='color: #7e766d; font-size: 14px;'>此驗證碼將在 <strong>5 分鐘</strong>後失效。</p>
+                          <p style='color: #7e766d; font-size: 14px;'>如果您沒有嘗試登入，請忽略此郵件。</p>
+                        </div>"
+                };
+                mail.To.Add(toEmail);
+                client.Send(mail);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"[2FA] 發送 OTP 郵件失敗: {ex.Message}");
+            }
         }
     }
 }

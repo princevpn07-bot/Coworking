@@ -8,7 +8,8 @@ import { BehaviorSubject, Observable } from 'rxjs';
 })
 export class AuthService
 {
-  private apiurl = 'http://localhost:5193/api/Users/Login';
+  private baseUrl = 'http://localhost:5193/api/Users';
+  private apiurl = `${this.baseUrl}/Login`;
   private loggedInSubject = new BehaviorSubject<boolean>(this.isLoggedIn());
   loggedIn$ = this.loggedInSubject.asObservable();
 
@@ -17,6 +18,11 @@ export class AuthService
   login(requst: LoginRequest): Observable<LoginResponse>
   {
     return this.http.post<LoginResponse>(this.apiurl, requst);
+  };
+
+  verifyOtp(email: string, otp: string): Observable<LoginResponse>
+  {
+    return this.http.post<LoginResponse>(`${this.baseUrl}/VerifyOtp`, { email, otp });
   };
 
   savetoken(token: string)

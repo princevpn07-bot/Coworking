@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { FrontendHeader } from '../../../shared/frontend-header/frontend-header';
+import { ToastService } from '../../../services/toast';
 
 @Component({
   selector: 'app-register',
@@ -19,15 +20,15 @@ export class Register {
 
   private apiUrl = 'http://localhost:5193/api/Users/Register';
 
-  constructor(private http: HttpClient, private router: Router) {}
+  constructor(private http: HttpClient, private router: Router, private toast: ToastService) {}
 
   register() {
     if (!this.fullName || !this.email || !this.password || !this.confirmPassword) {
-      alert('請填寫所有欄位');
+      this.toast.warning('請填寫所有欄位');
       return;
     }
     if (this.password !== this.confirmPassword) {
-      alert('兩次輸入的密碼不相同，請重新確認！');
+      this.toast.error('兩次輸入的密碼不相同，請重新確認！');
       return;
     }
 
@@ -37,12 +38,12 @@ export class Register {
       password: this.password,
     }).subscribe({
       next: () => {
-        alert('註冊成功，請登入');
+        this.toast.success('註冊成功，請登入');
         this.router.navigate(['/login']);
       },
       error: (err) => {
         console.error('註冊失敗', err);
-        alert('註冊失敗，請稍後再試');
+        this.toast.error('註冊失敗，請稍後再試');
       },
     });
   }

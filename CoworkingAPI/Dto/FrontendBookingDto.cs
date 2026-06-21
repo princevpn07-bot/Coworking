@@ -3,6 +3,7 @@ namespace CoworkingAPI.Dto
     public class FrontendMyOrderDto
     {
         public int contract_id { get; set; }
+        public int? space_id { get; set; }
         public string? space_name { get; set; }
         public string? location_city { get; set; }
         public string? location_address { get; set; }

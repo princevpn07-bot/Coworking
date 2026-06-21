@@ -163,7 +163,45 @@
               class="addon-pure-input"
               name="lineId"
               [(ngModel)]="profile.lineId"
+              placeholder="請先加入 Bot 好友取得 ID"
               [disabled]="!isEditMode" />
+          </div>
+
+          <div class="line-guide-card">
+            <div class="line-guide-header">
+              <svg class="line-icon" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <rect width="48" height="48" rx="12" fill="#06C755"/>
+                <path d="M24 10C15.163 10 8 16.168 8 23.8c0 6.983 6.193 12.836 14.567 13.965l.933.13v4.105l3.8-2.09a24.76 24.76 0 0 0 2.1.09C37.837 40 44 33.83 44 23.8 44 16.168 36.837 10 24 10Z" fill="white"/>
+                <path d="M21 21h-2v6h2v-6Zm8 0h-2v6h2v-6Zm-4 0h-2v6h2v-6Z" fill="#06C755"/>
+                <text x="24" y="29" text-anchor="middle" font-family="Arial" font-weight="900" font-size="13" fill="#06C755">LINE</text>
+              </svg>
+              <span class="line-guide-title">如何取得您的 LINE User ID？</span>
+            </div>
+
+            <ol class="line-guide-steps">
+              <li>
+                <span class="step-num">1</span>
+                <span class="step-text">點擊下方按鈕將 <strong>LINE Bot</strong> 加為好友</span>
+              </li>
+              <li>
+                <span class="step-num">2</span>
+                <span class="step-text">傳送任意訊息（例如：「你好」），Bot 會自動回覆您的 User ID</span>
+              </li>
+              <li>
+                <span class="step-num">3</span>
+                <span class="step-text">複製收到的 User ID，貼入上方欄位後儲存</span>
+              </li>
+            </ol>
+
+            <a class="line-add-btn"
+               href="https://line.me/R/ti/p/%40389xvrdl"
+               target="_blank"
+               rel="noopener noreferrer">
+              <svg viewBox="0 0 20 20" fill="currentColor" width="16" height="16">
+                <path d="M10 2C5.477 2 2 5.373 2 9.52c0 3.591 2.857 6.599 6.727 7.165l.273.038v1.777l1.8-.99A11.83 11.83 0 0 0 12 17.52c4.523 0 8-3.373 8-7.52S14.523 2 10 2Z"/>
+              </svg>
+              加入 LINE Bot 好友
+            </a>
           </div>
         </div>
       </div>

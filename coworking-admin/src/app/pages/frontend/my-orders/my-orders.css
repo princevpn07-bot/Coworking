@@ -231,6 +231,16 @@
   color: #b05c3b;
 }
 
+.overdue-hint {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 13px;
+  color: #a94442;
+  font-weight: 500;
+  opacity: 0.85;
+}
+
 /* 圖標樣式 */
 .icon-payment,
 .icon-navigate,

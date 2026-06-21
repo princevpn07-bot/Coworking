@@ -2,6 +2,7 @@ import { Component, Input, Output, EventEmitter, HostListener , OnInit, ChangeDe
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ProfileService } from '../../../services/profile';
+import { ToastService } from '../../../services/toast';
 
 export interface UserProfileData {
   firstName: string;
@@ -64,7 +65,8 @@ private decodedImage: HTMLImageElement | null = null; // 🌟 新增：快取已
 
 constructor(
   private profileService: ProfileService,
-  private cdr: ChangeDetectorRef
+  private cdr: ChangeDetectorRef,
+  private toast: ToastService
 ) {}
 
 // 切換選單顯示狀態
@@ -163,7 +165,7 @@ onDocumentClick(event: Event): void {
 
       },
       error: (err) => {
-        alert('儲存失敗，請檢查後端 API 連線或登入狀態。');
+        this.toast.error('儲存失敗，請檢查後端 API 連線或登入狀態。');
         console.error('API 更新錯誤：', err);
       }
     });
@@ -230,7 +232,7 @@ onFileSelected(event: any): void {
   if (file) {
     // 安全檢查：限制檔案大小（例如不得超過 2MB，可選）
     if (file.size > 2 * 1024 * 1024) {
-      alert('圖片大小不能超過 2MB！');
+      this.toast.warning('圖片大小不能超過 2MB！');
       return;
     }
     this.isImageLoading = true; // 🌟 啟動讀取中遮罩

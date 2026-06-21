@@ -109,6 +109,36 @@ export class Bookings implements OnInit {
     return result;
   }
 
+  private isPast(dateStr: string | null): boolean {
+    if (!dateStr) return false;
+    const end = new Date(dateStr);
+    end.setHours(0, 0, 0, 0);
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    return end < today;
+  }
+
+  bookingClass(b: Booking): string {
+    if (b.status === 2) return 'cancelled';
+    if (b.status === 0) return 'pending';
+    if (b.status === 1) return this.isPast(b.end_date) ? 'expired' : 'paid';
+    return '';
+  }
+
+  detailClass(d: BookingDetail): string {
+    if (d.status === 2) return 'cancelled';
+    if (d.status === 0) return 'pending';
+    if (d.status === 1) return this.isPast(d.end_date) ? 'expired' : 'paid';
+    return '';
+  }
+
+  detailLabel(d: BookingDetail): string {
+    if (d.status === 2) return '已取消';
+    if (d.status === 0) return '待處理';
+    if (d.status === 1) return this.isPast(d.end_date) ? '已結束' : '已付款';
+    return '未知';
+  }
+
   statusClass(status: number): string {
     if (status === 1) return 'paid';
     if (status === 0) return 'pending';

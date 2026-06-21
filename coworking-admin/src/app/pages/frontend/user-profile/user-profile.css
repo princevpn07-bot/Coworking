@@ -805,6 +805,107 @@
   color: #ffffff;
 }
 
+/* ── LINE Bot 引導卡 ────────────────────────────────────────────────────── */
+.line-guide-card {
+  margin-top: 0.75rem;
+  background: #f0faf4;
+  border: 1px solid #b7e4c7;
+  border-radius: 8px;
+  padding: 1rem 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.line-guide-header {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.line-icon {
+  width: 24px;
+  height: 24px;
+  flex-shrink: 0;
+}
+
+.line-guide-title {
+  font-family: "Work Sans", sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  color: #1a5c32;
+  letter-spacing: 0.02em;
+}
+
+.line-guide-steps {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.line-guide-steps li {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.6rem;
+}
+
+.step-num {
+  flex-shrink: 0;
+  width: 20px;
+  height: 20px;
+  background: #06C755;
+  color: #ffffff;
+  border-radius: 50%;
+  font-family: "Work Sans", sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 1px;
+}
+
+.step-text {
+  font-family: "Source Serif 4", Georgia, serif;
+  font-size: 13px;
+  color: #2d5a3d;
+  line-height: 1.5;
+}
+
+.step-text strong {
+  color: #1a5c32;
+  font-weight: 600;
+}
+
+.line-add-btn {
+  align-self: flex-start;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: #06C755;
+  color: #ffffff;
+  padding: 7px 16px;
+  border-radius: 6px;
+  font-family: "Work Sans", sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-decoration: none;
+  transition: background 0.2s ease, transform 0.15s ease;
+}
+
+.line-add-btn:hover {
+  background: #05a847;
+  transform: translateY(-1px);
+}
+
+.line-add-btn svg {
+  flex-shrink: 0;
+}
+
 /* 客製化大地色極細滾動條 */
 .custom-dropdown-list::-webkit-scrollbar {
   width: 6px;
