@@ -2,7 +2,8 @@
 <div class="main-content">
   <section class="hero">
 
-    <div class="cinematic-gate">
+    <div class="cinematic-gate" #gateContainer>
+      <canvas #gateInkCanvas class="gate-ink-canvas"></canvas>
       <div class="gate-door left-door"></div>
       <div class="gate-text-center">
         <span class="gate-text-l">CO</span><span class="gate-text-r">VO</span>
@@ -43,7 +44,7 @@
           <video #heroVideo src="assets/office_.mp4" loop muted playsinline (play)="isVideoPlaying = true" (pause)="isVideoPlaying = false"></video>
         </div>
         
-        <button class="video-ui-play-btn" [class.is-playing]="isVideoPlaying" (click inversion)="toggleVideo($event)">
+        <button class="video-ui-play-btn" [class.is-playing]="isVideoPlaying" (click)="toggleVideo($event)">
           <span class="material-symbols-outlined">{{ isVideoPlaying ? 'pause' : 'play_arrow' }}</span>
         </button>
 
@@ -59,14 +60,15 @@
   <section class="horizontal-pin-container" #pinContainer>
     <div class="horizontal-bg-shader">
       <canvas #prefaceCanvas></canvas>
+      <canvas #liquidGlassCanvas class="liquid-glass-layer"></canvas>
     </div>
 
     <div class="horizontal-bg-typography">AESTHETIC SPACES</div>
-
+    <script src="./js/TweenMax.min.js"></script>
     <div class="horizontal-scroll-wrapper" #scrollWrapper>
       <div class="horizontal-intro">
         <h2 class="reveal-text">精選空間</h2>
-        <p class="reveal-text">為不同工作型態量身打造的專屬領域。<br>往下滾動滑鼠，探索全球美學空間。</p>
+        <p class="reveal-text">為不同工作型態量身打造的專屬領域，靈感如水源般湧現。<br>往下滾動滑鼠，探索全球美學空間。</p>
         <a class="view-all reveal-text" routerLink="/all-spaces">查看所有空間 <span class="material-symbols-outlined">arrow_forward</span></a>
       </div>
 
@@ -85,7 +87,7 @@
         </div>
         <div class="horizontal-card alt-offset">
           <div class="image-box" style="view-transition-name: space-morph-4;"><img src="assets/Featured_space_04.png"></div>
-          <h3>領袖專專屬</h3><p class="location">梅菲爾, 倫敦</p>
+          <h3>領袖專屬</h3><p class="location">梅菲爾, 倫敦</p>
         </div>
       </div>
     </div>
@@ -93,7 +95,7 @@
     <svg class="svg-shader-filter">
       <defs>
         <filter id="liquid-chromatic-shader">
-          <feTurbulence type="fractalNoise" baseFrequency="0.008" numOctaves="3" result="noise" />
+          <feTurbulence type="fractalNoise" baseFrequency="0.012" numOctaves="2" result="noise" />
           <feDisplacementMap in="SourceGraphic" in2="noise" scale="0" xChannelSelector="R" yChannelSelector="G" id="glsl-displacement" />
           <feColorMatrix type="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 1 0" id="glsl-chromatic" />
         </filter>
@@ -102,7 +104,16 @@
   </section>
 
   <section id="philosophy" class="philosophy">
-    <div class="container philosophy-3d-wrapper">
+    <div class="philosophy-bg-typography-3d" #philosophyBgText>AESTHETIC</div>
+    <div class="philosophy-sunlight-glows" #philosophyGlows>
+      <div class="philosophy-glow-1"></div>
+      <div class="philosophy-glow-2"></div>
+    </div>
+    <div class="philosophy-mesh-grid" #philosophyMeshGrid></div>
+    <canvas class="philosophy-fluid-layer" #philosophyFluidCanvas></canvas>
+    
+
+    <div class="container philosophy-3d-wrapper" #philosophy3dWrapper>
       <div class="philosophy-center-text">
         <h2>策展理念</h2>
         <p>PHILOSOPHY</p>
@@ -136,7 +147,7 @@
       
       <div class="floating-card card-6" (mouseenter)="onCardMouseEnter(5)" (mouseleave)="onCardMouseLeave()">
         <div class="card-inner"><img src="assets/Featured_space_01.png" alt="空間6"><div class="card-caption">感官沉澱</div></div>
-        <div class="hover-description-box"><p>精選低色溫智慧環境照明，舒緩雙眼無視決疲勞，溫和引導大腦進入深度思考。</p></div>
+        <div class="hover-description-box"><p>精選低色溫智慧環境照明，舒緩雙眼無視決疲勞，溫和引導大腦深度思考。</p></div>
       </div>
       
       <div class="floating-card card-7" (mouseenter)="onCardMouseEnter(6)" (mouseleave)="onCardMouseLeave()">
@@ -161,7 +172,7 @@
     </div>
   </section>
 
-  <section id="rental-plans" class="rental-plans">
+  <section class="rental-plans">
     <div class="container">
       <div class="section-header">
         <div>
@@ -190,7 +201,7 @@
             <span class="plan-badge font-premium">熱門推薦</span>
             <h3>專屬固定辦公桌</h3>
             <div class="plan-price">NT$ 8,500<span> / 月起</span></div>
-            <p class="plan-desc">專為需要固定高專注基地的創作者打造。擁有個人專屬位置與專利人體工學椅。</p>
+            <p class="plan-desc">專為需要固定高專注基地創作者打造。擁有個人專屬位置與專利人體工學椅。</p>
             <ul class="plan-features">
               <li><span class="material-symbols-outlined">check</span>24/7 全天候專屬門禁進出</li>
               <li><span class="material-symbols-outlined">check</span>每月免費商務會議室額度</li>

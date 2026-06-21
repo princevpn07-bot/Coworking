@@ -10,53 +10,217 @@
   --margin-edge: 48px;
   --section-gap: 120px;
   --gutter: 32px;
-  display: block; width: 100%; background: var(--surface-container-low);
+  display: block;
+  width: 100%;
+  background: var(--surface-container-low);
 }
 
-.container { max-width: var(--container-max); margin: 0 auto; padding: 0 var(--margin-edge); position: relative; z-index: 2; }
+.container {
+  max-width: var(--container-max);
+  margin: 0 auto;
+  padding: 0 var(--margin-edge);
+  position: relative;
+  z-index: 2;
+}
 
 /* --- Keyframes --- */
-@keyframes imageZoom { from { transform: scale(1); } to { transform: scale(1.1); } }
-@keyframes fadeInUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(-50px); } }
+@keyframes imageZoom {
+  from {
+    transform: scale(1);
+  }
 
-/* 電影級播放鍵常駐光圈漣漪呼吸燈動畫 */
+  to {
+    transform: scale(1.1);
+  }
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(-50px);
+  }
+}
+
 @keyframes videoBtnPlayPulse {
-  0% { box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.25), 0 20px 50px rgba(0, 0, 0, 0.4); }
-  70% { box-shadow: 0 0 0 24px rgba(255, 255, 255, 0), 0 20px 50px rgba(0, 0, 0, 0.4); }
-  100% { box-shadow: 0 0 0 0 rgba(255, 255, 255, 0), 0 20px 50px rgba(0, 0, 0, 0.4); }
+  0% {
+    box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.25), 0 20px 50px rgba(0, 0, 0, 0.4);
+  }
+
+  70% {
+    box-shadow: 0 0 0 24px rgba(255, 255, 255, 0), 0 20px 50px rgba(0, 0, 0, 0.4);
+  }
+
+  100% {
+    box-shadow: 0 0 0 0 rgba(255, 255, 255, 0), 0 20px 50px rgba(0, 0, 0, 0.4);
+  }
 }
 
 /* ==========================================================================
    🖼️ 精選空間（橫向大視差）核心樣式
    ========================================================================== */
-.horizontal-pin-container { position: relative; width: 100%; height: 100vh; overflow: hidden; background: var(--surface-container-low); z-index: 2; box-shadow: 0 -30px 60px rgba(0, 0, 0, 0.05); perspective: 2000px; transform-style: preserve-3d; }
-.horizontal-bg-shader { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 0; filter: url(#liquid-chromatic-shader); transform: translateZ(0); pointer-events: none; }
-.horizontal-bg-shader canvas { width: 100%; height: 100%; object-fit: cover; transform-origin: center center; will-change: transform; opacity: 0.35; }
-.horizontal-scroll-wrapper { position: relative; z-index: 2; display: flex !important; flex-direction: row !important; flex-wrap: nowrap !important; height: 100%; align-items: center; padding: 0 100px; will-change: transform; width: max-content; }
-.horizontal-grid { display: flex !important; flex-direction: row !important; flex-wrap: nowrap !important; gap: 64px; align-items: center; flex-shrink: 0; }
-.horizontal-intro { flex-shrink: 0; width: 450px; margin-right: 120px; }
-.horizontal-intro h2 { font-size: 56px; font-weight: 700; margin-bottom: 24px; letter-spacing: -0.01em; line-height: 1.2; }
-.horizontal-intro p { color: rgba(29, 27, 26, 0.6); font-size: 20px; line-height: 1.6; margin-bottom: 40px; }
-.horizontal-intro .view-all { color: #695c4e; font-size: 18px; font-weight: 600; display: flex; align-items: center; gap: 8px; text-decoration: none; }
-.horizontal-card { flex-shrink: 0; width: 380px; cursor: pointer; transform-style: preserve-3d; perspective: 1000px; }
-.horizontal-card.alt-offset { transform: translateY(48px); }
+.horizontal-pin-container {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  overflow: hidden;
+  background: var(--surface-container-low);
+  z-index: 2;
+  box-shadow: 0 -30px 60px rgba(0, 0, 0, 0.05);
+  perspective: 2000px;
+  transform-style: preserve-3d;
+}
+
+.horizontal-bg-shader {
+  position: absolute;
+  inset: 0;
+  width: 1000vw;
+  height: 100vh;
+  z-index: 0;
+  transform: translateZ(0);
+  pointer-events: none;
+}
+
+.horizontal-bg-shader canvas {
+  width: 100vw !important;
+  height: 100vh !important;
+  object-fit: cover;
+  position: fixed;
+  top: 0;
+  left: 0;
+  will-change: transform;
+  opacity: 1;
+}
+
+.horizontal-intro h2,
+.horizontal-intro p {
+  filter: url(#liquid-chromatic-shader);
+  will-change: filter, transform;
+}
+
+.horizontal-scroll-wrapper {
+  position: relative;
+  z-index: 2;
+  display: flex !important;
+  flex-direction: row !important;
+  flex-wrap: nowrap !important;
+  height: 100%;
+  align-items: center;
+  padding: 0 100px;
+  will-change: transform;
+  width: max-content;
+}
+
+.horizontal-grid {
+  display: flex !important;
+  flex-direction: row !important;
+  flex-wrap: nowrap !important;
+  gap: 64px;
+  align-items: center;
+  flex-shrink: 0;
+  will-change: transform;
+  transform: translateZ(0);
+}
+
+.horizontal-intro {
+  flex-shrink: 0;
+  width: 450px;
+  margin-right: 120px;
+}
+
+.horizontal-intro h2 {
+  font-size: 56px;
+  font-weight: 700;
+  margin-bottom: 24px;
+  letter-spacing: -0.01em;
+  line-height: 1.2;
+}
+
+.horizontal-intro p {
+  color: rgba(29, 27, 26, 0.6);
+  font-size: 20px;
+  line-height: 1.6;
+  margin-bottom: 40px;
+}
+
+.horizontal-intro .view-all {
+  color: #695c4e;
+  font-size: 18px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  text-decoration: none;
+}
+
+.horizontal-card {
+  flex-shrink: 0;
+  width: 380px;
+  cursor: pointer;
+  transform-style: preserve-3d;
+  perspective: 1000px;
+}
+
+.horizontal-card.alt-offset {
+  transform: translateY(48px);
+}
 
 .horizontal-card .image-box {
-  aspect-ratio: 4/5.2; border-radius: 16px; overflow: hidden; margin-bottom: 20px; border: 1px solid #cfc5bb; box-shadow: 0 10px 40px -15px rgba(0, 0, 0, 0.12);
-  /* 🔒 轉場加速機制：移除 Transform 原生 CSS 補間，改由 GSAP 與跨頁面 Morph 識別碼進行毫秒級接管 */
+  aspect-ratio: 4/5.2;
+  border-radius: 16px;
+  overflow: hidden;
+  margin-bottom: 20px;
+  border: 1px solid #cfc5bb;
+  box-shadow: 0 10px 40px -15px rgba(0, 0, 0, 0.12);
   transition: box-shadow 0.6s cubic-bezier(0.16, 1, 0.3, 1);
   will-change: transform, view-transition-name;
 }
-.horizontal-card:hover .image-box { box-shadow: 0 25px 55px -10px rgba(105, 92, 78, 0.22); }
-.horizontal-card .image-box img { width: 112%; height: 112%; position: relative; top: -6%; left: -6%; object-fit: cover; pointer-events: none; transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1); }
-.horizontal-card:hover .image-box img { transform: scale(1.05); }
 
-/* 🔒 高階磁吸：為文字圖層註冊硬體加速圖層 */
-.horizontal-card h3 { font-size: 22px; font-weight: 500; margin-bottom: 6px; will-change: transform; display: block; }
-.horizontal-card .location { font-size: 16px; color: rgba(29, 27, 26, 0.6); will-change: transform; display: block; }
-.svg-shader-filter { position: absolute; width: 0; height: 0; pointer-events: none; }
+.horizontal-card:hover .image-box {
+  box-shadow: 0 25px 55px -10px rgba(105, 92, 78, 0.22);
+}
 
-/* 背景大字體長軌道巨幅視差樣式 */
+.horizontal-card .image-box img {
+  width: 112%;
+  height: 112%;
+  position: relative;
+  top: -6%;
+  left: -6%;
+  object-fit: cover;
+  pointer-events: none;
+  transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.horizontal-card:hover .image-box img {
+  transform: scale(1.05);
+}
+
+.horizontal-card h3 {
+  font-size: 22px;
+  font-weight: 500;
+  margin-bottom: 6px;
+  will-change: transform;
+  display: block;
+}
+
+.horizontal-card .location {
+  font-size: 16px;
+  color: rgba(29, 27, 26, 0.6);
+  will-change: transform;
+  display: block;
+}
+
+.svg-shader-filter {
+  position: absolute;
+  width: 0;
+  height: 0;
+  pointer-events: none;
+}
+
 .horizontal-bg-typography {
   position: absolute;
   left: 200px;
@@ -65,7 +229,7 @@
   font-family: 'Cinzel', 'Didot', serif;
   font-size: 20vw;
   font-weight: 900;
-  color: rgba(105, 92, 78, 0.025); /* 🔒 僅 2.5% 低調透明度 */
+  color: rgba(105, 92, 78, 0.025);
   letter-spacing: 0.15em;
   white-space: nowrap;
   pointer-events: none;
@@ -73,48 +237,219 @@
   will-change: transform;
 }
 
-/* 🚀【全新追加】：基於 Scroll 文字「掃描」揭露初始透明失焦臨界層 */
 .reveal-text {
   will-change: transform, opacity, filter;
 }
 
 /* ==========================================================================
-   🌌 Hero Banner 第一幕與第二幕布局 (🔒 3D 圖層與防穿透圓角隔離防線)
+   🌌 Hero Banner 第一幕與第二幕布局
    ========================================================================== */
-.hero { position: relative; height: 100vh; width: 100%; overflow: hidden; z-index: 1; background: #ffffff; perspective: 2000px; transform-style: preserve-3d; }
-.hero-slides-wrapper { display: flex; flex-wrap: nowrap; height: 100%; width: 200vw; will-change: transform; transform-style: preserve-3d; }
-.hero-slide { position: relative; width: 100vw; height: 100vh; display: flex; align-items: center; justify-content: center; flex-shrink: 0; box-sizing: border-box; perspective: 1500px; transform-style: preserve-3d; }
-.hero-slide:first-child .hero-bg { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 0; transform-style: preserve-3d; }
-.hero-slide:first-child .hero-bg canvas { transform-origin: center center; will-change: transform; }
+.hero {
+  position: relative;
+  height: 100vh;
+  width: 100%;
+  overflow: hidden;
+  z-index: 1;
+  background: #ffffff;
+  perspective: 2000px;
+  transform-style: preserve-3d;
+}
+
+.hero-slides-wrapper {
+  display: flex;
+  flex-wrap: nowrap;
+  height: 100%;
+  width: 200vw;
+  will-change: transform;
+  transform-style: preserve-3d;
+}
+
+.hero-slide {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  box-sizing: border-box;
+  perspective: 1500px;
+  transform-style: preserve-3d;
+}
+
+.hero-slide:first-child .hero-bg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+  transform: translateZ(0);
+}
+
+.hero-slide:first-child .hero-bg canvas {
+  transform-origin: center center;
+  will-change: transform;
+}
 
 .hero-slide:not(:first-child) .hero-bg {
-  position: absolute; width: 92vw; height: 86vh; top: 7vh; left: 4vw; border-radius: 32px; overflow: hidden; box-shadow: 0 30px 70px rgba(0, 0, 0, 0.25); z-index: 0; transform-style: preserve-3d; will-change: transform, width, height, top, left, border-radius, box-shadow;
-  transform: translateZ(0); -webkit-backface-visibility: hidden; backface-visibility: hidden;
-}
-.hero-slide:not(:first-child) .hero-bg img, .hero-slide:not(:first-child) .hero-bg video {
-  position: absolute; top: 0; left: -20%; width: 140%; height: 100%; object-fit: cover; will-change: transform;
-  border-radius: inherit; overflow: hidden;
+  position: absolute;
+  width: 92vw;
+  height: 86vh;
+  top: 7vh;
+  left: 4vw;
+  border-radius: 32px;
+  overflow: hidden;
+  box-shadow: 0 30px 70px rgba(0, 0, 0, 0.25);
+  z-index: 0;
+  transform-style: preserve-3d;
+  will-change: transform, width, height, top, left, border-radius, box-shadow;
+  transform: translateZ(0);
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
 }
 
-.hero-slide .hero-bg { position: absolute; inset: 0; overflow: hidden; }
-.hero-slide .hero-bg img { width: 110%; height: 100%; object-fit: cover; will-change: transform; }
-.hero-slide:not(:first-child) .hero-bg::after { content: ''; position: absolute; inset: 0; background: rgba(14, 14, 16, 0.2); z-index: 1; }
-.hero-slide-content { position: relative; z-index: 2; text-align: left; color: white; padding-left: 120px; width: 100%; will-change: transform; transform-style: preserve-3d; }
-.hero-slide-content h1 { font-size: 56px; font-weight: 700; margin: 0 0 24px 0; line-height: 1.25; letter-spacing: -0.01em; text-shadow: 0 2px 10px rgba(0,0,0,0.15); }
-.hero-slide-content p { font-size: 20px; max-width: 650px; margin: 0 0 48px 0; opacity: 0.9; line-height: 1.6; text-shadow: 0 2px 8px rgba(0,0,0,0.15); }
-.hero .hero-bg canvas { width: 100%; height: 100%; object-fit: cover; }
-.search-bar { background: rgba(248, 242, 240, 0.95); backdrop-filter: blur(5px); border-radius: 100px; padding: 8px; display: flex; align-items: center; max-width: 900px; border: 1px solid #cfc5bb; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1); opacity: 0; }
-.search-bar .search-item { flex: 1; display: flex; align-items: center; padding: 8px 24px; border-right: 1px solid rgba(207, 197, 187, 0.5); width: 100%; }
-.search-bar .search-item:last-of-type { border-right: none; }
-.search-bar .search-item .icon { color: #7e766d; margin-right: 12px; font-size: 20px; }
-.search-bar .search-item .info { text-align: left; }
-.search-bar .search-item .info label { display: block; font-size: 11px; font-weight: 600; color: #7e766d; margin-bottom: 2px; }
-.search-bar .search-item .info input { background: transparent; border: none; outline: none; font-family: inherit; font-size: 14px; color: #1d1b1a; width: 100%; }
-.search-bar .btn-search { background: #695c4e; color: white; padding: 14px 40px; border-radius: 100px; font-size: 14px; font-weight: 600; border: none; cursor: pointer; font-family: inherit; transition: background 0.3s ease; }
-.search-bar .btn-search:hover { background: #4a4036; }
+.hero-slide:not(:first-child) .hero-bg img,
+.hero-slide:not(:first-child) .hero-bg video {
+  position: absolute;
+  top: 0;
+  left: -20%;
+  width: 140%;
+  height: 100%;
+  object-fit: cover;
+  will-change: transform;
+  border-radius: inherit;
+  overflow: hidden;
+}
+
+.hero-slide .hero-bg {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+
+.hero-slide .hero-bg img {
+  width: 110%;
+  height: 100%;
+  object-fit: cover;
+  will-change: transform;
+}
+
+.hero-slide:not(:first-child) .hero-bg::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: rgba(14, 14, 16, 0.2);
+  z-index: 1;
+}
+
+.hero-slide-content {
+  position: relative;
+  z-index: 2;
+  text-align: left;
+  color: white;
+  padding-left: 120px;
+  width: 100%;
+  will-change: transform;
+  transform-style: preserve-3d;
+}
+
+.hero-slide-content h1 {
+  font-size: 56px;
+  font-weight: 700;
+  margin: 0 0 24px 0;
+  line-height: 1.25;
+  letter-spacing: -0.01em;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
+}
+
+.hero-slide-content p {
+  font-size: 20px;
+  max-width: 650px;
+  margin: 0 0 48px 0;
+  opacity: 0.9;
+  line-height: 1.6;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+.hero .hero-bg canvas {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.search-bar {
+  background: rgba(248, 242, 240, 0.95);
+  backdrop-filter: blur(5px);
+  border-radius: 100px;
+  padding: 8px;
+  display: flex;
+  align-items: center;
+  max-width: 900px;
+  border: 1px solid #cfc5bb;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  opacity: 0;
+}
+
+.search-bar .search-item {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  padding: 8px 24px;
+  border-right: 1px solid rgba(207, 197, 187, 0.5);
+  width: 100%;
+}
+
+.search-bar .search-item:last-of-type {
+  border-right: none;
+}
+
+.search-bar .search-item .icon {
+  color: #7e766d;
+  margin-right: 12px;
+  font-size: 20px;
+}
+
+.search-bar .search-item .info {
+  text-align: left;
+}
+
+.search-bar .search-item .info label {
+  display: block;
+  font-size: 11px;
+  font-weight: 600;
+  color: #7e766d;
+  margin-bottom: 2px;
+}
+
+.search-bar .search-item .info input {
+  background: transparent;
+  border: none;
+  outline: none;
+  font-family: inherit;
+  font-size: 14px;
+  color: #1d1b1a;
+  width: 100%;
+}
+
+.search-bar .btn-search {
+  background: #695c4e;
+  color: white;
+  padding: 14px 40px;
+  border-radius: 100px;
+  font-size: 14px;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  font-family: inherit;
+  transition: background 0.3s ease;
+}
+
+.search-bar .btn-search:hover {
+  background: #4a4036;
+}
 
 /* ==========================================================================
-   🌌 策展理念 3D 圓環卡片飛入輪盤核心樣式 (🔒 鎖定開關燈升級)
+   🌌 策展理念 3D 圓環卡片牆樣式
    ========================================================================== */
 .philosophy {
   position: relative;
@@ -127,16 +462,152 @@
   padding: 100px 0;
   z-index: 3;
   box-shadow: 0 -30px 60px rgba(0, 0, 0, 0);
+  perspective: 1500px;
+  transform-style: preserve-3d;
+  overflow: hidden;
 }
-.philosophy-3d-wrapper { width: 100%; height: 700px; display: flex; align-items: center; justify-content: center; perspective: 1200px; }
-.philosophy-center-text { text-align: center; z-index: 10; pointer-events: none; }
-.philosophy-center-text h2 { font-size: 80px; font-weight: 800; letter-spacing: -0.01em; margin-bottom: 8px; background: linear-gradient(180deg, #ffffff 30%, #a1a1a6 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-.philosophy-center-text p { font-size: 16px; font-weight: 700; color: #c4b5a5; letter-spacing: 0.3em; margin-bottom: 24px; }
-.philosophy-center-text span { font-size: 18px; color: rgba(255, 255, 255, 0.4); font-weight: 400; letter-spacing: 0.05em; }
 
-.floating-card { position: absolute; width: 260px; aspect-ratio: 1 / 1; border-radius: 24px; background: transparent; will-change: transform, opacity; transform-style: preserve-3d; left: 50%; top: 50%; margin-left: -130px; margin-top: -130px; }
+/* 💡 ✨【修改點一】：大幅加強背景網格線條的清晰度（從 0.035 提高到 0.12），呈現洗鍊高級感 */
+.philosophy-mesh-grid {
+  position: absolute;
+  inset: -10%;
+  width: 120%;
+  height: 120%;
+  background-image:
+    linear-gradient(rgba(105, 92, 78, 0.12) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(105, 92, 78, 0.12) 1px, transparent 1px);
+  background-size: 80px 80px;
+  background-position: center center;
+  z-index: 1;
+  pointer-events: none;
+  transform: translateZ(-50px);
+  will-change: transform;
+}
+/* ✨【新增】：策展理念專屬半透明流水 WebGL 膜層佈局 */
+.philosophy-fluid-layer {
+  position: absolute;
+  inset: 0;
+  width: 100vw !important;
+  height: 100vh !important;
+  object-fit: cover;
+  z-index: 2; /* 剛性懸浮在幾何網格與暖陽光斑上方 */
+  pointer-events: none; /* 穿透點擊，確保滑鼠可以順利抓取卡片與旋轉空間 */
+  opacity: 0.9;
+  will-change: transform;
+}
 
-/* 🚀【核心排卡優化】：徹底移除 transform 補間聲明，全權交給 GSAP.ticker 管理，根除雙向拉扯造成的頁面抖動與影格遺失 */
+.philosophy-sunlight-glows {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+  pointer-events: none;
+  transform: translateZ(-260px);
+  will-change: transform;
+  filter: blur(140px);
+  opacity: 0.65;
+}
+
+.philosophy-glow-1 {
+  position: absolute;
+  top: 15%;
+  left: 10%;
+  width: 45vw;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(247, 233, 210, 0.25) 0%, transparent 75%);
+}
+
+.philosophy-glow-2 {
+  position: absolute;
+  bottom: 10%;
+  right: 5%;
+  width: 50vw;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(230, 215, 195, 0.2) 0%, transparent 70%);
+}
+
+.philosophy-bg-typography-3d {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%) translateZ(-450px);
+  font-family: 'Cinzel', 'Didot', serif;
+  font-size: 14vw;
+  font-weight: 900;
+  color: rgba(105, 92, 78, 0.045);
+  letter-spacing: 0.2em;
+  white-space: nowrap;
+  pointer-events: none;
+  z-index: 0;
+  will-change: transform;
+}
+
+/* 🔒 100% 剛性保護卡片舞台結構 */
+.philosophy-3d-wrapper {
+  width: 100%;
+  height: 700px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  perspective: 1200px;
+  position: relative;
+  z-index: 5;
+  transform-style: preserve-3d;
+  will-change: transform;
+}
+
+.philosophy-center-text {
+  text-align: center;
+  z-index: 10;
+  pointer-events: none;
+}
+
+.philosophy-center-text h2 {
+  font-size: 80px;
+  font-weight: 800;
+  letter-spacing: -0.01em;
+  margin-bottom: 8px;
+  background: linear-gradient(180deg, #ffffff 30%, #a1a1a6 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.philosophy-center-text p {
+  font-size: 16px;
+  font-weight: 700;
+  color: #c4b5a5;
+  letter-spacing: 0.3em;
+  margin-bottom: 24px;
+}
+
+.philosophy-center-text span {
+  font-size: 18px;
+  color: rgba(255, 255, 255, 0.4);
+  font-weight: 400;
+  letter-spacing: 0.05em;
+}
+
+/* 🔒 剛性幾何判定面熱區：大小保持絕對固定，絕不因動畫突變而閃爍 */
+.floating-card {
+  position: absolute;
+  width: 260px;
+  aspect-ratio: 1 / 1;
+  border-radius: 24px;
+  background: transparent;
+  will-change: transform, opacity;
+  transform-style: preserve-3d;
+  left: 50%;
+  top: 50%;
+  margin-left: -130px;
+  margin-top: -130px;
+  pointer-events: auto;
+  transition: z-index 0.3s ease;
+  z-index: 10;
+}
+
 .floating-card .card-inner {
   position: relative;
   width: 100%;
@@ -145,119 +616,534 @@
   overflow: hidden;
   border: 1px solid rgba(255, 255, 255, 0.08);
   box-shadow: 0 40px 90px rgba(0, 0, 0, 0.6);
-  will-change: transform;
+  will-change: transform, filter, box-shadow;
+  /* 💡 補齊 GPU 燒燬渲染通道 */
   -webkit-backface-visibility: hidden;
   backface-visibility: hidden;
-  transform: translateZ(0);
-  transition: border-color 0.5s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  transform: translateZ(0) ;
+  transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.5s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.5s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-.floating-card img { width: 100%; height: 100%; object-fit: cover; }
-.floating-card .card-caption { position: absolute; bottom: 24px; left: 24px; background: rgba(14, 14, 16, 0.6); backdrop-filter: blur(15px); color: white; padding: 8px 18px; border-radius: 100px; font-size: 14px; font-weight: 600; border: 1px solid rgba(255, 255, 255, 0.1); letter-spacing: 0.05em; z-index: 5; }
-.floating-card:hover .card-inner { border-color: rgba(255, 255, 255, 0.25); box-shadow: 0 50px 100px rgba(0, 0, 0, 0.8), 0 0 40px rgba(105, 92, 78, 0.55); }
-.floating-card .hover-description-box { position: absolute; top: 50%; width: 250px; background: rgba(14, 14, 16, 0.85); border: 1px solid rgba(255, 255, 255, 0.1); backdrop-filter: blur(16px); padding: 20px; border-radius: 16px; box-shadow: 0 30px 60px rgba(0, 0, 0, 0.5); pointer-events: none; opacity: 0; z-index: 999; transform: translateY(-50%) scale(0.9); transition: opacity 0.5s cubic-bezier(0.16, 1, 0.3, 1), transform 0.5s cubic-bezier(0.16, 1, 0.3, 1); }
-.card-1 .hover-description-box, .card-3 .hover-description-box, .card-5 .hover-description-box, .card-7 .hover-description-box, .card-9 .hover-description-box { left: 120%; }
-.card-2 .hover-description-box, .card-4 .hover-description-box, .card-6 .hover-description-box, .card-8 .hover-description-box, .card-10 .hover-description-box { right: 120%; }
-.floating-card .hover-description-box p { margin: 0; font-size: 14px; color: rgba(255, 255, 255, 0.95); line-height: 1.6; letter-spacing: 0.02em; white-space: normal; }
-.floating-card:hover .hover-description-box { opacity: 1; transform: translateY(-50%) scale(1); }
+.floating-card img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.floating-card .card-caption {
+  position: absolute;
+  bottom: 24px;
+  left: 24px;
+  background: rgba(14, 14, 16, 0.6);
+  backdrop-filter: blur(15px);
+  color: white;
+  padding: 8px 18px;
+  border-radius: 100px;
+  font-size: 14px;
+  font-weight: 600;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  letter-spacing: 0.05em;
+  z-index: 5;
+}
+
+.floating-card:hover .card-inner {
+  border-color: rgba(255, 255, 255, 0.25);
+  transform: scale(1.12) translateZ(12px);
+  box-shadow: 0 40px 80px rgba(0, 0, 0, 0.7), 0 0 30px rgba(105, 92, 78, 0.4);
+  z-index: 100; 
+}
+
+.floating-card .hover-description-box {
+  position: absolute;
+  top: 50%;
+  width: 250px;
+  background: rgba(14, 14, 16, 0.88);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  backdrop-filter: blur(16px);
+  padding: 20px;
+  border-radius: 16px;
+  box-shadow: 0 30px 60px rgba(0, 0, 0, 0.5);
+  opacity: 0;
+  z-index: 999;
+  transform: translateY(-50%) scale(0.88);
+  transition: opacity 0.45s cubic-bezier(0.16, 1, 0.3, 1), transform 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+  pointer-events: none; /* 防止對話框干擾 hit detection */
+  
+  /* 確保變大時對話框不會因為 overflow 被切掉 */
+  overflow: visible;
+}
+
+.card-1 .hover-description-box,
+.card-3 .hover-description-box,
+.card-5 .hover-description-box,
+.card-7 .hover-description-box,
+.card-9 .hover-description-box {
+  left: 120%;
+}
+
+.card-2 .hover-description-box,
+.card-4 .hover-description-box,
+.card-6 .hover-description-box,
+.card-8 .hover-description-box,
+.card-10 .hover-description-box {
+  right: 120%;
+}
+
+.floating-card .hover-description-box p {
+  margin: 0;
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.95);
+  line-height: 1.6;
+  letter-spacing: 0.02em;
+  white-space: normal;
+}
+
+.floating-card:hover .hover-description-box {
+  opacity: 1;
+  transform: translateY(-50%) translateZ(50px) scale(1.1);
+}
+
+/* 🌙 暗黑藝廊模式下的網格亮度同步加深明亮 */
+:host-context(.dark-mode) .philosophy-bg-typography-3d {
+  color: rgba(255, 255, 255, 0.015) !important;
+}
+
+/* 💡 ✨【修改點二】：暗黑模式下的網格從 0.015 提升至 0.055，保障線條立體、精緻絕倫 */
+:host-context(.dark-mode) .philosophy-mesh-grid {
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.055) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.055) 1px, transparent 1px);
+}
 
 /* ==========================================================================
-   🎬 租賃方案、極致細節、全球網絡完整樣式 (🔒 方案卡片防穿透倒角安全機制)
+   🎬 租賃方案、極致細節、全球網絡完整樣式
    ========================================================================== */
-.rental-plans { padding: var(--section-gap) 0; background: white; position: relative; z-index: 5; }
-.plans-visual-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--gutter); margin-top: 60px; }
+.rental-plans {
+  padding: var(--section-gap) 0;
+  background: white;
+  position: relative;
+  z-index: 5;
+}
+
+.plans-visual-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--gutter);
+  margin-top: 60px;
+}
 
 .visual-plan-card {
-  position: relative; height: 580px; border-radius: 28px; overflow: hidden; background: #1d1b1a; display: flex; align-items: flex-end; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.03); transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.8s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.8s cubic-bezier(0.16, 1, 0.3, 1);
-  will-change: transform, opacity; transform: translateZ(0); -webkit-backface-visibility: hidden; backface-visibility: hidden;
+  position: relative;
+  height: 580px;
+  border-radius: 28px;
+  overflow: hidden;
+  background: #1d1b1a;
+  display: flex;
+  align-items: flex-end;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.03);
+  transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.8s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: transform, opacity;
+  transform: translateZ(0);
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
 }
-.visual-plan-card .card-image-box { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 1; border-radius: inherit; overflow: hidden; }
-.visual-plan-card .card-image-box img { width: 100%; height: 100%; object-fit: cover; transition: transform 1.2s cubic-bezier(0.16, 1, 0.3, 1); }
-.visual-plan-card .image-mask { position: absolute; inset: 0; background: linear-gradient(to top, rgba(29, 27, 26, 0.95) 0%, rgba(29, 27, 26, 0.6) 40%, transparent 100%); }
-.visual-plan-card .card-info-content { position: relative; z-index: 2; padding: 40px; width: 100%; color: white; transform: translateY(35px); transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1); }
-.visual-plan-card .plan-badge { display: inline-block; background: rgba(255, 255, 255, 0.15); backdrop-filter: blur(10px); color: white; font-size: 12px; font-weight: 600; padding: 6px 14px; border-radius: 100px; margin-bottom: 20px; border: 1px solid rgba(255, 255, 255, 0.1); }
-.visual-plan-card.active .plan-badge.font-premium { background: var(--primary); color: white; border-color: var(--primary); }
-.visual-plan-card h3 { font-size: 26px; font-weight: 600; margin-bottom: 8px; }
-.visual-plan-card .plan-price { font-size: 28px; font-weight: 700; margin-bottom: 24px; color: #f8f2f0; }
-.visual-plan-card .plan-price span { font-size: 14px; font-weight: 400; color: rgba(248, 242, 240, 0.6); }
-.visual-plan-card .plan-desc { font-size: 15px; color: rgba(255, 255, 255, 0.7); line-height: 1.6; margin-bottom: 28px; opacity: 0; transition: opacity 0.6s ease; }
-.visual-plan-card .plan-features { list-style: none; padding: 0; margin: 0 0 32px 0; opacity: 0; transition: opacity 0.6s ease; }
-.visual-plan-card .plan-features li { font-size: 14px; color: rgba(255, 255, 255, 0.8); margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
-.visual-plan-card .plan-features li span { font-size: 16px; color: #cfc5bb; }
-.visual-plan-card .btn-plan-action { width: 100%; padding: 16px; border-radius: 100px; border: 1px solid rgba(255, 255, 255, 0.3); background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(5px); color: white; font-size: 15px; font-weight: 600; cursor: pointer; transition: all 0.4s ease; }
-.visual-plan-card .btn-plan-action.premium { background: white; color: var(--on-background); border-color: white; }
-.visual-plan-card:hover { transform: translateY(-8px); box-shadow: 0 30px 60px rgba(0, 0, 0, 0.25); }
-.visual-plan-card:hover .card-image-box img { transform: scale(1.08); }
-.visual-plan-card:hover .card-info-content { transform: translateY(0); }
-.visual-plan-card:hover .plan-desc, .visual-plan-card:hover .plan-features { opacity: 1; transition-delay: 0.1s; }
-.visual-plan-card .btn-plan-action:hover { background: white; color: var(--on-background); }
-.visual-plan-card.active { border-color: var(--primary); box-shadow: 0 15px 40px rgba(105, 92, 78, 0.15); }
 
-.amenities { padding: var(--section-gap) 0; background: white; position: relative; z-index: 5; }
-.amenities-split-layout { display: grid; grid-template-columns: 7fr 5fr; gap: 96px; align-items: center; }
-.amenities-left-content { display: flex; flex-direction: column; gap: 56px; }
-.section-header-left h2 { font-size: 44px; font-weight: 700; margin-bottom: 16px; }
-.section-header-left p { font-size: 18px; color: rgba(29, 27, 26, 0.6); line-height: 1.6; max-width: 550px; }
-.amenities-2x2-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 48px 40px; }
-.amenity-item { text-align: left; transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1); }
-.amenity-item:hover { transform: translateX(8px); }
-.amenity-item span { font-size: 38px; color: var(--primary); margin-bottom: 18px; display: block; }
-.amenity-item h4 { font-size: 19px; font-weight: 600; margin-bottom: 10px; color: var(--on-background); }
-.amenity-item p { font-size: 14px; color: rgba(29, 27, 26, 0.6); line-height: 1.6; }
-.amenities-right-image-box { position: relative; width: 100%; aspect-ratio: 3.6 / 4.6; border-radius: 24px; overflow: hidden; border: 1px solid var(--outline-subtle); box-shadow: 0 30px 70px rgba(105, 92, 78, 0.12); transition: transform 1.2s cubic-bezier(0.16, 1, 0.3, 1); }
-.amenities-right-image-box img { width: 100%; height: 100%; object-fit: cover; transition: transform 1.2s cubic-bezier(0.16, 1, 0.3, 1); }
-.amenities-right-image-box:hover { transform: translateY(-10px); box-shadow: 0 40px 90px rgba(105, 92, 78, 0.2); }
-.amenities-right-image-box:hover img { transform: scale(1.05); }
+.visual-plan-card .card-image-box {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+  border-radius: inherit;
+  overflow: hidden;
+}
 
-.network { position: relative; padding: var(--section-gap) 0; text-align: center; background: var(--surface-container-low); z-index: 4; }
-.section-header.center { display: block; text-align: center; margin-bottom: 64px; }
-.section-header.center h2 { font-size: 32px; font-weight: 600; margin-bottom: 16px; }
-.section-header.center p { font-size: 18px; color: rgba(29, 27, 26, 0.6); }
-.network .regions { display: grid; grid-template-columns: repeat(3, 1fr); gap: 48px; max-width: 1000px; margin: 0 auto; }
-.network .region { border-top: 1px solid #cfc5bb; padding-top: 32px; }
-.network .region h3 { font-size: 12px; color: #695c4e; text-transform: uppercase; letter-spacing: 0.2em; margin-bottom: 24px; }
-.network .region ul { list-style: none; padding: 0; margin: 0; }
-.network .region ul li { margin-bottom: 16px; font-size: 18px; }
-.network .region ul li:hover { color: #695c4e; }
-.network .region ul li a { text-decoration: none; color: inherit; transition: all 0.3s ease; }
-.btn-explore, .view-all, .network .region ul li a { transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1) !important; }
-.section-header .view-all:hover span { transform: translateX(6px); }
-.network .region ul li a:hover { transform: translateY(-3px); color: #695c4e; }
+.visual-plan-card .card-image-box img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.visual-plan-card .image-mask {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(29, 27, 26, 0.95) 0%, rgba(29, 27, 26, 0.6) 40%, transparent 100%);
+}
+
+.visual-plan-card .card-info-content {
+  position: relative;
+  z-index: 2;
+  padding: 40px;
+  width: 100%;
+  color: white;
+  transform: translateY(35px);
+  transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.visual-plan-card .plan-badge {
+  display: inline-block;
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(10px);
+  color: white;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 6px 14px;
+  border-radius: 100px;
+  margin-bottom: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.visual-plan-card.active .plan-badge.font-premium {
+  background: var(--primary);
+  color: white;
+  border-color: var(--primary);
+}
+
+.visual-plan-card h3 {
+  font-size: 26px;
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+.visual-plan-card .plan-price {
+  font-size: 28px;
+  font-weight: 700;
+  margin-bottom: 24px;
+  color: #f8f2f0;
+}
+
+.visual-plan-card .plan-price span {
+  font-size: 14px;
+  font-weight: 400;
+  color: rgba(248, 242, 240, 0.6);
+}
+
+.visual-plan-card .plan-desc {
+  font-size: 15px;
+  color: rgba(255, 255, 255, 0.7);
+  line-height: 1.6;
+  margin-bottom: 28px;
+  opacity: 0;
+  transition: opacity 0.6s ease;
+}
+
+.visual-plan-card .plan-features {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 32px 0;
+  opacity: 0;
+  transition: opacity 0.6s ease;
+}
+
+.visual-plan-card .plan-features li {
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.8);
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.visual-plan-card .plan-features li span {
+  font-size: 16px;
+  color: #cfc5bb;
+}
+
+.visual-plan-card .btn-plan-action {
+  width: 100%;
+  padding: 16px;
+  border-radius: 100px;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(5px);
+  color: white;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.4s ease;
+}
+
+.visual-plan-card .btn-plan-action.premium {
+  background: white;
+  color: var(--on-background);
+  border-color: white;
+}
+
+.visual-plan-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 30px 60px rgba(0, 0, 0, 0.25);
+}
+
+.visual-plan-card:hover .card-image-box img {
+  transform: scale(1.08);
+}
+
+.visual-plan-card:hover .card-info-content {
+  transform: translateY(0);
+}
+
+.visual-plan-card:hover .plan-desc,
+.visual-plan-card:hover .plan-features {
+  opacity: 1;
+  transition-delay: 0.1s;
+}
+
+.visual-plan-card .btn-plan-action:hover {
+  background: white;
+  color: var(--on-background);
+}
+
+.visual-plan-card.active {
+  border-color: var(--primary);
+  box-shadow: 0 15px 40px rgba(105, 92, 78, 0.15);
+}
+
+.amenities {
+  padding: var(--section-gap) 0;
+  background: white;
+  position: relative;
+  z-index: 5;
+}
+
+.amenities-split-layout {
+  display: grid;
+  grid-template-columns: 7fr 5fr;
+  gap: 96px;
+  align-items: center;
+}
+
+.amenities-left-content {
+  display: flex;
+  flex-direction: column;
+  gap: 56px;
+}
+
+.section-header-left h2 {
+  font-size: 44px;
+  font-weight: 700;
+  margin-bottom: 16px;
+}
+
+.section-header-left p {
+  font-size: 18px;
+  color: rgba(29, 27, 26, 0.6);
+  line-height: 1.6;
+  max-width: 550px;
+}
+
+.amenities-2x2-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 48px 40px;
+}
+
+.amenity-item {
+  text-align: left;
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.amenity-item:hover {
+  transform: translateX(8px);
+}
+
+.amenity-item span {
+  font-size: 38px;
+  color: var(--primary);
+  margin-bottom: 18px;
+  display: block;
+}
+
+.amenity-item h4 {
+  font-size: 19px;
+  font-weight: 600;
+  margin-bottom: 10px;
+  color: var(--on-background);
+}
+
+.amenity-item p {
+  font-size: 14px;
+  color: rgba(29, 27, 26, 0.6);
+  line-height: 1.6;
+}
+
+.amenities-right-image-box {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 3.6 / 4.6;
+  border-radius: 24px;
+  overflow: hidden;
+  border: 1px solid var(--outline-subtle);
+  box-shadow: 0 30px 70px rgba(105, 92, 78, 0.12);
+  transition: transform 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.amenities-right-image-box img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.amenities-right-image-box:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 40px 90px rgba(105, 92, 78, 0.2);
+}
+
+.amenities-right-image-box:hover img {
+  transform: scale(1.05);
+}
+
+.network {
+  position: relative;
+  padding: var(--section-gap) 0;
+  text-align: center;
+  background: var(--surface-container-low);
+  z-index: 4;
+}
+
+.section-header.center {
+  display: block;
+  text-align: center;
+  margin-bottom: 64px;
+}
+
+.section-header.center h2 {
+  font-size: 32px;
+  font-weight: 600;
+  margin-bottom: 16px;
+}
+
+.section-header.center p {
+  font-size: 18px;
+  color: rgba(29, 27, 26, 0.6);
+}
+
+.network .regions {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 48px;
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.network .region {
+  border-top: 1px solid #cfc5bb;
+  padding-top: 32px;
+}
+
+.network .region h3 {
+  font-size: 12px;
+  color: #695c4e;
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  margin-bottom: 24px;
+}
+
+.network .region ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.network .region ul li {
+  margin-bottom: 16px;
+  font-size: 18px;
+}
+
+.network .region ul li:hover {
+  color: #695c4e;
+}
+
+.network .region ul li a {
+  text-decoration: none;
+  color: inherit;
+  transition: all 0.3s ease;
+}
+
+.btn-explore,
+.view-all,
+.network .region ul li a {
+  transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+
+.section-header .view-all:hover span {
+  transform: translateX(6px);
+}
+
+.network .region ul li a:hover {
+  transform: translateY(-3px);
+  color: #695c4e;
+}
 
 .video-ui-play-btn {
-  position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%) translateZ(60px); width: 84px; height: 84px; border-radius: 50%; background: rgba(14, 14, 16, 0.65); border: 1px solid rgba(255, 255, 255, 0.25); color: #ffffff; display: flex; align-items: center; justify-content: center; cursor: pointer; z-index: 10; outline: none; animation: videoBtnPlayPulse 2s infinite ease-in-out; transition: background 0.4s ease, border-color 0.4s ease, opacity 0.8s cubic-bezier(0.25, 1, 0.5, 1), transform 0.8s cubic-bezier(0.25, 1, 0.5, 1);
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) translateZ(60px);
+  width: 84px;
+  height: 84px;
+  border-radius: 50%;
+  background: rgba(14, 14, 16, 0.65);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 10;
+  outline: none;
+  animation: videoBtnPlayPulse 2s infinite ease-in-out;
+  transition: background 0.4s ease, border-color 0.4s ease, opacity 0.8s cubic-bezier(0.25, 1, 0.5, 1), transform 0.8s cubic-bezier(0.25, 1, 0.5, 1);
 }
-.video-ui-play-btn span { font-size: 38px; transition: transform 0.3s ease; }
-.video-ui-play-btn:hover { background: rgba(14, 14, 16, 0.85); border-color: rgba(255, 255, 255, 0.5); transform: translate(-50%, -50%) translateZ(80px) scale(1.05); }
-.video-ui-play-btn.is-playing { opacity: 0; pointer-events: none; transform: translate(-50%, -50%) translateZ(20px) scale(0.5); }
 
-/* ==========================================================================
-   🎬 完美回歸：電影級極簡雙開大門與左右分裂文字樣式 (🔒 徹底移除所有墨水遮罩與濾鏡)
-   ========================================================================== */
+.video-ui-play-btn span {
+  font-size: 38px;
+  transition: transform 0.3s ease;
+}
+
+.video-ui-play-btn:hover {
+  background: rgba(14, 14, 16, 0.85);
+  border-color: rgba(255, 255, 255, 0.5);
+  transform: translate(-50%, -50%) translateZ(80px) scale(1.05);
+}
+
+.video-ui-play-btn.is-playing {
+  opacity: 0;
+  pointer-events: none;
+  transform: translate(-50%, -50%) translateZ(20px) scale(0.5);
+}
+
 .cinematic-gate {
   position: absolute;
   inset: 0;
   width: 100%;
   height: 100%;
   z-index: 99;
-  pointer-events: none;
+  pointer-events: auto;
   display: flex;
   overflow: hidden;
   perspective: 1000px;
+  background: transparent;
+  mix-blend-mode: normal;
+  isolation: isolate;
 }
+
 .gate-door {
   flex: 1;
   height: 100%;
   background: #1d1b1a;
   will-change: transform;
+  pointer-events: none;
 }
+
 .gate-text-center {
   position: absolute;
   left: 50%;
   top: 50%;
   transform: translate(-50%, -50%);
   z-index: 101;
-  color: rgba(255, 255, 255, 0.85);
+  color: #ffffff;
   font-family: 'Cinzel', 'Didot', 'Noto Serif TC', serif;
   font-size: 90px;
   font-weight: 300;
@@ -265,23 +1151,29 @@
   text-shadow: 0 0 12px rgba(0, 0, 0, 0.3);
   white-space: nowrap;
   will-change: transform, opacity;
+  pointer-events: none;
 }
+
+.gate-ink-canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 100;
+  pointer-events: none;
+  mix-blend-mode: destination-out;
+}
+
 .gate-text-center span {
   display: inline-block;
   will-change: transform, opacity;
 }
 
-/* ==========================================================================
-   🌙 建築美學學派：首頁全量關燈模式 (.dark-mode) 頂級藝廊濾鏡
-   ========================================================================== */
-
-/* 1. 核心變數洗刷：底色與文字色對流反轉 */
 :host-context(.dark-mode) {
-  --on-background: #f5efe9;         /* 全域大字轉為高級細體白 */
-  --surface-container-low: #121110; /* 全網頁大畫布底色轉為奢華闇黑 */
+  --on-background: #f5efe9;
+  --surface-container-low: #121110;
 }
 
-/* 為所有大面積區塊註冊絲滑的關燈過渡動畫，模擬影廳漸暗的手感 */
 :host-context(.dark-mode) .hero,
 :host-context(.dark-mode) .rental-plans,
 :host-context(.dark-mode) .amenities,
@@ -289,7 +1181,6 @@
   transition: background-color 0.8s cubic-bezier(0.16, 1, 0.3, 1), color 0.5s ease;
 }
 
-/* 2. 剛性覆寫：將原本純白 (#ffffff) 的展示區段，降修為溫潤的暗炭木色 (#1c1a18) */
 :host-context(.dark-mode) .hero,
 :host-context(.dark-mode) .rental-plans,
 :host-context(.dark-mode) .amenities {
@@ -297,16 +1188,15 @@
   color: #e3ded8;
 }
 
-/* 3. 精選空間與租賃方案卡片面板黑夜化 */
 :host-context(.dark-mode) .horizontal-card .image-box {
   border-color: #3d3630;
 }
+
 :host-context(.dark-mode) .visual-plan-card {
-  background-color: #262320; /* 方案卡片底色變深 */
+  background-color: #262320;
   border-color: rgba(255, 255, 255, 0.06);
 }
 
-/* 4. 確保黑夜下各級標題字體的可讀性與環境光比 */
 :host-context(.dark-mode) .amenity-item h4,
 :host-context(.dark-mode) .horizontal-intro h2,
 :host-context(.dark-mode) .section-header h2,
@@ -316,7 +1206,6 @@
   color: #f5efe9 !important;
 }
 
-/* 副標題與說明短文改為高雅的 60% 透光白 */
 :host-context(.dark-mode) .horizontal-intro p,
 :host-context(.dark-mode) .amenity-item p,
 :host-context(.dark-mode) .section-header-left p,
@@ -325,23 +1214,31 @@
   color: rgba(245, 239, 233, 0.6) !important;
 }
 
-/* 5. 背景超大視差裝飾字體（AESTHETIC SPACES）微光弱化，避免在黑夜中過於突兀 */
-:host-context(.dark-mode) .horizontal-bg-typography {
-  color: rgba(255, 255, 255, 0.015) !important;
-}
-
-/* ==========================================================================
-   🎯 【全新追加】修復方案卡片按鈕在黑夜模式下白底白字的視覺盲點
-   ========================================================================== */
-
-/* 1. 剛性強置：熱門推薦卡片的白底按鈕，字體在黑夜中必須維持深黑色 */
 :host-context(.dark-mode) .visual-plan-card .btn-plan-action.premium {
-  color: #1d1b1a !important;            /* 強制反轉為深邃黑，在白底上拉開頂級清晰度 */
-  background-color: #ffffff !important;  /* 維持極簡純白底色 */
+  color: #1d1b1a !important;
+  background-color: #ffffff !important;
 }
 
-/* 2. 同步修復：普通卡片按鈕在滑鼠懸停（Hover）轉為白底時的字體顏色 */
 :host-context(.dark-mode) .visual-plan-card .btn-plan-action:hover {
   background-color: #ffffff !important;
-  color: #1d1b1a !important;            /* 懸停轉為白底瞬間，字體同步極速切換為深邃黑 */
+  color: #1d1b1a !important;
+}
+
+.liquid-glass-layer {
+  width: 100vw !important;
+  height: 100vh !important;
+  object-fit: cover;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 1;
+  pointer-events: none;
+  opacity: 0.85;
+}
+
+.horizontal-scroll-wrapper,
+.horizontal-grid,
+.horizontal-card {
+  position: relative;
+  z-index: 5 !important;
 }

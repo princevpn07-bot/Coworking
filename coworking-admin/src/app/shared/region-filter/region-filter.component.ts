@@ -58,10 +58,10 @@ export class RegionFilterComponent {
   taiwanRegionData: { [key: string]: any } = {
     '北部': {
       cities: [
-        { id: 'tw-tp', name: '台北市', imgUrl: 'assets/area/taipei.png', alt: '台北市景' },
-        { id: 'tw-ntpc', name: '新北市', imgUrl: 'assets/area/new_taipei.png', alt: '新北市景' },
-        { id: 'tw-keelung', name: '基隆市', imgUrl: 'assets/area/keelung.png', alt: '基隆市景' },
-        { id: 'tw-ty', name: '桃園市', imgUrl: 'assets/area/taoyuan.png', alt: '桃園市景' }
+        { id: 'tw-tp', name: '台北市', imgUrl: 'assets/area/taipei.webp', alt: '台北市景' },
+        { id: 'tw-ntpc', name: '新北市', imgUrl: 'assets/area/new_taipei.webp', alt: '新北市景' },
+        { id: 'tw-keelung', name: '基隆市', imgUrl: 'assets/area/keelung.webp', alt: '基隆市景' },
+        { id: 'tw-ty', name: '桃園市', imgUrl: 'assets/area/taoyuan.webp', alt: '桃園市景' }
       ],
       cityDetails: {
         'tw-tp': {
@@ -104,11 +104,11 @@ export class RegionFilterComponent {
     },
     '中部': {
       cities: [
-        { id: 'tw-tc', name: '台中市', imgUrl: 'assets/area/taichung.png', alt: '台中市景' },
-        { id: 'tw-ch', name: '彰化縣', imgUrl: 'assets/area/changhua.png', alt: '彰化縣景' },
-        { id: 'tw-nt', name: '南投縣', imgUrl: 'assets/area/nantou.png', alt: '南投縣景' },
-        { id: 'tw-ml', name: '苗栗縣', imgUrl: 'assets/area/miaoli.png', alt: '苗栗縣景' },
-        { id: 'tw-yl', name: '雲林縣', imgUrl: 'assets/area/yunlin.png', alt: '雲林縣景' }
+        { id: 'tw-tc', name: '台中市', imgUrl: 'assets/area/taichung.webp', alt: '台中市景' },
+        { id: 'tw-ch', name: '彰化縣', imgUrl: 'assets/area/changhua.webp', alt: '彰化縣景' },
+        { id: 'tw-nt', name: '南投縣', imgUrl: 'assets/area/nantou.webp', alt: '南投縣景' },
+        { id: 'tw-ml', name: '苗栗縣', imgUrl: 'assets/area/miaoli.webp', alt: '苗栗縣景' },
+        { id: 'tw-yl', name: '雲林縣', imgUrl: 'assets/area/yunlin.webp', alt: '雲林縣景' }
       ],
       cityDetails: {
         'tw-tc': {
@@ -145,11 +145,11 @@ export class RegionFilterComponent {
     },
     '南部': {
       cities: [
-        { id: 'tw-kh', name: '高雄市', imgUrl: 'assets/area/kaohsiung.png', alt: '高雄市景' },
-        { id: 'tw-tn', name: '台南市', imgUrl: 'assets/area/tainan.png', alt: '台南市景' },
-        { id: 'tw-cyi', name: '嘉義市', imgUrl: 'assets/area/chiayi_city.png', alt: '嘉義市景' },
-        { id: 'tw-cyh', name: '嘉義縣', imgUrl: 'assets/area/chiayi_county.png', alt: '嘉義縣景' },
-        { id: 'tw-pt', name: '屏東縣', imgUrl: 'assets/area/pingtung.png', alt: '屏東縣景' }
+        { id: 'tw-kh', name: '高雄市', imgUrl: 'assets/area/kaohsiung.webp', alt: '高雄市景' },
+        { id: 'tw-tn', name: '台南市', imgUrl: 'assets/area/tainan.webp', alt: '台南市景' },
+        { id: 'tw-cyi', name: '嘉義市', imgUrl: 'assets/area/chiayi_city.webp', alt: '嘉義市景' },
+        { id: 'tw-cyh', name: '嘉義縣', imgUrl: 'assets/area/chiayi_county.webp', alt: '嘉義縣景' },
+        { id: 'tw-pt', name: '屏東縣', imgUrl: 'assets/area/pingtung.webp', alt: '屏東縣景' }
       ],
       cityDetails: {
         'tw-kh': {
@@ -191,12 +191,12 @@ export class RegionFilterComponent {
     },
     '東部與離島': {
       cities: [
-        { id: 'tw-il', name: '宜蘭縣', imgUrl: 'assets/area/yilan.png', alt: '宜蘭縣景' },
-        { id: 'tw-hl', name: '花蓮縣', imgUrl: 'assets/area/hualien.png', alt: '花蓮縣景' },
-        { id: 'tw-tt', name: '台東縣', imgUrl: 'assets/area/taitung.png', alt: '台東縣景' },
-        { id: 'tw-ph', name: '澎湖縣', imgUrl: 'assets/area/penghu.png', alt: '澎湖縣景' },
-        { id: 'tw-km', name: '金門縣', imgUrl: 'assets/area/kinmen.png', alt: '金門縣景' },
-        { id: 'tw-lc', name: '連江縣', imgUrl: 'assets/area/matsu.png', alt: '連江馬祖縣景' }
+        { id: 'tw-il', name: '宜蘭縣', imgUrl: 'assets/area/yilan.webp', alt: '宜蘭縣景' },
+        { id: 'tw-hl', name: '花蓮縣', imgUrl: 'assets/area/hualien.webp', alt: '花蓮縣景' },
+        { id: 'tw-tt', name: '台東縣', imgUrl: 'assets/area/taitung.webp', alt: '台東縣景' },
+        { id: 'tw-ph', name: '澎湖縣', imgUrl: 'assets/area/penghu.webp', alt: '澎湖縣景' },
+        { id: 'tw-km', name: '金門縣', imgUrl: 'assets/area/kinmen.webp', alt: '金門縣景' },
+        { id: 'tw-lc', name: '連江縣', imgUrl: 'assets/area/matsu.webp', alt: '連江馬祖縣景' }
       ],
       cityDetails: {
         'tw-il': {
