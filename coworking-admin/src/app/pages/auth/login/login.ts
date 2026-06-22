@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { LoginRequest } from '../../../models/user.model';
 import { AuthService } from '../../../services/auth';
-import { Router, RouterLink } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { hasBackendAccess } from '../../../models/role.model';
 import { FrontendHeader } from '../../../shared/frontend-header/frontend-header';
 import { ProfileService } from '../../../services/profile';
@@ -21,13 +21,17 @@ export class Login
   pendingEmail = '';
   otp = '';
   isSending = false;
+  returnUrl: string = '/';
 
   constructor(
     private authservices: AuthService,
     private router: Router,
+    private route: ActivatedRoute,
     private profileService: ProfileService,
     private toast: ToastService
-  ) {}
+  ) {
+    this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/';
+  }
 
   login()
   {
@@ -82,6 +86,6 @@ export class Login
     this.authservices.savetoken(token);
     const role = this.authservices.getrole();
     if (hasBackendAccess(role)) this.router.navigate(['/backend/dashboard']);
-    else this.router.navigate(['/']);
+    else this.router.navigate([this.returnUrl]);
   }
 }

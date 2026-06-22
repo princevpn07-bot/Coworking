@@ -8,6 +8,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { FavoriteService } from '../../../services/favorite';
 import { ToastService } from '../../../services/toast';
+import { AuthService } from '../../../services/auth';
 
 @Pipe({ name: 'hourLabel', standalone: true })
 export class HourLabelPipe implements PipeTransform {
@@ -36,7 +37,8 @@ export class SpaceDetail implements OnInit {
   constructor(
     private sanitizer: DomSanitizer,
     public favoriteService: FavoriteService,
-    private router: Router
+    private router: Router,
+    private auth: AuthService
   ) {}
 
   toggleFavorite(spaceId: number, event: Event) {
@@ -299,6 +301,14 @@ export class SpaceDetail implements OnInit {
     }
     if (this.hasConflict) {
       this.toast.error('此時段已被預訂，請選擇其他時間');
+      return;
+    }
+
+    if (!this.auth.isLoggedIn()) {
+      this.router.navigate(['/login'],{
+        queryParams: {returnUrl: `/space-detail/${this.space.spaceId}`}
+      });
+      this.toast.warning('請先登入帳號再選擇空間');
       return;
     }
 

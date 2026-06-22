@@ -11,6 +11,8 @@ import * as L from 'leaflet';
 import 'leaflet.markercluster';
 import { NgZone } from '@angular/core';
 import { FavoriteService } from '../../../services/favorite';
+import { ToastService } from '../../../services/toast';
+import { AuthService } from '../../../services/auth';
 
 @Component({
   selector: 'app-all-spaces',
@@ -75,7 +77,9 @@ export class AllSpaces implements OnInit, AfterViewInit {
     private route: ActivatedRoute,
     private ngZone: NgZone,
     private cdr: ChangeDetectorRef,
-    public favoriteService: FavoriteService
+    public favoriteService: FavoriteService,
+    private auth: AuthService,
+    private toastr: ToastService
   ) { }
 
   toggleFavorite(id: number, event: Event) {
