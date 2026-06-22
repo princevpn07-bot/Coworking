@@ -54,7 +54,7 @@
   align-items: center;
 }
 
-.calendar-header .view-controls > button {
+.calendar-header .view-controls>button {
   padding: 8px 16px;
   border: 1px solid #C4C7C5;
   border-radius: 8px;
@@ -63,7 +63,7 @@
   font-size: 14px;
 }
 
-.calendar-header .view-controls > button:hover {
+.calendar-header .view-controls>button:hover {
   background: var(--surface-container-low);
 }
 
@@ -169,10 +169,25 @@
   text-overflow: ellipsis;
 }
 
-.event-chip.paid      { background: #C8E6C9; color: #1B5E20; }
-.event-chip.pending   { background: #FFE0B2; color: #BF360C; }
-.event-chip.expired   { background: #CFD8DC; color: #37474F; }
-.event-chip.cancelled { background: #EEEEEE; color: #616161; }
+.event-chip.paid {
+  background: #C8E6C9;
+  color: #1B5E20;
+}
+
+.event-chip.pending {
+  background: #FFE0B2;
+  color: #BF360C;
+}
+
+.event-chip.expired {
+  background: #CFD8DC;
+  color: #37474F;
+}
+
+.event-chip.cancelled {
+  background: #EEEEEE;
+  color: #616161;
+}
 
 /* Event Bars（跨天延續段） */
 .event-bar {
@@ -187,14 +202,41 @@
   margin-right: -8px;
 }
 
-.event-bar.round-left  { border-radius: 4px 0 0 4px; margin-left: 0; }
-.event-bar.round-right { border-radius: 0 4px 4px 0; margin-right: 0; }
-.event-bar.round-left.round-right { border-radius: 4px; margin-left: 0; margin-right: 0; }
+.event-bar.round-left {
+  border-radius: 4px 0 0 4px;
+  margin-left: 0;
+}
 
-.event-bar.paid      { background: #C8E6C9; color: #1B5E20; }
-.event-bar.pending   { background: #FFE0B2; color: #BF360C; }
-.event-bar.expired   { background: #CFD8DC; color: #37474F; }
-.event-bar.cancelled { background: #EEEEEE; color: #616161; }
+.event-bar.round-right {
+  border-radius: 0 4px 4px 0;
+  margin-right: 0;
+}
+
+.event-bar.round-left.round-right {
+  border-radius: 4px;
+  margin-left: 0;
+  margin-right: 0;
+}
+
+.event-bar.paid {
+  background: #C8E6C9;
+  color: #1B5E20;
+}
+
+.event-bar.pending {
+  background: #FFE0B2;
+  color: #BF360C;
+}
+
+.event-bar.expired {
+  background: #CFD8DC;
+  color: #37474F;
+}
+
+.event-bar.cancelled {
+  background: #EEEEEE;
+  color: #616161;
+}
 
 
 .more-events {
@@ -235,10 +277,25 @@
   border-radius: 50%;
 }
 
-.legend-item.paid .dot      { background: #C8E6C9; outline: 1px solid #1B5E20; }
-.legend-item.pending .dot   { background: #FFE0B2; outline: 1px solid #BF360C; }
-.legend-item.expired .dot   { background: #CFD8DC; outline: 1px solid #37474F; }
-.legend-item.cancelled .dot { background: #EEEEEE; outline: 1px solid #bdbdbd; }
+.legend-item.paid .dot {
+  background: #C8E6C9;
+  outline: 1px solid #1B5E20;
+}
+
+.legend-item.pending .dot {
+  background: #FFE0B2;
+  outline: 1px solid #BF360C;
+}
+
+.legend-item.expired .dot {
+  background: #CFD8DC;
+  outline: 1px solid #37474F;
+}
+
+.legend-item.cancelled .dot {
+  background: #EEEEEE;
+  outline: 1px solid #bdbdbd;
+}
 
 /* Day cell interaction */
 .day-cell {
@@ -273,6 +330,7 @@
   border-radius: 16px;
   overflow: hidden;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  box-sizing: border-box;
 }
 
 .day-panel-header {
@@ -347,10 +405,25 @@
   border-radius: 100px;
 }
 
-.booking-status-badge.paid      { background: #C8E6C9; color: #1B5E20; }
-.booking-status-badge.pending   { background: #FFE0B2; color: #BF360C; }
-.booking-status-badge.expired   { background: #CFD8DC; color: #37474F; }
-.booking-status-badge.cancelled { background: #EEEEEE; color: #616161; }
+.booking-status-badge.paid {
+  background: #C8E6C9;
+  color: #1B5E20;
+}
+
+.booking-status-badge.pending {
+  background: #FFE0B2;
+  color: #BF360C;
+}
+
+.booking-status-badge.expired {
+  background: #CFD8DC;
+  color: #37474F;
+}
+
+.booking-status-badge.cancelled {
+  background: #EEEEEE;
+  color: #616161;
+}
 
 
 .booking-item-meta {
@@ -516,7 +589,7 @@
 .btn-cancel {
   padding: 10px 20px;
   border: 1px solid #C4C7C5;
-  border-radius: 8px;
+  border-radius: 100px;
   background: #fff;
   font-size: 14px;
   font-weight: 600;

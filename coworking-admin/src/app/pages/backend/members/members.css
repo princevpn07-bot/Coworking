@@ -66,7 +66,7 @@
   display: flex;
   align-items: center;
   gap: 8px;
-  background-color: black;
+  background-color: #3D5A35;
   color: white;
   padding: 10px 20px;
   border: none;
@@ -75,6 +75,11 @@
   font-size: 14px;
   cursor: pointer;
 }
+
+.btn-primary:hover {
+  background: #2E4528;
+}
+
 
 /* Stats Cards */
 .stats-grid {
@@ -422,13 +427,17 @@
 
 .btn-submit {
   padding: 10px 20px;
-  background: black;
+  background: #3D5A35;
   color: white;
   border: none;
   border-radius: var(--border-radius-pill);
   font-size: 14px;
   font-weight: 700;
   cursor: pointer;
+}
+
+.btn-submit:hover:not(:disabled) {
+  background: #2E4528;
 }
 
 .btn-submit:disabled { opacity: 0.5; cursor: not-allowed; }

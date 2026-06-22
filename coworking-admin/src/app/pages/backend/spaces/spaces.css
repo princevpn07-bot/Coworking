@@ -46,7 +46,7 @@
   color: #ffffff;
   border: none;
   padding: 10px 24px;
-  border-radius: 8px;
+  border-radius: 100px;
   font-weight: 700;
   font-size: 15px;
   display: flex;
@@ -63,7 +63,7 @@
   color: #1A1C1E;
   border: 1px solid #C4C7C5;
   padding: 10px 24px;
-  border-radius: 8px;
+  border-radius: 100px;
   font-weight: 600;
   font-size: 15px;
   display: flex;
@@ -703,7 +703,7 @@
 .btn-cancel {
   padding: 10px 20px;
   border: 1px solid #C4C7C5;
-  border-radius: 8px;
+  border-radius: 100px;
   background: #fff;
   font-size: 14px;
   font-weight: 600;

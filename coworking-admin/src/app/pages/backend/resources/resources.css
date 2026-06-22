@@ -72,7 +72,7 @@
   display: flex;
   align-items: center;
   gap: 6px;
-  background: #111827;
+  background: #3D5A35;
   color: #ffffff;
   padding: 9px 20px;
   border: none;
@@ -84,7 +84,7 @@
 }
 
 .btn-primary:hover {
-  background: #1f2937;
+  background: #2E4528;
 }
 
 .asset-grid {
@@ -465,7 +465,7 @@
 
 .btn-ghost {
   padding: 8px 16px;
-  border-radius: 8px;
+  border-radius: 100px;
   font-size: 14px;
   font-weight: 600;
   border: 1px solid #e5e7eb;
@@ -481,18 +481,18 @@
 
 .btn-confirm {
   padding: 8px 20px;
-  border-radius: 8px;
+  border-radius: 100px;
   font-size: 14px;
   font-weight: 600;
   border: none;
-  background: #10b981;
+  background: #3D5A35;
   color: #ffffff;
   cursor: pointer;
   transition: background 0.15s;
 }
 
 .btn-confirm:hover:not(:disabled) {
-  background: #059669;
+  background: #2E4528;
 }
 
 .btn-ghost:disabled,

@@ -413,3 +413,7 @@ html, body {
 .admin-wrapper.dark .event-chip.cancelled,
 .admin-wrapper.dark .event-bar.cancelled,
 .admin-wrapper.dark .booking-status-badge.cancelled { background: #1e2433; color: #8892a4; }
+
+.admin-wrapper.dark .modal-header h4 {
+  color: #e2e8f0 !important;
+}
