@@ -25,11 +25,11 @@
   <div class="hero">
     <div class="hero__gallery">
       <div class="hero__main-img">
-        <img [src]="mainImage" [alt]="space?.spaceNumber">
+        <img [src]="mainImage" [alt]="space?.spaceNumber" />
       </div>
       <div class="hero__thumbs">
         <div class="thumb" *ngFor="let image of galleryThumbs">
-          <img [src]="image.fullUrl">
+          <img [src]="image.fullUrl" />
         </div>
       </div>
     </div>
@@ -40,9 +40,7 @@
           <div class="hero__top">
             <h1>{{ space?.spaceNumber }}</h1>
             <button class="share-btn" (click)="showShareModal = true">
-              <span class="material-symbols-outlined">
-                upload
-              </span>
+              <span class="material-symbols-outlined"> upload </span>
             </button>
           </div>
           <div class="location">
@@ -62,33 +60,32 @@
             <span class="count">0.0 (0 則評價)</span>
           </div>
         </div>
-
       </div>
 
-      <div class="luxury-modal-overlay" [class.active]="showShareModal" (click)="showShareModal = false">
-        <div class="luxury-center-card" [class.active]="showShareModal" (click)="$event.stopPropagation()">
+      <div
+        class="luxury-modal-overlay"
+        [class.active]="showShareModal"
+        (click)="showShareModal = false"
+      >
+        <div
+          class="luxury-center-card"
+          [class.active]="showShareModal"
+          (click)="$event.stopPropagation()"
+        >
           <div class="luxury-icon-wrapper">
             <div class="luxury-icon-glow"></div>
             <div class="luxury-icon-core">
-              <span class="material-symbols-outlined">
-                share
-              </span>
+              <span class="material-symbols-outlined"> share </span>
             </div>
           </div>
           <div class="luxury-text-package">
-            <h3 class="luxury-brand-title">
-              分享此空間
-            </h3>
+            <h3 class="luxury-brand-title">分享此空間</h3>
             <div class="luxury-divider-line"></div>
-            <p class="luxury-brand-subtitle">
-              將此空間連結分享給朋友或社群平台
-            </p>
+            <p class="luxury-brand-subtitle">將此空間連結分享給朋友或社群平台</p>
             <div class="luxury-share-row">
-              <input class="luxury-share-link-input" [value]="shareUrl" readonly>
+              <input class="luxury-share-link-input" [value]="shareUrl" readonly />
               <button type="button" class="luxury-copy-icon-btn" (click)="copyLink()">
-                <span class="material-symbols-outlined">
-                  content_copy
-                </span>
+                <span class="material-symbols-outlined"> content_copy </span>
               </button>
             </div>
           </div>
@@ -97,9 +94,7 @@
 
       <div class="hero__amenities-bar">
         <div class="item" *ngFor="let equipment of equipments">
-          <span class="material-symbols-outlined">
-            check_circle
-          </span>
+          <span class="material-symbols-outlined"> check_circle </span>
           <span>
             {{ equipment.fullName }}
           </span>
@@ -108,13 +103,17 @@
 
       <div class="hero__booking-card">
         <div class="price-row">
-          <span class="price">NT$ {{ (selectedRent?.price ?? lowestPrice) | number }}</span>
-          <span class="unit">/ {{ selectedRent ? priceTypeMap[selectedRent.priceType] : '起' }}</span>
+          <span class="price">NT$ {{ selectedRent?.price ?? lowestPrice | number }}</span>
+          <span class="unit"
+            >/ {{ selectedRent ? priceTypeMap[selectedRent.priceType] : '起' }}</span
+          >
           <div class="price-types">
-            <div *ngFor="let rent of (space?.rents ?? [])"
-                 [class.selected]="selectedRent === rent"
-                 (click)="selectRent(rent)"
-                 style="cursor: pointer;">
+            <div
+              *ngFor="let rent of space?.rents ?? []"
+              [class.selected]="selectedRent === rent"
+              (click)="selectRent(rent)"
+              style="cursor: pointer"
+            >
               <span>{{ priceTypeMap[rent.priceType] }}</span>
               <span>NT$ {{ rent.price | number }}</span>
             </div>
@@ -129,12 +128,21 @@
             <div class="booking-date-fields">
               <div class="booking-date-field">
                 <label>日期</label>
-                <input type="date" class="booking-input" [min]="today" (change)="onStartDateChange($event)" />
+                <input
+                  type="date"
+                  class="booking-input"
+                  [min]="today"
+                  (change)="onStartDateChange($event)"
+                />
               </div>
               <div class="booking-date-field-row">
                 <div class="booking-date-field">
                   <label>開始</label>
-                  <select class="booking-input" [(ngModel)]="startHour" (ngModelChange)="onStartHourChange()">
+                  <select
+                    class="booking-input"
+                    [(ngModel)]="startHour"
+                    (ngModelChange)="onStartHourChange()"
+                  >
                     <option value="" disabled>選擇</option>
                     @for (hour of hourOptions; track hour) {
                       <option [value]="hour">{{ hour | hourLabel }}</option>
@@ -144,7 +152,11 @@
                 <span class="date-sep">～</span>
                 <div class="booking-date-field">
                   <label>結束</label>
-                  <select class="booking-input" [(ngModel)]="endHour" (ngModelChange)="onEndHourChange()">
+                  <select
+                    class="booking-input"
+                    [(ngModel)]="endHour"
+                    (ngModelChange)="onEndHourChange()"
+                  >
                     <option value="" disabled>選擇</option>
                     @for (hour of hourOptions; track hour) {
                       <option [value]="hour">{{ hour | hourLabel }}</option>
@@ -159,11 +171,21 @@
             <div class="booking-date-fields">
               <div class="booking-date-field">
                 <label>開始日期</label>
-                <input type="date" class="booking-input" [min]="today" (change)="onStartDateChange($event)" />
+                <input
+                  type="date"
+                  class="booking-input"
+                  [min]="today"
+                  (change)="onStartDateChange($event)"
+                />
               </div>
               <div class="booking-date-field">
                 <label>結束日期</label>
-                <input type="date" class="booking-input" [min]="startDate || today" (change)="onEndDateChange($event)" />
+                <input
+                  type="date"
+                  class="booking-input"
+                  [min]="startDate || today"
+                  (change)="onEndDateChange($event)"
+                />
               </div>
             </div>
           }
@@ -172,11 +194,21 @@
             <div class="booking-date-fields">
               <div class="booking-date-field">
                 <label>開始月份</label>
-                <input type="month" class="booking-input" [min]="curMonth" (change)="onStartDateChange($event)" />
+                <input
+                  type="month"
+                  class="booking-input"
+                  [min]="curMonth"
+                  (change)="onStartDateChange($event)"
+                />
               </div>
               <div class="booking-date-field">
                 <label>結束月份</label>
-                <input type="month" class="booking-input" [min]="startDate || curMonth" (change)="onEndDateChange($event)" />
+                <input
+                  type="month"
+                  class="booking-input"
+                  [min]="startDate || curMonth"
+                  (change)="onEndDateChange($event)"
+                />
               </div>
             </div>
           }
@@ -202,7 +234,10 @@
                 @for (slot of bookedSlots; track slot.startDate) {
                   <div class="booked-slot-item">
                     <span class="material-symbols-outlined">event_busy</span>
-                    <span>{{ slot.startDate | date:'MM/dd HH:mm' }} ~ {{ slot.endDate | date:'MM/dd HH:mm' }}</span>
+                    <span
+                      >{{ slot.startDate | date: 'MM/dd HH:mm' }} ~
+                      {{ slot.endDate | date: 'MM/dd HH:mm' }}</span
+                    >
                   </div>
                 }
               </div>
@@ -211,15 +246,23 @@
         </div>
 
         <div class="actions">
-          <button class="btn-book"
-                  [class.btn-book--disabled]="!computedStartDate || !computedEndDate || hasConflict"
-                  (click)="goBooking()">
+          <button
+            class="btn-book"
+            [class.btn-book--disabled]="!computedStartDate || !computedEndDate || hasConflict"
+            (click)="goBooking()"
+          >
             立即預約
           </button>
-          <div *ngIf="space as s" class="btn-fav" [class.active]="favoriteService.isFavorite(s.spaceId)"
-            (click)="toggleFavorite(s.spaceId, $event)">
-            <span class="material-symbols-outlined favorite-icon"
-              [class.filled]="favoriteService.isFavorite(s.spaceId)">
+          <div
+            *ngIf="space as s"
+            class="btn-fav"
+            [class.active]="favoriteService.isFavorite(s.spaceId)"
+            (click)="toggleFavorite(s.spaceId, $event)"
+          >
+            <span
+              class="material-symbols-outlined favorite-icon"
+              [class.filled]="favoriteService.isFavorite(s.spaceId)"
+            >
               favorite
             </span>
           </div>
@@ -228,13 +271,10 @@
     </div>
   </div>
 
-
   <!-- Content Tabs -->
   <div class="content-tabs">
     <div class="content-tabs__nav">
-      <button [class.active]="activeTab === 'intro'" (click)="setTab('intro')">
-        空間介紹
-      </button>
+      <button [class.active]="activeTab === 'intro'" (click)="setTab('intro')">空間介紹</button>
 
       <button [class.active]="activeTab === 'amenities'" (click)="setTab('amenities')">
         設備設施
@@ -244,25 +284,19 @@
         位置交通
       </button>
 
-      <button [class.active]="activeTab === 'notice'" (click)="setTab('notice')">
-        注意事項
-      </button>
+      <button [class.active]="activeTab === 'notice'" (click)="setTab('notice')">注意事項</button>
 
-      <button [class.active]="activeTab === 'review'" (click)="setTab('review')">
-        評價 (0)
-      </button>
+      <button [class.active]="activeTab === 'review'" (click)="setTab('review')">評價 (0)</button>
     </div>
     <div class="content-tabs__grid" [ngSwitch]="activeTab">
-
       <!-- =========================MAIN AREA========================== -->
       <div class="content-tabs__main">
-
         <!-- intro -->
         <section *ngSwitchCase="'intro'">
           <h2>空間介紹</h2>
           <p>{{ space?.introduction }}</p>
 
-          <hr class="space-rules__divider">
+          <hr class="space-rules__divider" />
 
           <h2>適合活動</h2>
           <div class="activity-tags">
@@ -289,46 +323,55 @@
                 </div>
               </div>
             </div>
-
           </div>
         </section>
         <section *ngSwitchCase="'notice'">
           <h2>使用規範</h2>
           <ul class="rule-list">
-            <li><span class="material-symbols-outlined">schedule</span>
+            <li>
+              <span class="material-symbols-outlined">schedule</span>
               請依預約時段準時進場與離場，避免影響下一位租借者使用權益。
             </li>
-            <li><span class="material-symbols-outlined">cleaning_services</span>
+            <li>
+              <span class="material-symbols-outlined">cleaning_services</span>
               使用完畢後請協助恢復場地原狀，並將垃圾分類丟棄。
             </li>
-            <li><span class="material-symbols-outlined">wifi</span>
+            <li>
+              <span class="material-symbols-outlined">wifi</span>
               場地提供免費 Wi-Fi，請勿從事違法或影響網路穩定之行為。
             </li>
-            <li><span class="material-symbols-outlined">construction</span>
+            <li>
+              <span class="material-symbols-outlined">construction</span>
               設備使用如有異常，請立即聯繫管理人員協助處理。
             </li>
-            <li><span class="material-symbols-outlined">groups</span>
+            <li>
+              <span class="material-symbols-outlined">groups</span>
               使用人數請勿超過空間核定容量，以維護安全與使用品質。
             </li>
           </ul>
 
-          <hr class="space-rules__divider">
+          <hr class="space-rules__divider" />
 
           <h2>禁止事項</h2>
           <ul class="rule-list">
-            <li><span class="material-symbols-outlined">smoke_free</span>
+            <li>
+              <span class="material-symbols-outlined">smoke_free</span>
               場地全面禁菸、電子煙及其他煙草產品，請勿在室內或指定禁菸區域吸菸。
             </li>
-            <li><span class="material-symbols-outlined">volume_off</span>
+            <li>
+              <span class="material-symbols-outlined">volume_off</span>
               請勿大聲喧嘩或播放高音量音樂，以免影響周邊環境。
             </li>
-            <li><span class="material-symbols-outlined">local_bar</span>
+            <li>
+              <span class="material-symbols-outlined">local_bar</span>
               未經同意禁止攜帶酒精飲品或危險物品進入場地。
             </li>
-            <li><span class="material-symbols-outlined">pets</span>
+            <li>
+              <span class="material-symbols-outlined">pets</span>
               除導盲犬等工作犬外，禁止攜帶寵物入內。
             </li>
-            <li><span class="material-symbols-outlined">block</span>
+            <li>
+              <span class="material-symbols-outlined">block</span>
               禁止從事任何違法、危險或損害場地設備之行為。
             </li>
           </ul>
@@ -338,7 +381,6 @@
           <h2>評價</h2>
           <p>尚無評價</p>
         </section>
-
       </div>
 
       <!-- =========================SIDE AREA ========================== -->
@@ -346,19 +388,15 @@
         <section *ngSwitchCase="'amenities'">
           <h2>設備服務</h2>
           <div class="amenities-card">
-
             <ul>
               <li *ngFor="let equipment of equipments">
                 <span class="material-symbols-outlined">check_circle</span>
                 {{ equipment.category }}
               </li>
             </ul>
-
           </div>
         </section>
-
       </div>
-
     </div>
   </div>
 </div>
