@@ -10,8 +10,8 @@
   /* 換行處理 */
   min-width: 240px;
   max-width: 360px;
-  white-space: normal;
-  word-wrap: break-word;
+  white-space: normal;    /* 較新版本支援 */
+  word-wrap: break-word;  /* 舊版本支援 */
   overflow-wrap: break-word;
   word-break: break-word;
 }

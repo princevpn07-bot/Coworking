@@ -57,6 +57,7 @@ namespace CoworkingAPI.Controllers
             user.role = User.role;
             user.line_id = User.line_id;
             user.is_active = User.is_active;
+            user.two_factor_enabled = User.two_factor_enabled;
 
             _context.Users.Update(user);
             await _context.SaveChangesAsync();
