@@ -163,27 +163,45 @@
   cursor: pointer;
   transform-style: preserve-3d;
   perspective: 1000px;
+  
+  /* 1. 🎯 封裝透光外殼：卡片本體化身為一塊具有物理厚度的毛玻璃磚 */
+  background: rgba(255, 255, 255, 0.04) !important;
+  backdrop-filter: blur(20px) saturate(130%) !important;
+  -webkit-backdrop-filter: blur(20px) saturate(130%) !important;
+  
+  padding: 16px;
+  border-radius: 24px;
+  
+  /* 2. 💎 鑽石拋光防邊緣銳化線：營造玻璃磨邊的奢華白金高光 */
+  border: 1px solid rgba(255, 255, 255, 0.25) !important;
+  
+  /* 3. 托舉深影與內襯倒角光 (Glass Rim Reflection) */
+  box-shadow: 
+    0 25px 55px rgba(0, 0, 0, 0.2),
+    inset 0 1.5px 2px rgba(255, 255, 255, 0.4) !important;
+    
+  transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1) !important;
+  will-change: transform, box-shadow, border-color;
 }
-
 .horizontal-card.alt-offset {
   transform: translateY(48px);
 }
 
+/* 4. 🔒 保護圖片框：將相片封裝在毛玻璃下層夾片中 */
 .horizontal-card .image-box {
   aspect-ratio: 4/5.2;
   border-radius: 16px;
   overflow: hidden;
   margin-bottom: 20px;
-  border: 1px solid #cfc5bb;
-  box-shadow: 0 10px 40px -15px rgba(0, 0, 0, 0.12);
+  
+  /* 輕薄內框線 */
+  border: 1px solid rgba(255, 255, 255, 0.15) !important;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
   transition: box-shadow 0.6s cubic-bezier(0.16, 1, 0.3, 1);
   will-change: transform, view-transition-name;
 }
 
-.horizontal-card:hover .image-box {
-  box-shadow: 0 25px 55px -10px rgba(105, 92, 78, 0.22);
-}
-
+/* 5. ✨【核心重構】：將卡片內部圖片平時全量「半透明高透光化」 */
 .horizontal-card .image-box img {
   width: 112%;
   height: 112%;
@@ -192,13 +210,71 @@
   left: -6%;
   object-fit: cover;
   pointer-events: none;
-  transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+  
+  /* 🎯 關鍵光學配置：
+     - opacity: 0.48 平時呈現完美的半透明狀態，讓卡片宛如一塊有色光學濾鏡玻璃，能直接看透並融進底層的植物搖曳樹影！
+     - mix-blend-mode: lighten 讓圖片的亮部與背景環境晨光完美咬合，製造高級的極簡通透體感 */
+  opacity: 0.76 !important;
+  mix-blend-mode: lighten !important;
+  
+  /* 稍微提高圖片本身的反差與明暗對比，防止半透明化後畫面細節變灰 */
+  filter: brightness(0.85) contrast(1.18) !important;
+  transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1), filter 0.6s cubic-bezier(0.16, 1, 0.3, 1) !important;
 }
 
+/* 6. 🚀 標題與地點：換算為質感白金色系，確保毛玻璃背景上的清晰度與簡約感 */
+.horizontal-card h3 {
+  font-size: 22px;
+  font-weight: 500;
+  margin-bottom: 6px;
+  color: #ffffff !important;
+  padding-left: 8px;
+  will-change: transform;
+  display: block;
+}
+
+.horizontal-card .location {
+  font-size: 16px;
+  color: rgba(255, 255, 255, 0.45) !important; /* 優雅的半透明白金小字 */
+  padding-left: 8px;
+  will-change: transform;
+  display: block;
+}
+
+/* 7. ✨【強烈懸停交互（Hover spec）】：滑鼠移過去時，圖片恢復不透明清晰狀態 */
+.horizontal-card:hover {
+  transform: translateY(-8px) scale(1.02) !important;
+  border-color: rgba(255, 255, 255, 0.65) !important; /* 迎光磨邊被照亮 */
+  
+  box-shadow: 
+    0 40px 85px rgba(0, 0, 0, 0.35), 
+    0 0 30px rgba(255, 255, 255, 0.1),
+    inset 0 1.5px 3px rgba(255, 255, 255, 0.6) !important;
+}
+
+/* 配合 alt-offset 錯落布局的懸停補償 */
+.horizontal-card.alt-offset:hover {
+  transform: translateY(40px) scale(1.02) !important;
+}
+
+.horizontal-card:hover .image-box {
+  box-shadow: 0 20px 45px rgba(0, 0, 0, 0.15);
+}
+
+/* 🎯 滑鼠 hover 移入卡片時：透明度優雅「解凍」至不透明（0.95），讓空間細節完美清晰呈現 */
 .horizontal-card:hover .image-box img {
-  transform: scale(1.05);
+  transform: scale(1.03); /* 微幅平滑向前推動 */
+  opacity: 0.95 !important;
+  filter: brightness(0.98) contrast(1.1) !important;
 }
-
+/* 🌙 暗黑藝廊模式下的毛玻璃反差微調：降低白邊亮度，更顯沉靜 */
+:host-context(.dark-mode) .horizontal-card {
+  background: rgba(20, 18, 16, 0.2) !important;
+  border-color: rgba(255, 255, 255, 0.12) !important;
+}
+:host-context(.dark-mode) .horizontal-card:hover {
+  border-color: rgba(255, 255, 255, 0.38) !important;
+}
 .horizontal-card h3 {
   font-size: 22px;
   font-weight: 500;
@@ -299,15 +375,49 @@
   left: 4vw;
   border-radius: 32px;
   overflow: hidden;
-  box-shadow: 0 30px 70px rgba(0, 0, 0, 0.25);
   z-index: 0;
   transform-style: preserve-3d;
-  will-change: transform, width, height, top, left, border-radius, box-shadow;
   transform: translateZ(0);
   -webkit-backface-visibility: hidden;
   backface-visibility: hidden;
-}
+  will-change: transform, width, height, top, left, border-radius, box-shadow;
 
+  /* 1. 🎯 封裝透光毛玻璃外殼層：賦予外框晶瑩微白的玻璃基底 */
+  background: rgba(255, 255, 255, 0.04) !important;
+  
+  /* 2. 🚀 GPU 硬體級模糊波導：在影片外緣切除硬邊，產生溫潤的環境融合度 */
+  backdrop-filter: blur(24px) saturate(135%) !important;
+  -webkit-backdrop-filter: blur(24px) saturate(135%) !important;
+
+  /* 3. 💎 鑽石拋光防邊緣銳化線：打造具有物理厚度感的白金倒角反射高光 */
+  border: 1px solid rgba(255, 255, 255, 0.35) !important;
+
+  /* 4. 雙重倒角深影疊加，將整塊影片玻璃碑優雅浮現於第一幕上層 */
+  box-shadow: 
+    0 40px 90px rgba(0, 0, 0, 0.35),
+    inset 0 1.5px 3px rgba(255, 255, 255, 0.5),
+    inset 0 -1px 3px rgba(0, 0, 0, 0.2) !important;
+  
+  transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+/* 5. ✨【核心新增：影片層上方的空氣感反射鏡面 Overlay】 */
+/* 這層斜切光線會在半透明毛玻璃邊框與影片亮部之間，交織生成一抹如高檔畫廊落地窗的物理反光層 */
+.hero-slide:not(:first-child) .hero-bg::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.32) 0%,
+    rgba(255, 255, 255, 0.08) 30%,
+    transparent 60%,
+    rgba(0, 0, 0, 0.15) 100%
+  ) !important;
+  z-index: 2; /* 剛性懸浮在影片上方、Border 內側 */
+  pointer-events: none;
+  mix-blend-mode: overlay;
+  opacity: 0.85;
+}
 .hero-slide:not(:first-child) .hero-bg img,
 .hero-slide:not(:first-child) .hero-bg video {
   position: absolute;
@@ -316,11 +426,27 @@
   width: 140%;
   height: 100%;
   object-fit: cover;
-  will-change: transform;
   border-radius: inherit;
   overflow: hidden;
+  z-index: 0;
+  will-change: transform;
+  
+  /* 稍微將影片調為高級香檳反差，使其與外側的白金發光框完美呼應 */
+  filter: brightness(0.88) contrast(1.08) !important;
+  transition: filter 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+/* 6. 🚀 互動亮化：當滑鼠滑入第二幕影片大範圍時，玻璃邊框與影片提亮解凍 */
+.hero-slide:not(:first-child):hover .hero-bg {
+  border-color: rgba(255, 255, 255, 0.65) !important; /* 邊緣磨邊高光大放異彩 */
+  box-shadow: 
+    0 50px 110px rgba(0, 0, 0, 0.45),
+    0 0 40px rgba(255, 255, 255, 0.1),
+    inset 0 2px 4px rgba(255, 255, 255, 0.6) !important;
 }
 
+.hero-slide:not(:first-child):hover .hero-bg video {
+  filter: brightness(0.96) contrast(1.05) !important; /* 解凍明暗反差 */
+}
 .hero-slide .hero-bg {
   position: absolute;
   inset: 0;
@@ -378,24 +504,38 @@
 }
 
 .search-bar {
-  background: rgba(248, 242, 240, 0.95);
-  backdrop-filter: blur(5px);
+  /* 1. 🎯 物理透光底色：降低固有色不透明度，釋放背景視差圖層 */
+  background: rgba(255, 255, 255, 0.48) !important;
+  
+  /* 2. 🚀 GPU 硬體級霧面模糊矩陣：20px 達到最溫潤不刺眼的精品毛玻璃氣場 */
+  backdrop-filter: blur(20px) saturate(140%) !important;
+  -webkit-backdrop-filter: blur(20px) saturate(140%) !important;
+  
   border-radius: 100px;
-  padding: 8px;
+  padding: 10px; /* 微調間距，讓排版更大氣 */
   display: flex;
   align-items: center;
-  max-width: 900px;
-  border: 1px solid #cfc5bb;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  max-width: 960px; /* 微調寬度釋放張力 */
+  
+  /* 3. 💎 鑽石磨邊白金線條 (物理厚度倒角高光) */
+  border: 1px solid rgba(255, 255, 255, 0.42) !important;
+  
+  /* 4. 重力環境柔和深影，將玻璃框優雅地托舉浮現於空間上方 */
+  box-shadow: 
+    0 30px 70px rgba(0, 0, 0, 0.18),
+    inset 0 1.5px 2px rgba(255, 255, 255, 0.4) !important;
+    
   opacity: 0;
+  transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1) !important;
 }
 
+/* 搜尋項目間的拋光半透明分隔線 */
 .search-bar .search-item {
   flex: 1;
   display: flex;
   align-items: center;
-  padding: 8px 24px;
-  border-right: 1px solid rgba(207, 197, 187, 0.5);
+  padding: 8px 28px;
+  border-right: 1px solid rgba(255, 255, 255, 0.30) !important; /* 改為半透明白，與毛玻璃融為一體 */
   width: 100%;
 }
 
@@ -403,51 +543,67 @@
   border-right: none;
 }
 
+/* 洗鍊精緻的環境金圖標 */
 .search-bar .search-item .icon {
-  color: #7e766d;
+  color: #51463b !important; /* 改為帶有暖木質調的高級深古銅金 */
   margin-right: 12px;
-  font-size: 20px;
+  font-size: 22px; /* 微調大小 */
+  opacity: 0.66;
 }
 
 .search-bar .search-item .info {
   text-align: left;
 }
 
+/* 標籤小字 */
 .search-bar .search-item .info label {
   display: block;
   font-size: 11px;
-  font-weight: 600;
-  color: #7e766d;
-  margin-bottom: 2px;
+  font-weight: 700; /* 加粗字體，提升高解析度下的可讀性 */
+  color: #433b33 !important; /* 灰褐色古銅金 */
+  margin-bottom: 3px;
+  letter-spacing: 0.05em;
 }
 
+/* 關鍵：讓輸入框（Input）完全清澈透明，與毛玻璃背景完美咬合 */
 .search-bar .search-item .info input {
-  background: transparent;
+  background: transparent !important;
   border: none;
   outline: none;
   font-family: inherit;
   font-size: 14px;
+  font-weight: 500;
   color: #1d1b1a;
   width: 100%;
 }
 
+/* 自訂輸入框 Placeholder 的精緻古銅灰色 */
+.search-bar .search-item .info input::placeholder {
+  color: rgba(29, 27, 26, 0.45) !important;
+}
+
+/* 5. 🚀 搜尋按鈕全量時裝化調整 */
 .search-bar .btn-search {
-  background: #695c4e;
-  color: white;
-  padding: 14px 40px;
+  background: #44322a !important; /* 改為更為沉穩、內斂的高級深曜岩木炭黑 */
+  color: #f8f2f0 !important;
+  padding: 14px 44px;
   border-radius: 100px;
   font-size: 14px;
   font-weight: 600;
-  border: none;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
   cursor: pointer;
   font-family: inherit;
-  transition: background 0.3s ease;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1) !important;
 }
 
+/* 搜尋按鈕懸停：爆發出香檳金色調 */
 .search-bar .btn-search:hover {
-  background: #4a4036;
+  background: #695c4e !important; /* 轉為經典品牌香檳金褐 */
+  color: white !important;
+  transform: scale(1.03) translateZ(10px);
+  box-shadow: 0 8px 25px rgba(105, 92, 78, 0.3);
 }
-
 /* ==========================================================================
    🌌 策展理念 3D 圓環卡片牆樣式
    ========================================================================== */

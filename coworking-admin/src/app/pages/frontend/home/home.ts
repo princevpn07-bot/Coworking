@@ -12,6 +12,9 @@ import { startGateInk } from './gate-ink.effect.js';
 import { startPhilosophyParallax } from './philosophy-parallax.effect.js';
 // @ts-ignore
 import { startPhilosophyFluid } from './philosophy-fluid.effect.js';
+
+// @ts-ignore
+import { startGateRain } from './gate-rain.effect.js'; // 換裝導入新寫的亂數雨窗引擎
 gsap.registerPlugin(ScrollTrigger);
 
 @Component({
@@ -83,7 +86,8 @@ export class Home implements OnInit, AfterViewInit, OnDestroy {
     { from: { x: '-10vw', y: '-50vh', rX: -70, rY: 15, rZ: -110, s: 0.2 } },
     { from: { x: '15vw', y: '50vh', rX: 50, rY: -15, rZ: 85, s: 0.3 } },
     { from: { x: '-30vw', y: '-45vh', rX: 40, rY: -20, rZ: -25, s: 0.3 } },
-    { from: { x: '35vw', y: '45vh', rX: -30, rY: 40, rZ: 55, s: 0.2 } }
+    { from: { x: '35vw', y: '45vh', rX: -30, rY: 40, rZ: 55, s: 0.2 } },
+
   ];
 
   @ViewChild('pinContainer') pinContainer!: ElementRef;
@@ -104,7 +108,8 @@ export class Home implements OnInit, AfterViewInit, OnDestroy {
   private philosophyParallaxEngine?: { update: (mx: number, my: number, f: number) => void; destroy: () => void };
   private liquidGlassEngine?: { destroy: () => void };
   private gateInkEngine?: { destroy: () => void };
-// 💡 ✨ 新增：儲存新流體引擎的控制權
+  private gateRainEngine?: { destroy: () => void };
+  // 💡 ✨ 新增：儲存新流體引擎的控制權
   private philosophyFluidEngine?: { destroy: () => void };
   private prefaceImages: HTMLImageElement[] = [];
   private prefaceFrameCount = 60;
@@ -489,24 +494,35 @@ export class Home implements OnInit, AfterViewInit, OnDestroy {
   }
 
   private initPhilosophyAnimation() {
-    const nativeElement = this.el.nativeElement; 
-    const section = nativeElement.querySelector('.philosophy'); 
+    const nativeElement = this.el.nativeElement;
+    const section = nativeElement.querySelector('.philosophy');
     if (!section) return;
     // ✨ 【新增這段】：當進入或離開策展理念區塊時，自動解凍/凍結 WebGL 渲染
-  ScrollTrigger.create({
-    trigger: section,
-    start: 'top bottom', // 當區塊頂部進入螢幕底部時就開始準備渲染
-    end: 'bottom top',   // 當區塊底部離開螢幕頂部時停止渲染
-    onToggle: (self) => {
-      this.isPhilosophyVisible = self.isActive;
-    }
-  });
-    
+    ScrollTrigger.create({
+      trigger: section,
+      start: 'top bottom', // 當區塊頂部進入螢幕底部時就開始準備渲染
+      end: 'bottom top',   // 當區塊底部離開螢幕頂部時停止渲染
+      onToggle: (self) => {
+        this.isPhilosophyVisible = self.isActive;
+      }
+    });
+
     const tl = gsap.timeline({
-      scrollTrigger: { trigger: section, start: 'top top', end: '+=5500', pin: true, scrub: 2, invalidateOnRefresh: true, onUpdate: (self: ScrollTrigger) => { this.scrollRotation.value = self.progress * 130; } }
+      scrollTrigger:
+      {
+        trigger: section,
+        start: 'top top',
+        end: '+=5500',
+        pin: true,
+        scrub: 2,
+        invalidateOnRefresh: true,
+        onUpdate: (self: ScrollTrigger) => { this.scrollRotation.value = self.progress * 130; }
+      }
     });
     tl.to(section, { backgroundColor: '#0e0e10', boxShadow: '0 -30px 60px rgba(0, 0, 0, 0.4)', ease: 'expo.out', duration: 0.08 });
-    tl.to(this.entranceFactor, { value: 1, ease: 'power2.out', duration: 0.55 }); tl.to({}, { duration: 0.55 }); tl.to(this.entranceFactor, { value: 0, ease: 'power2.in', duration: 0.60 });
+    tl.to(this.entranceFactor, { value: 1, ease: 'power2.out', duration: 0.55 });
+    tl.to({}, { duration: 0.55 }); // 🔴 這裡是一個 GSAP 的「空白死區（Empty Deadzone）」！
+    tl.to(this.entranceFactor, { value: 0, ease: 'power2.in', duration: 0.60 });
     tl.to(section, { backgroundColor: '#ffffff', boxShadow: '0 -30px 60px rgba(0, 0, 0, 0)', ease: 'power2.out', duration: 0.18 });
   }
 
@@ -613,8 +629,8 @@ export class Home implements OnInit, AfterViewInit, OnDestroy {
       if (card.dataset['controlled'] === 'true') return;
 
       const m = this.trajectories[index]; if (!m) return;
-      const baseAngle = index * (360 / cards.length); 
-      const totalAngle = baseAngle + totalRotation; 
+      const baseAngle = index * (360 / cards.length);
+      const totalAngle = baseAngle + totalRotation;
       const angleRad = totalAngle * (Math.PI / 180);
 
       const targetX = Math.cos(angleRad) * radius;
@@ -628,8 +644,8 @@ export class Home implements OnInit, AfterViewInit, OnDestroy {
       const currentX = fromXpx + (targetX - fromXpx) * factor;
       const currentY = fromYpx + (targetY - fromYpx) * factor;
       let currentZ = fromZpx + (targetZ - fromZpx) * factor;
-      
-     
+
+
       const currentOpacity = 0 + (1.0 - 0) * factor;
       const depthBlur = ((radius - targetY) / (radius * 2)) * 2.5;
       const entryBlur = 12 * (1 - factor);
@@ -728,7 +744,7 @@ export class Home implements OnInit, AfterViewInit, OnDestroy {
     if (this.liquidGlassEngine) { this.liquidGlassEngine.destroy(); }
     if (this.gateInkEngine) { this.gateInkEngine.destroy(); }
     if (this.philosophyParallaxEngine) { this.philosophyParallaxEngine.destroy(); }
-// 💡 ✨ 新增：路由頁面銷毀時，同步安全釋放 WebGL 渲染器，杜絕記憶體洩漏
+    // 💡 ✨ 新增：路由頁面銷毀時，同步安全釋放 WebGL 渲染器，杜絕記憶體洩漏
     if (this.philosophyFluidEngine) { this.philosophyFluidEngine.destroy(); }
     this.lenis?.destroy();
     ScrollTrigger.getAll().forEach((trigger: ScrollTrigger) => trigger.kill());
