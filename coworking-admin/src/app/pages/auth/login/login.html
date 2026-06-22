@@ -1,14 +1,23 @@
 <app-frontend-header />
 
-<div class="login-content">
+<div class="login-content" #loginContainer>
   <div class="bg-image"></div>
   <div class="overlay"></div>
 
+  <div class="color-splash-container">
+    <div class="color-splash splash-1"></div>
+    <div class="color-splash splash-2"></div>
+  </div>
+
+ 
+
   @if (step === 1) {
-    <main class="login-card">
+    <main class="login-card" #loginCard>
       <header class="header">
-        <h1>WorkspaceCollective</h1>
-        <p>Return to your sanctuary.</p>
+    <h1 class="login-title">
+          <span class="char">C</span><span class="char">O</span><span class="char">V</span><span class="char">O</span>
+        </h1>
+        <p class="login-subtitle">Return to your sanctuary.</p>
       </header>
 
       <form (ngSubmit)="login()">
@@ -27,7 +36,7 @@
         <div class="input-group">
           <div class="label-row">
             <label for="password">密碼 Password</label>
-            <a href="#">忘記密碼 Forgot Password?</a>
+            <a href="#" (click)="$event.preventDefault()" >忘記密碼 Forgot Password?</a>
           </div>
           <input
             [(ngModel)]="credentials.password"
