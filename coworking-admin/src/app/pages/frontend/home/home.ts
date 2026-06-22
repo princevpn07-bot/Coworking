@@ -98,7 +98,7 @@ export class Home implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild('liquidGlassCanvas') liquidGlassCanvasRef!: ElementRef<HTMLCanvasElement>;
   @ViewChild('gateContainer') gateContainerRef!: ElementRef;
   @ViewChild('gateInkCanvas') gateInkCanvasRef!: ElementRef<HTMLCanvasElement>;
-
+  @ViewChild('gateRainCanvas') gateRainCanvasRef!: ElementRef<HTMLCanvasElement>;
   @ViewChild('philosophyBgText') philosophyBgTextRef!: ElementRef;
   @ViewChild('philosophyGlows') philosophyGlowsRef!: ElementRef;
   @ViewChild('philosophyMeshGrid') philosophyMeshGridRef!: ElementRef;
@@ -146,9 +146,13 @@ export class Home implements OnInit, AfterViewInit, OnDestroy {
       }
 
       const gateCanvas = this.gateInkCanvasRef?.nativeElement;
+      const gateRainCanvas = this.gateRainCanvasRef?.nativeElement;
       const gateContainer = this.gateContainerRef?.nativeElement;
       const heroCanvas = this.canvasRef?.nativeElement;
-
+      // 1. 底層啟動寫實雨窗 (🎯 已補上傳入 this.zone，解凍 ReferenceError 死鎖)
+      if (gateRainCanvas && gateContainer && heroCanvas) {
+        this.gateRainEngine = startGateRain(gateRainCanvas, gateContainer, heroCanvas, this.zone);
+      }
       if (gateCanvas && gateContainer && heroCanvas) {
         this.gateInkEngine = startGateInk(gateCanvas, gateContainer, heroCanvas);
       }
@@ -407,6 +411,9 @@ export class Home implements OnInit, AfterViewInit, OnDestroy {
 
     masterTl.fromTo('.left-door', { xPercent: 0 }, { xPercent: -101, ease: 'power2.inOut', duration: 0.5 }, 0);
     masterTl.fromTo('.right-door', { xPercent: 0 }, { xPercent: 101, ease: 'power2.inOut', duration: 0.5 }, 0);
+    // 🎯【新增同步淡出軌跡】：確保滑動開門時，毛玻璃雨水與墨痕完美淡出，消除 Flash 突變
+    masterTl.fromTo('.gate-rain-canvas', { opacity: 1 }, { opacity: 0, ease: 'power2.inOut', duration: 0.5 }, 0);
+    masterTl.fromTo('.gate-ink-canvas', { opacity: 1 }, { opacity: 0, ease: 'power2.inOut', duration: 0.5 }, 0);
     masterTl.fromTo('.gate-text-l', { x: 0, opacity: 1 }, { x: -160, opacity: 0, ease: 'power2.inOut', duration: 0.5 }, 0);
     masterTl.fromTo('.gate-text-r', { x: 0, opacity: 1 }, { x: 160, opacity: 0, ease: 'power2.inOut', duration: 0.5 }, 0);
     masterTl.set('.cinematic-gate', { display: 'none' }, 0.5);
@@ -743,6 +750,7 @@ export class Home implements OnInit, AfterViewInit, OnDestroy {
 
     if (this.liquidGlassEngine) { this.liquidGlassEngine.destroy(); }
     if (this.gateInkEngine) { this.gateInkEngine.destroy(); }
+    if (this.gateRainEngine) { this.gateRainEngine.destroy(); }
     if (this.philosophyParallaxEngine) { this.philosophyParallaxEngine.destroy(); }
     // 💡 ✨ 新增：路由頁面銷毀時，同步安全釋放 WebGL 渲染器，杜絕記憶體洩漏
     if (this.philosophyFluidEngine) { this.philosophyFluidEngine.destroy(); }
