@@ -37,7 +37,7 @@
 
 .listing-section__feed {
   flex: 1;
-  overflow-y: auto;
+  overflow-y: flex;
   padding: 2rem;
 }
 
@@ -272,8 +272,8 @@
 /* 滑鼠懸停（Hover）：完美展現 3D 彈性抬升效果 */
 .card:hover {
   transform: translateY(-10px) scale(1.015); /* 微調向上拉伸 10px 並放大 */
-  box-shadow: 
-    0 20px 38px rgba(61, 48, 40, 0.08), 
+  box-shadow:
+    0 20px 38px rgba(61, 48, 40, 0.08),
     0 6px 14px rgba(61, 48, 40, 0.03);
   background-color: #fdfcfb; /* 懸停時帶點極淡的極簡溫暖色 */
 }
