@@ -6,13 +6,13 @@
 
   <main class="login-card">
     <header class="header">
-      <h1>WorkspaceCollective</h1>
+      <h1>COVO</h1>
       <p>Create your account.</p>
     </header>
 
     <form (ngSubmit)="register()">
       <div class="input-group">
-        <label for="fullName">Full Name</label>
+        <label for="fullName">姓名 Full Name</label>
         <input
           [(ngModel)]="fullName"
           name="fullName"
@@ -24,7 +24,7 @@
       </div>
 
       <div class="input-group">
-        <label for="email">Email Address</label>
+        <label for="email">電子信箱 Email Address</label>
         <input
           [(ngModel)]="email"
           name="email"
@@ -36,7 +36,7 @@
       </div>
 
       <div class="input-group">
-        <label for="password">Password</label>
+        <label for="password">密碼 Password</label>
         <input
           [(ngModel)]="password"
           name="password"
@@ -48,7 +48,7 @@
       </div>
 
       <div class="input-group">
-        <label for="confirmPassword">Confirm Password</label>
+        <label for="confirmPassword">確認密碼 Confirm Password</label>
         <input
           [(ngModel)]="confirmPassword"
           name="confirmPassword"
@@ -62,11 +62,11 @@
         </p>
       </div>
 
-      <button type="submit" class="btn-signin">Join Now</button>
+      <button type="submit" class="btn-signin">註  冊</button>
     </form>
 
     <footer class="footer">
-      Already a member? <a routerLink="/login">Sign In</a>
+      已經是會員？ <a routerLink="/login">Sign In</a>
     </footer>
   </main>
 </div>
