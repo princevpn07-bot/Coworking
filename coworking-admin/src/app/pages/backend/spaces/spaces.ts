@@ -4,12 +4,15 @@ import { FormsModule } from '@angular/forms';
 import { AdminSpaceAssertsDto, AdminSpaceInfoDto, CreateSpace, Location, SpaceAsset, SpaceImageItem, SpaceStatus, SpaceView } from '../../../models/space.model';
 import { SpaceService } from '../../../services/space';
 import { EquipmentService } from '../../../services/equipment';
+import { AuthService } from '../../../services/auth';
+import { ToastService } from '../../../services/toast';
 
 const STATUS_MAP: Record<number, SpaceStatus> = {
   0: '可用',
   1: '使用中',
   2: '停用中',
   3: '清潔中',
+  5: '審核中',
 };
 
 @Component({
@@ -22,6 +25,10 @@ const STATUS_MAP: Record<number, SpaceStatus> = {
 export class Spaces implements OnInit {
   private spaceService = inject(SpaceService);
   private equipmentService = inject(EquipmentService);
+  private authService = inject(AuthService);
+  private toastService = inject(ToastService);
+
+  get isAdmin(): boolean { return this.authService.isAdmin(); }
 
   // --- list state ---
   readonly loading = signal(true);
@@ -236,6 +243,7 @@ export class Spaces implements OnInit {
       assetCount: d.assetcount ?? 0,
       imagePath: d.imagePath ?? '',
       introduction: d.introduction ?? null,
+      isPendingReview: d.status === 5,
     };
   }
 
@@ -351,7 +359,7 @@ export class Spaces implements OnInit {
     if (!s || !draft) return;
     if (!draft.name.trim()) { this.panelUpdateError.set('請填寫空間名稱'); return; }
     if (!draft.locationId) { this.panelUpdateError.set('請選擇據點'); return; }
-    const STATUS_REVERSE: Record<SpaceStatus, number> = { '可用': 0, '使用中': 1, '停用中': 2, '清潔中': 3 };
+    const STATUS_REVERSE: Record<SpaceStatus, number> = { '可用': 0, '使用中': 1, '停用中': 2, '清潔中': 3, '審核中': 5 };
     const payload = {
       space_id: s.id,
       location_id: draft.locationId,
@@ -440,7 +448,7 @@ export class Spaces implements OnInit {
     const updated: SpaceView = { ...s, status: newStatus };
     this.selectedSpace.set(updated);
     this.spaces.update(list => list.map(item => item.id === updated.id ? updated : item));
-    const STATUS_REVERSE: Record<SpaceStatus, number> = { '可用': 0, '使用中': 1, '停用中': 2, '清潔中': 3 };
+    const STATUS_REVERSE: Record<SpaceStatus, number> = { '可用': 0, '使用中': 1, '停用中': 2, '清潔中': 3, '審核中': 5 };
     const payload = {
       space_id: s.id,
       location_id: s.locationId > 0 ? s.locationId : null,
@@ -485,13 +493,35 @@ export class Spaces implements OnInit {
     return 'inventory_2';
   }
 
+  approveSpace(space: SpaceView): void {
+    const payload = {
+      space_id: space.id,
+      location_id: space.locationId > 0 ? space.locationId : null,
+      space_number: space.name,
+      capacity: space.capacity,
+      status: 0,
+    };
+    this.spaceService.update(payload as any).subscribe({
+      next: () => {
+        this.spaces.update(list =>
+          list.map(s => s.id === space.id ? { ...s, status: '可用' as SpaceStatus, isPendingReview: false } : s)
+        );
+        this.toastService.success(`「${space.name}」已核准上線`);
+      },
+      error: () => {
+        this.toastService.error('核准失敗，請稍後再試');
+      },
+    });
+  }
+
   getSpaceBadgeClass(status: SpaceStatus): string {
     const map: Record<SpaceStatus, string> = {
       '可用': 'badge-available',
       '使用中': 'badge-occupied',
       '停用中': 'badge-disabled',
       '清潔中': 'badge-cleaning',
+      '審核中': 'badge-review',
     };
-    return map[status];
+    return map[status] ?? '';
   }
 }

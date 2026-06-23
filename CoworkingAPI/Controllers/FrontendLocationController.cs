@@ -24,7 +24,9 @@ namespace CoworkingAPI.Controllers
             try
             { 
                 // 1. 建立基本查詢（此時還沒真正去查資料庫）
-                var query = _context.Spaces.Include(s => s.Location).AsQueryable();
+                var query = _context.Spaces.Include(s => s.Location)
+                    .Where(s => s.status != 5) // 排除審核中的空間
+                    .AsQueryable();
 
                 // ============================================================
                 // ⚡ 核心時段式日期篩選（排除該時段內已被預約的空間）

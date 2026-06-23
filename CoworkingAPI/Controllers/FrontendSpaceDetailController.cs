@@ -35,7 +35,7 @@ namespace CoworkingAPI.Controllers
         public async Task<IActionResult> GetSpaceDetail(int spaceId)
         {
             var dto = await _context.Spaces
-        .Where(s => s.space_id == spaceId)
+        .Where(s => s.space_id == spaceId && s.status != 5)
         .Select(s => new SpaceDetailDto
         {
             SpaceId = s.space_id,

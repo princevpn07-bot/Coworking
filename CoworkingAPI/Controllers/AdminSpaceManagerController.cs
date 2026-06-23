@@ -51,12 +51,13 @@ namespace CoworkingAPI.Controllers
         [HttpPost("createspace")]
         public async Task<IActionResult> CreateSpace([FromBody] CreateSpaceDto dto)
         {
+            var role = int.TryParse(User.FindFirst(ClaimTypes.Role)?.Value, out var r) ? r : 0;
             var space = new Space
             {
                 location_id = dto.location_id,
                 space_number = dto.space_number,
                 capacity = dto.capacity,
-                status = dto.status,
+                status = role == 60 ? 5 : dto.status, // 合作夥伴新增自動進入審核中
                 introduction = dto.introduction
             };
             _context.Spaces.Add(space);

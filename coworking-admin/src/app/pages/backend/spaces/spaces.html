@@ -483,5 +483,18 @@
         }
       </div>
     }
+    @if (isAdmin && $any(space).isPendingReview) {
+      <div class="panel-divider"></div>
+      <div class="panel-approve-section">
+        <p class="approve-hint">
+          <span class="material-symbols-outlined">info</span>
+          此空間由合作夥伴新增，待審核上線
+        </p>
+        <button class="btn-approve" (click)="approveSpace(space)">
+          <span class="material-symbols-outlined">check_circle</span>
+          核准上線
+        </button>
+      </div>
+    }
   }
 </div>

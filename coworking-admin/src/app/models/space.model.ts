@@ -36,7 +36,7 @@ export interface SpaceImageItem {
   image_path: string | null;
 }
 
-export type SpaceStatus = '可用' | '使用中' | '停用中' | '清潔中';
+export type SpaceStatus = '可用' | '使用中' | '停用中' | '清潔中' | '審核中';
 
 export interface SpaceAsset {
   assertsId: number;
@@ -63,6 +63,7 @@ export interface SpaceView {
   assetCount: number;
   imagePath: string;
   introduction: string | null;
+  isPendingReview: boolean;
 }
 
 export interface AdminSpaceInfoDto {
