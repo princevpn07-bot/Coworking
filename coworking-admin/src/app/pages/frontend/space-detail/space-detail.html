@@ -5,6 +5,18 @@
   </div>
 </div>
 
+<div class="ad-banner ad-banner--left" *ngIf="showLeftAd">
+  <button class="close-ad" (click)="dismissAd('left')">×</button>
+  <a href="https://example.com/ad-left" target="_blank">
+    <video class="ad-video"
+      src="assets/images/ad-left.mp4" 
+      autoplay 
+      muted 
+      loop 
+      playsinline onloadedmetadata="this.muted = true; this.volume = 0;"> </video>
+  </a>
+</div>
+
 <div class="container">
   <!-- Breadcrumb -->
   <nav class="breadcrumb" aria-label="Breadcrumb">
@@ -124,7 +136,7 @@
         <div class="booking-date-section">
           <h4 class="booking-date-title">選擇時段</h4>
 
-          @if (dateMode === 'hour') {
+       @if (dateMode === 'hour') {
             <div class="booking-date-fields">
               <div class="booking-date-field">
                 <label>日期</label>
@@ -135,37 +147,50 @@
                   (change)="onStartDateChange($event)"
                 />
               </div>
+
               <div class="booking-date-field-row">
                 <div class="booking-date-field">
                   <label>開始</label>
-                  <select
-                    class="booking-input"
-                    [(ngModel)]="startHour"
-                    (ngModelChange)="onStartHourChange()"
-                  >
-                    <option value="" disabled>選擇</option>
-                    @for (hour of hourOptions; track hour) {
-                      <option [value]="hour">{{ hour | hourLabel }}</option>
-                    }
-                  </select>
+                  <div class="luxury-dropdown" [class.open]="openedDropdown === 'start'" (click)="$event.stopPropagation()">
+                    <div class="luxury-dropdown-trigger" (click)="toggleDropdown('start')">
+                      <span>{{ startHour ? (startHour | hourLabel) : '選擇' }}</span>
+                      <span class="material-symbols-outlined arrow">expand_more</span>
+                    </div>
+                    <div class="luxury-dropdown-menu">
+                      @for (hour of hourOptions; track hour) {
+                        <div class="luxury-dropdown-item" 
+                             [class.selected]="isHourSelected('start', hour)"
+                             (click)="selectHour('start', hour)">
+                          {{ hour | hourLabel }}
+                        </div>
+                      }
+                    </div>
+                  </div>
                 </div>
+
                 <span class="date-sep">～</span>
+
                 <div class="booking-date-field">
                   <label>結束</label>
-                  <select
-                    class="booking-input"
-                    [(ngModel)]="endHour"
-                    (ngModelChange)="onEndHourChange()"
-                  >
-                    <option value="" disabled>選擇</option>
-                    @for (hour of hourOptions; track hour) {
-                      <option [value]="hour">{{ hour | hourLabel }}</option>
-                    }
-                  </select>
+                  <div class="luxury-dropdown" [class.open]="openedDropdown === 'end'" (click)="$event.stopPropagation()">
+                    <div class="luxury-dropdown-trigger" (click)="toggleDropdown('end')">
+                      <span>{{ endHour ? (endHour | hourLabel) : '選擇' }}</span>
+                      <span class="material-symbols-outlined arrow">expand_more</span>
+                    </div>
+                    <div class="luxury-dropdown-menu">
+                      @for (hour of hourOptions; track hour) {
+                        <div class="luxury-dropdown-item" 
+                             [class.selected]="isHourSelected('end', hour)"
+                             (click)="selectHour('end', hour)">
+                          {{ hour | hourLabel }}
+                        </div>
+                      }
+                    </div>
+                  </div>
                 </div>
               </div>
-            </div>
-          }
+            </div> }
+          
 
           @if (dateMode === 'day') {
             <div class="booking-date-fields">
@@ -399,4 +424,10 @@
       </div>
     </div>
   </div>
+</div>
+<div class="ad-banner ad-banner--right" *ngIf="showRightAd">
+  <button class="close-ad" (click)="dismissAd('right')">×</button>
+  <a href="https://example.com/ad-right" target="_blank">
+    <img src="assets/images/ad-right.png" alt="廣告贊助" />
+  </a>
 </div>

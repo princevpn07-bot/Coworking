@@ -1,4 +1,4 @@
-import { Component, OnInit, inject, ChangeDetectorRef, Pipe, PipeTransform } from '@angular/core';
+import { Component, OnInit, inject, ChangeDetectorRef, Pipe, PipeTransform, HostListener } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -12,8 +12,11 @@ import { AuthService } from '../../../services/auth';
 
 @Pipe({ name: 'hourLabel', standalone: true })
 export class HourLabelPipe implements PipeTransform {
-  transform(hour: number): string {
-    return hour.toString().padStart(2, '0') + ':00';
+  // 調整為接收 number 或 string，完美相容各種傳入數值
+  transform(hour: number | string | null | undefined): string {
+    if (hour === null || hour === undefined || hour === '') return '';
+    const num = Number(hour);
+    return isNaN(num) ? String(hour) : num.toString().padStart(2, '0') + ':00';
   }
 }
 
@@ -39,8 +42,35 @@ export class SpaceDetail implements OnInit {
     public favoriteService: FavoriteService,
     private router: Router,
     private auth: AuthService
-  ) {}
+  ) { }
+// ── 自訂下拉選單控制邏輯（完全不改動原有核心功能） ──
+  openedDropdown: 'start' | 'end' | null = null;
 
+  toggleDropdown(type: 'start' | 'end') {
+    this.openedDropdown = this.openedDropdown === type ? null : type;
+  }
+
+  selectHour(type: 'start' | 'end', hour: number) {
+    if (type === 'start') {
+      this.startHour = String(hour);
+      this.onStartHourChange(); 
+    } else {
+      this.endHour = String(hour);
+      this.onEndHourChange();   
+    }
+    this.openedDropdown = null; 
+  }
+
+  // 新增此專用檢門方法，徹底消滅 HTML 範本中的型別報錯紅線
+  isHourSelected(type: 'start' | 'end', hour: number): boolean {
+    const currentHour = type === 'start' ? this.startHour : this.endHour;
+    return currentHour !== '' && Number(currentHour) === hour;
+  }
+
+  @HostListener('document:click')
+  closeDropdowns() {
+    this.openedDropdown = null;
+  }
   toggleFavorite(spaceId: number, event: Event) {
     event.stopPropagation();
     this.favoriteService.toggleFavorite(spaceId);
@@ -49,7 +79,9 @@ export class SpaceDetail implements OnInit {
   showShareModal = false;
   showCopySuccessToast = false;
   shareUrl = window.location.href;
-
+  // 📢 新增：控制左右廣告顯示狀態的變數
+  showLeftAd = false;
+  showRightAd = false;
   async copyLink() {
     try {
       await navigator.clipboard.writeText(this.shareUrl);
@@ -162,10 +194,22 @@ export class SpaceDetail implements OnInit {
     const date = new Date(Number(year), Number(month), 0);
     return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
   }
-
+  // ── 關閉廣告的方法 (已移到正確位置) ──
+  dismissAd(side: 'left' | 'right') {
+    if (side === 'left') this.showLeftAd = false;
+    if (side === 'right') this.showRightAd = false;
+    this.cdr.detectChanges();
+  }
   // ── lifecycle ─────────────────────────────────────────
   ngOnInit(): void {
+    // 📢 新增：設定頁面載入 3 秒後自動顯示廣告
+    setTimeout(() => {
+      this.showLeftAd = true;
+      this.showRightAd = true;
+      this.cdr.detectChanges(); // 強制觸發 Angular 畫面檢查
+    }, 3000); // 3000 毫秒 = 3 秒
     const id = Number(this.route.snapshot.paramMap.get('id'));
+
 
     this.spaceDetailService.getSpaceDetail(id).subscribe({
       next: (data) => {
@@ -178,6 +222,8 @@ export class SpaceDetail implements OnInit {
           ...img,
           fullUrl: this.imgBaseUrl + img.imagePath
         }));
+
+
         this.equipments = data.equipments ?? [];
         this.lowestPrice = data.rents?.length
           ? Math.min(...data.rents.map((r: any) => r.price))
@@ -187,14 +233,16 @@ export class SpaceDetail implements OnInit {
 
         this.mapUrl = data.location?.address
           ? this.sanitizer.bypassSecurityTrustResourceUrl(
-              `https://www.google.com/maps?q=${encodeURIComponent(data.location.address)}&output=embed`
-            )
+            `https://www.google.com/maps?q=${encodeURIComponent(data.location.address)}&output=embed`
+          )
           : null;
 
         this.loading = false;
         this.cdr.detectChanges();
 
         this.loadBookedSlots(id);
+
+
       },
       error: (err) => {
         console.error(err);
@@ -212,7 +260,7 @@ export class SpaceDetail implements OnInit {
         this.bookedSlots = slots;
         this.cdr.detectChanges();
       },
-      error: () => {}
+      error: () => { }
     });
   }
 
@@ -305,8 +353,8 @@ export class SpaceDetail implements OnInit {
     }
 
     if (!this.auth.isLoggedIn()) {
-      this.router.navigate(['/login'],{
-        queryParams: {returnUrl: `/space-detail/${this.space.spaceId}`}
+      this.router.navigate(['/login'], {
+        queryParams: { returnUrl: `/space-detail/${this.space.spaceId}` }
       });
       this.toast.warning('請先登入帳號再選擇空間');
       return;
@@ -323,4 +371,5 @@ export class SpaceDetail implements OnInit {
       }
     });
   }
+
 }

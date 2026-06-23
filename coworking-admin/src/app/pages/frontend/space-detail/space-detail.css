@@ -360,28 +360,102 @@
   font-weight: 500;
 }
 
+/* ── 升級版輸入框本體樣式 ── */
 .booking-input {
   width: 100%;
-  padding: 8px 10px;
-  border: 1px solid #d6cec7;
-  border-radius: 8px;
-  font-size: 13px;
+  padding: 11px 14px; /* 稍微加高，讓呼吸感更精緻 */
+  border: 1px solid rgba(105, 92, 78, 0.25); /* 改用質感的柔和品牌色邊框 */
+  border-radius: 12px; /* 契合你分享卡片的 12px 圓角語彙 */
+  font-size: 14px;
   font-family: inherit;
-  background: #fff;
+  background: #ffffff;
   color: #1d1b1a;
   outline: none;
-  transition: border-color 0.2s ease;
+  box-shadow: 0 1px 2px rgba(105, 92, 78, 0.03); /* 微弱的下陰影增加立體感 */
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
+/* 懸停動態反饋 */
+.booking-input:hover {
+  border-color: rgba(105, 92, 78, 0.5);
+  background: #fffcfb; /* 淡淡的暖調白 */
+}
+
+/* 聚焦發光動態效果 */
 .booking-input:focus {
   border-color: #695c4e;
+  background: #ffffff;
+  /* 呼應高奢 Modal 的細緻擴散光暈 */
+  box-shadow: 0 0 0 4px rgba(105, 92, 78, 0.1); 
+}
+
+/* ── 1. 改造時間下拉選單 (Select) ── */
+select.booking-input {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  
+  /* 用優雅的 SVG 展開箭頭取代原本粗糙的瀏覽器預設箭頭 */
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' height='24' viewBox='0 -960 960 960' width='24' fill='%23695c4e'%3E%3Cpath d='M480-344 240-584l56-56 184 184 184-184 56 56-240 240Z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 14px center;
+  background-size: 18px;
+  padding-right: 38px; /* 留出空間給自訂箭頭，避免文字重疊 */
+  cursor: pointer;
+}
+
+/* ── 2. 改造日期/月份輸入框 (Date/Month) ── */
+input[type="date"].booking-input,
+input[type="month"].booking-input {
+  cursor: pointer;
+  font-variant-numeric: tabular-nums; /* 讓數字排列更整齊 */
+  
+  /* ⚡ 核心魔法：直接把日曆內預設的「亮藍色選取區與外框」變成你的高雅品牌色！ */
+  accent-color: #695c4e;
+  
+  /* 確保底層彈窗強制採用明亮優雅的主題色調配置，不被系統夜間模式干擾 */
+  color-scheme: light;
+}
+
+/* 順便精緻化日期輸入框內文字的呼吸感 */
+input[type="date"].booking-input::-webkit-datetime-edit {
+  padding: 2px 0;
+  color: #1d1b1a;
+}
+
+/* 讓尚未選擇時的「年 / 月 / 日」預設虛字變成高級的低調灰色 */
+input[type="date"].booking-input::-webkit-datetime-edit-placeholder {
+  color: #a0958a;
+}
+
+/* 自訂日曆小圖示的外觀與觸發區域 */
+.booking-input::-webkit-calendar-picker-indicator {
+  /* 替換為與品牌色調一致、線條更乾淨的內嵌日曆圖示 */
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' height='24' viewBox='0 -960 960 960' width='24' fill='%23695c4e'%3E%3Cpath d='M200-120q-33 0-56.5-23.5T120-200v-560q0-33 23.5-56.5T200-840h40v-80h80v80h320v-80h80v80h40q33 0 56.5 23.5T840-760v560q0-33-23.5 56.5T800-120H200Zm0-80h600v-360H200v360Zm0-440h600v-120H200v120Z'/%3E%3C/svg%3E");
+  background-size: 18px;
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 4px;
+  transition: transform 0.2s ease, opacity 0.2s ease;
+  opacity: 0.8;
+}
+
+/* 滑鼠移到日曆圖示上的微互動 */
+.booking-input::-webkit-calendar-picker-indicator:hover {
+  transform: scale(1.08);
+  opacity: 1;
+}
+
+/* 調整相鄰欄位之間的排版細節 */
+.booking-date-field-row {
+  margin-top: 4px;
 }
 
 .date-sep {
-  font-size: 14px;
-  color: #7a7268;
-  padding-bottom: 8px;
-  flex-shrink: 0;
+  font-size: 16px;
+  color: #8a8178;
+  align-self: center;
+  padding-bottom: 12px; /* 修正跟 input 平行對齊的視覺重心 */
 }
 
 .booking-conflict-warning {
@@ -1115,4 +1189,202 @@
 
   color: #695c4e;
   /* 你的主色 */
+}
+
+/* =========================================================
+   📺 左右兩側廣告 Banner 佈局
+   ========================================================= */
+
+/* 基礎廣告容器設定 */
+.ad-banner {
+  position: fixed;
+  top: 190px;          /* 距離瀏覽器頂部的距離 */
+  width: 230px;         /* 廣告 Banner 寬度 */
+  height: 650px;        /* 廣告 Banner 高度 */
+  background-color: #f8f2f0; /* 預設底色 */
+  border: 1px solid #cfc5bb;
+  border-radius: 8px;
+  overflow: hidden;
+  z-index: 10;          /* 確保在內容之上，但低於 Loading 遮罩與 Modal */
+  display: none;        /* 預設隱藏（行動裝置、一般平板不顯示） */
+}
+
+/* ❌ 關閉廣告按鈕樣式 */
+.close-ad {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  z-index: 30;          /* 確保蓋在影片與圖片之上 */
+  width: 26px;
+  height: 26px;
+  background: rgba(0, 0, 0, 0.45);
+  color: #ffffff;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  line-height: 1;
+  font-weight: bold;
+  transition: background 0.2s ease, transform 0.2s ease;
+}
+
+.close-ad:hover {
+  background: rgba(0, 0, 0, 0.75);
+  transform: scale(1.05);
+}
+
+.ad-banner img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.ad-video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover; 
+  object-position: center center; /* 調整影片在框中的位置，可改為 top center 或 bottom center */
+}
+
+/* 🎯 精算定位：50% 是螢幕中央，640px 是主容器的一半(1280/2)，250px 是廣告寬度+與主內容留白 */
+.ad-banner--left {
+  left: calc(50% - 640px - 250px);
+}
+
+.ad-banner--right {
+  right: calc(50% - 640px - 250px);
+}
+
+/* 💻 響應式顯示：只有當螢幕寬度大於 1600px 時且狀態為 true 時，才淡入顯示廣告 */
+@media (min-width: 1600px) {
+  .ad-banner {
+    display: block;
+    /* 當 Angular 生成 DOM 時，立刻觸發 0.5 秒的流暢淡入動畫 */
+    animation: adFadeIn 0.5s ease forwards;
+  }
+}
+
+/* 📢 關鍵：優雅的淡入動畫 */
+@keyframes adFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px); /* 帶有一點點微微往上浮現的精品感 */
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+/* ── 精品自訂下拉選單容器 ── */
+.luxury-dropdown {
+  position: relative;
+  width: 100%;
+}
+
+/* 模擬輸入框外殼 */
+.luxury-dropdown-trigger {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  padding: 11px 14px;
+  border: 1px solid rgba(105, 92, 78, 0.25);
+  border-radius: 12px;
+  font-size: 14px;
+  background: #ffffff;
+  color: #1d1b1a;
+  cursor: pointer;
+  user-select: none;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.luxury-dropdown-trigger:hover {
+  border-color: rgba(105, 92, 78, 0.5);
+  background: #fffcfb;
+}
+
+.luxury-dropdown.open .luxury-dropdown-trigger {
+  border-color: #695c4e;
+  box-shadow: 0 0 0 4px rgba(105, 92, 78, 0.1);
+}
+
+.luxury-dropdown-trigger .arrow {
+  font-size: 18px;
+  color: #695c4e;
+  transition: transform 0.25s ease;
+}
+
+.luxury-dropdown.open .arrow {
+  transform: rotate(180deg);
+}
+
+/* 🔮 關鍵：完全由 CSS 掌控的點開後下拉清單面版 */
+.luxury-dropdown-menu {
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  width: 100%;
+  max-height: 220px;
+  overflow-y: auto;
+  background: #ffffff;
+  border: 1px solid rgba(105, 92, 78, 0.15);
+  border-radius: 12px;
+  /* 比照高階 Card 的柔和擴散陰影 */
+  box-shadow: 0 10px 30px rgba(105, 92, 78, 0.12); 
+  z-index: 100;
+  padding: 6px;
+  
+  /* 動態淡入效果 */
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-4px);
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.luxury-dropdown.open .luxury-dropdown-menu {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+/* 選項美化 */
+.luxury-dropdown-item {
+  padding: 9px 12px;
+  font-size: 14px;
+  color: #4c463e;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.luxury-dropdown-item:hover {
+  background: #f8f2f0; /* 溫潤的暖白色 hover 反饋 */
+  color: #1d1b1a;
+}
+
+/* 完美幹掉原生醜陋的藍色高亮，換上你的品牌調性色 */
+.luxury-dropdown-item.selected {
+  background: #695c4e;
+  color: #ffffff;
+  font-weight: 600;
+}
+
+.luxury-dropdown-item.placeholder {
+  color: #a0958a;
+}
+
+/* 順便美化下拉選單的滾動條 */
+.luxury-dropdown-menu::-webkit-scrollbar {
+  width: 5px;
+}
+.luxury-dropdown-menu::-webkit-scrollbar-thumb {
+  background: rgba(105, 92, 78, 0.2);
+  border-radius: 10px;
+}
+.luxury-dropdown-menu::-webkit-scrollbar-thumb:hover {
+  background: rgba(105, 92, 78, 0.4);
 }
