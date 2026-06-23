@@ -5,7 +5,7 @@
     <div class="cinematic-gate" #gateContainer>
       <canvas #gateRainCanvas class="gate-rain-canvas"></canvas>
       <canvas #gateInkCanvas class="gate-ink-canvas"></canvas>
-      
+
       <div class="gate-door left-door"></div>
       <div class="gate-text-center">
         <span class="gate-text-l">CO</span><span class="gate-text-r">VO</span>
@@ -14,7 +14,7 @@
     </div>
 
     <div class="hero-slides-wrapper">
-      
+
       <div class="hero-slide">
         <div class="hero-bg">
           <canvas #imageCanvas style="width: 100%; height: 100%; object-fit: cover;"></canvas>
@@ -22,7 +22,7 @@
         <div class="container hero-slide-content">
           <h1 class="hero-title">一鍵開啟，你的專屬美學辦公室</h1>
           <p class="hero-subtitle">在喧囂中尋找寧靜，為您的專注與創造力打造專屬的高級避難所。</p>
-          
+
           <div class="search-bar">
             <div class="search-item">
               <span class="material-symbols-outlined icon">location_on</span>
@@ -45,7 +45,7 @@
         <div class="hero-bg">
           <video #heroVideo src="assets/office_.mp4" loop muted playsinline (play)="isVideoPlaying = true" (pause)="isVideoPlaying = false"></video>
         </div>
-        
+
         <button class="video-ui-play-btn" [class.is-playing]="isVideoPlaying" (click)="toggleVideo($event)">
           <span class="material-symbols-outlined">{{ isVideoPlaying ? 'pause' : 'play_arrow' }}</span>
         </button>
@@ -113,7 +113,7 @@
     </div>
     <div class="philosophy-mesh-grid" #philosophyMeshGrid></div>
     <canvas class="philosophy-fluid-layer" #philosophyFluidCanvas></canvas>
-    
+
 
     <div class="container philosophy-3d-wrapper" #philosophy3dWrapper>
       <div class="philosophy-center-text">
@@ -126,47 +126,47 @@
         <div class="card-inner"><img src="assets/space_card_01.webp" alt="空間1"><div class="card-caption">光影留白</div></div>
         <div class="hover-description-box"><p>讓自然日光自由穿透，在明暗交織中沉澱心靈，找回最純粹的工作專注力。</p></div>
       </div>
-      
+
       <div class="floating-card card-2" (mouseenter)="onCardMouseEnter(1)" (mouseleave)="onCardMouseLeave()">
         <div class="card-inner"><img src="assets/space_card_02.webp" alt="空間2"><div class="card-caption">減法藝術</div></div>
         <div class="hover-description-box"><p>捨棄一切繁複沉重的贅餘裝飾，留下極簡線條，給思維騰出無限想像空間。</p></div>
       </div>
-      
+
       <div class="floating-card card-3" (mouseenter)="onCardMouseEnter(2)" (mouseleave)="onCardMouseLeave()">
         <div class="card-inner"><img src="assets/Featured_space_01.webp" alt="空間3"><div class="card-caption">極致專注</div></div>
         <div class="hover-description-box"><p>特製高階聲學防噪降音結構，將外界城市的喧囂徹底隔絕，營造深度工作領域。</p></div>
       </div>
-      
+
       <div class="floating-card card-4" (mouseenter)="onCardMouseEnter(3)" (mouseleave)="onCardMouseLeave()">
         <div class="card-inner"><img src="assets/space_card_04.webp" alt="空間4"><div class="card-caption">心靈避難所</div></div>
         <div class="hover-description-box"><p>結合溫潤原木質調與落地窗天光，打造都市高壓環境下感官最舒適的避風港。</p></div>
       </div>
-      
+
       <div class="floating-card card-5" (mouseenter)="onCardMouseEnter(4)" (mouseleave)="onCardMouseLeave()">
         <div class="card-inner"><img src="assets/space_card_05.webp" alt="空間5"><div class="card-caption">美學重構</div></div>
         <div class="hover-description-box"><p>打破傳統辦公室生硬冰冷的格子間格局，融入藝廊策展思維，讓工作成為享受。</p></div>
       </div>
-      
+
       <div class="floating-card card-6" (mouseenter)="onCardMouseEnter(5)" (mouseleave)="onCardMouseLeave()">
         <div class="card-inner"><img src="assets/space_card_06.webp" alt="空間6"><div class="card-caption">感官沉澱</div></div>
         <div class="hover-description-box"><p>精選低色溫智慧環境照明，舒緩雙眼無視決疲勞，溫和引導大腦深度思考。</p></div>
       </div>
-      
+
       <div class="floating-card card-7" (mouseenter)="onCardMouseEnter(6)" (mouseleave)="onCardMouseLeave()">
         <div class="card-inner"><img src="assets/space_card_07.webp" alt="空間7"><div class="card-caption">首席商務空間</div></div>
         <div class="hover-description-box"><p>提供企業等級的私密行政辦公環境，具備高度隱私的獨立隔音空間，讓您的團隊專注於核心戰略，無後顧之憂。</p></div>
       </div>
-      
+
       <div class="floating-card card-8" (mouseenter)="onCardMouseEnter(7)" (mouseleave)="onCardMouseLeave()">
         <div class="card-inner"><img src="assets/space_card_08.webp" alt="空間8"><div class="card-caption">靈感湧現</div></div>
         <div class="hover-description-box"><p>開放式共享階梯社區與微醺中島，在每一次不經意的對話中碰撞出創意火花。</p></div>
       </div>
-      
+
       <div class="floating-card card-9" (mouseenter)="onCardMouseEnter(8)" (mouseleave)="onCardMouseLeave()">
         <div class="card-inner"><img src="assets/space_card_09.webp" alt="空間9"><div class="card-caption">流動光域</div></div>
         <div class="hover-description-box"><p>採用大面積超白全景採光玻璃，讓金黃色的日光與樹影隨時間在室內優雅流轉。</p></div>
       </div>
-      
+
       <div class="floating-card card-10" (mouseenter)="onCardMouseEnter(9)" (mouseleave)="onCardMouseLeave()">
         <div class="card-inner"><img src="assets/space_card_10.webp" alt="空間10"><div class="card-caption">留白境地</div></div>
         <div class="hover-description-box"><p>刻意不填滿的空間陳列，給予團隊彈性呼吸與延展可能，成就創意孵化的溫床。</p></div>
@@ -246,7 +246,7 @@
             <div class="amenity-item">
               <span class="material-symbols-outlined">coffee</span>
               <h4>精品咖啡與點心</h4>
-              <p>每日供應現烘單品手沖咖啡與氣泡水，放鬆舒壓吧。</p>
+              <p>每日供應現烘單品手沖咖啡與氣泡水，放鬆舒壓。</p>
             </div>
             <div class="amenity-item">
               <span class="material-symbols-outlined">nest_audio</span>
