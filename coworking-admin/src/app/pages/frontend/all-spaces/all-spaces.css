@@ -9,7 +9,7 @@
   height: calc(100vh - 80px);
   width: 100%;
   min-height: 0;
- 
+
 }
 
 /* Listing Section */
@@ -37,8 +37,9 @@
 }
 
 .listing-section__feed {
- flex: 1;
+  flex: 1;
   padding: 2rem;
+  overflow-y: flex;
   min-height: 0; /* 🔑 關鍵防禦：阻斷 flex 子元素無限外溢 */
 }
 /* --------------------------------------------------------------------------
@@ -63,7 +64,7 @@
    -------------------------------------------------------------------------- */
 .listing-section.full .listing-section__feed {
   overflow-y: auto; /* 💡 依然保持可滾動（防止 8 張卡片超重時下方內容被切斷死棋） */
-  
+
   /* 🔒 剛性上鎖：全面隱藏所有瀏覽器的原生滾動軌道與拉桿，達成無痕全螢幕視覺 */
   scrollbar-width: none; /* Firefox 完美隱藏 */
   -ms-overflow-style: none; /* IE / Edge 完美隱藏 */
@@ -71,7 +72,7 @@
 
 /* Chrome / Safari / Opera 完美隱藏拉桿 */
 .listing-section.full .listing-section__feed::-webkit-scrollbar {
-  display: none !important; 
+  display: none !important;
 }
 .listing-section__feed::-webkit-scrollbar {
   width: 4px;

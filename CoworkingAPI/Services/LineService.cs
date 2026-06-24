@@ -34,6 +34,12 @@ namespace CoworkingAPI.Services
                 return; // 或 throw exception
             }
 
+            if (String.IsNullOrEmpty(lineUserId))
+            {
+                Console.WriteLine("Warning: Line ID is null or empty, can't send message.");
+                return;
+            }
+
             var message = $"🎉 CoWork 預約確認\n\n" +
                           $"您好，您的預約已成功！\n\n" +
                           $"📍 空間：{spaceName}\n" +

@@ -3,9 +3,24 @@
     <div class="page-header">
       <h1>我的訂單</h1>
       <div class="page-tabs">
-        <span class="tab-item" [class.active]="activeTab() === 'upcoming'" (click)="setTab('upcoming')">所有訂單</span>
-        <span class="tab-item" [class.active]="activeTab() === 'completed'" (click)="setTab('completed')">已完成</span>
-        <span class="tab-item" [class.active]="activeTab() === 'cancelled'" (click)="setTab('cancelled')">已取消</span>
+        <span
+          class="tab-item"
+          [class.active]="activeTab() === 'upcoming'"
+          (click)="setTab('upcoming')"
+          >所有訂單</span
+        >
+        <span
+          class="tab-item"
+          [class.active]="activeTab() === 'completed'"
+          (click)="setTab('completed')"
+          >已完成</span
+        >
+        <span
+          class="tab-item"
+          [class.active]="activeTab() === 'cancelled'"
+          (click)="setTab('cancelled')"
+          >已取消</span
+        >
       </div>
     </div>
 
@@ -14,18 +29,30 @@
         <p>載入中...</p>
       </div>
     } @else if (filteredOrders().length === 0) {
-      <div class="empty-state" style="text-align: center; padding: 60px 0; color: #7a736a;">
-        <div class="empty-icon" style="font-size: 40px; margin-bottom: 16px;">📋</div>
+      <div class="empty-state" style="text-align: center; padding: 60px 0; color: #7a736a">
+        <div class="empty-icon" style="font-size: 40px; margin-bottom: 16px">📋</div>
         <h3>當前分類尚無訂單紀錄</h3>
         <p>探索更多美好的工作空間，開啟高效的一天！</p>
-        <a class="btn-browse" routerLink="/all-spaces" style="display: inline-block; margin-top: 16px; color: #2c251d; font-weight: 600; text-decoration: none; border-bottom: 1px solid #2c251d;">瀏覽空間</a>
+        <a
+          class="btn-browse"
+          routerLink="/all-spaces"
+          style="
+            display: inline-block;
+            margin-top: 16px;
+            color: #2c251d;
+            font-weight: 600;
+            text-decoration: none;
+            border-bottom: 1px solid #2c251d;
+          "
+          >瀏覽空間</a
+        >
       </div>
     } @else {
       <div class="order-list">
         @for (order of filteredOrders(); track order.contract_id) {
           <div class="order-card">
             <div class="order-card__image-section">
-              <img [src]="getOrderImage(order)" [alt]="order.space_name ?? 'Space Image'">
+              <img [src]="getOrderImage(order)" [alt]="order.space_name ?? 'Space Image'" />
               <span class="order-status-overlay" [class]="'status-' + order.status">
                 {{ getStatusLabel(order.status) }}
               </span>
@@ -34,7 +61,7 @@
             <div class="order-card__info-section">
               <div class="order-card__main-info">
                 <div class="name-price-group">
-               <h2 class="space-name">{{ getSpaceName(order) }}</h2>
+                  <h2 class="space-name">{{ getSpaceName(order) }}</h2>
                   <span class="total-price">$ {{ order.total_price | number }}</span>
                 </div>
                 <p class="space-meta">
@@ -45,42 +72,97 @@
               <div class="order-card__datetime-info">
                 <div class="date-block">
                   <span class="info-label">日期</span>
-                  <span class="info-value">{{ order.start_date | date:'MMM dd, yyyy' }}</span>
+                  <span class="info-value">{{ order.start_date | date: 'MMM dd, yyyy' }}</span>
                 </div>
                 <div class="time-block">
                   <span class="info-label">時間</span>
-                  <span class="info-value">{{ order.start_date | date:'hh:mm a' }} - {{ order.end_date | date:'hh:mm a' }}</span>
+                  <span class="info-value"
+                    >{{ order.start_date | date: 'hh:mm a' }} -
+                    {{ order.end_date | date: 'hh:mm a' }}</span
+                  >
                 </div>
               </div>
 
               <div class="order-card__actions">
                 @if (isPayable(order)) {
                   <button class="action-btn payment-btn" (click)="payment(order)">
-                    <svg class="icon-payment" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>
+                    <svg
+                      class="icon-payment"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                    >
+                      <rect x="2" y="5" width="20" height="14" rx="2" />
+                      <line x1="2" y1="10" x2="22" y2="10" />
+                    </svg>
                     去付款
                   </button>
                 } @else if (order.status === 0) {
                   <span class="overdue-hint">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-                    付款已逾期（{{ order.pay_deadline | date:'MM/dd' }}）
+                    <svg
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      width="14"
+                      height="14"
+                    >
+                      <circle cx="12" cy="12" r="10" />
+                      <line x1="12" y1="8" x2="12" y2="12" />
+                      <line x1="12" y1="16" x2="12.01" y2="16" />
+                    </svg>
+                    付款已逾期（{{ order.pay_deadline | date: 'MM/dd' }}）
                   </span>
                 }
-                
+
                 <button class="action-btn" (click)="navigateToSpace(order)">
-                  <svg class="icon-navigate" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="3 11 22 2 13 21 11 13 3 11"/></svg>
+                  <svg
+                    class="icon-navigate"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                  >
+                    <polygon points="3 11 22 2 13 21 11 13 3 11" />
+                  </svg>
                   導航
                 </button>
 
-                <button class="action-btn" [routerLink]="order.space_id ? ['/space', order.space_id] : ['/all-spaces']">
-                  <svg class="icon-modify" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"/>
+                <button
+                  class="action-btn"
+                  [routerLink]="order.space_id ? ['/space', order.space_id] : ['/all-spaces']"
+                >
+                  <svg
+                    class="icon-modify"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
+                    <path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67" />
                   </svg>
                   再預訂
                 </button>
-                
+
                 @if (order.status === 0) {
-                  <button class="action-btn" (click)="openCancelModal(order)" style="margin-left: auto; color: #a94442; font-weight: 500;">
-                    <svg class="icon-cancel" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/></svg>
+                  <button
+                    class="action-btn"
+                    (click)="openCancelModal(order)"
+                    style="margin-left: auto; color: #a94442; font-weight: 500"
+                  >
+                    <svg
+                      class="icon-cancel"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                    >
+                      <circle cx="12" cy="12" r="10" />
+                      <line x1="15" y1="9" x2="9" y2="15" />
+                    </svg>
                     取消預訂
                   </button>
                 }
@@ -94,11 +176,22 @@
 </div>
 
 <div class="luxury-modal-overlay" [class.active]="showCancelModal()" (click)="closeCancelModal()">
-  <div class="luxury-center-card" [class.active]="showCancelModal()" (click)="$event.stopPropagation()">
+  <div
+    class="luxury-center-card"
+    [class.active]="showCancelModal()"
+    (click)="$event.stopPropagation()"
+  >
     <div class="luxury-icon-wrapper">
       <div class="luxury-icon-glow"></div>
       <div class="luxury-icon-core">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="22" height="22">
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          width="22"
+          height="22"
+        >
           <circle cx="12" cy="12" r="10"></circle>
           <line x1="12" y1="8" x2="12" y2="12"></line>
           <line x1="12" y1="16" x2="12.01" y2="16"></line>
@@ -109,7 +202,9 @@
       <h3 class="luxury-brand-title">取消預訂確認</h3>
       <div class="luxury-divider-line"></div>
       <p class="luxury-brand-subtitle">
-        您確定要放棄在 <strong>{{ orderToCancel()?.space_name ?? '此空間' }}</strong> 的預訂行程嗎？此操作成功後將無法撤銷。
+        您確定要放棄在
+        <strong>{{ orderToCancel()?.space_name ?? '此空間' }}</strong>
+        的預訂行程嗎？此操作成功後將無法撤銷。
       </p>
     </div>
     <div class="luxury-modal-buttons">
