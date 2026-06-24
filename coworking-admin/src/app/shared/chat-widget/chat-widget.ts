@@ -36,7 +36,7 @@ private hintTimer: any;
 
   userInput = '';
   messages: ChatMessage[] = [
-    { role: 'assistant', content: '你好！我是 CoWork 的 AI 助理，有任何關於空間預約或平台功能的問題都可以問我！' }
+    { role: 'assistant', content: '你好！我是 COVO 的 AI 助理，有任何關於空間預約或平台功能的問題都可以問我！' }
   ];
 
   // 💡 1. 新增：控制表情面板顯示狀態的 Signal 與精選表情清單
