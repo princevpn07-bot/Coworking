@@ -176,7 +176,8 @@ export class PaymentComponent implements OnInit {
           this.toast.error('取得訂單編號失敗，請稍後再試');
           return;
         }
-        this.redirectToECPay(contractId);
+        //this.redirectToECPay(contractId);
+        this.router.navigate(['/my-orders']);
       },
       error: (err) => {
         console.error(err);
