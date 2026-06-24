@@ -115,3 +115,17 @@
   gap: 16px;
   font-size: 20px;
 }
+
+.line-icon {
+  width: 32px;
+  height: 32px;
+  margin-right: 8px;
+  vertical-align: middle;
+  color: #06C755;
+}
+
+a {
+  display: inline-flex;
+  align-items: center;
+  text-decoration: none;
+}
