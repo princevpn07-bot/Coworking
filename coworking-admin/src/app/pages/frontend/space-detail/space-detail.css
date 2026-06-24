@@ -386,7 +386,7 @@
   border-color: #695c4e;
   background: #ffffff;
   /* 呼應高奢 Modal 的細緻擴散光暈 */
-  box-shadow: 0 0 0 4px rgba(105, 92, 78, 0.1); 
+  box-shadow: 0 0 0 4px rgba(105, 92, 78, 0.1);
 }
 
 /* ── 1. 改造時間下拉選單 (Select) ── */
@@ -394,7 +394,7 @@ select.booking-input {
   appearance: none;
   -webkit-appearance: none;
   -moz-appearance: none;
-  
+
   /* 用優雅的 SVG 展開箭頭取代原本粗糙的瀏覽器預設箭頭 */
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' height='24' viewBox='0 -960 960 960' width='24' fill='%23695c4e'%3E%3Cpath d='M480-344 240-584l56-56 184 184 184-184 56 56-240 240Z'/%3E%3C/svg%3E");
   background-repeat: no-repeat;
@@ -409,10 +409,10 @@ input[type="date"].booking-input,
 input[type="month"].booking-input {
   cursor: pointer;
   font-variant-numeric: tabular-nums; /* 讓數字排列更整齊 */
-  
+
   /* ⚡ 核心魔法：直接把日曆內預設的「亮藍色選取區與外框」變成你的高雅品牌色！ */
   accent-color: #695c4e;
-  
+
   /* 確保底層彈窗強制採用明亮優雅的主題色調配置，不被系統夜間模式干擾 */
   color-scheme: light;
 }
@@ -1246,7 +1246,7 @@ input[type="date"].booking-input::-webkit-datetime-edit-placeholder {
 .ad-video {
   width: 100%;
   height: 100%;
-  object-fit: cover; 
+  object-fit: cover;
   object-position: center center; /* 調整影片在框中的位置，可改為 top center 或 bottom center */
 }
 
@@ -1334,10 +1334,10 @@ input[type="date"].booking-input::-webkit-datetime-edit-placeholder {
   border: 1px solid rgba(105, 92, 78, 0.15);
   border-radius: 12px;
   /* 比照高階 Card 的柔和擴散陰影 */
-  box-shadow: 0 10px 30px rgba(105, 92, 78, 0.12); 
+  box-shadow: 0 10px 30px rgba(105, 92, 78, 0.12);
   z-index: 100;
   padding: 6px;
-  
+
   /* 動態淡入效果 */
   opacity: 0;
   visibility: hidden;
