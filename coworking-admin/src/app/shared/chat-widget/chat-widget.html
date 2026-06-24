@@ -1,7 +1,7 @@
 @if (isOpen()) {
   <div class="chat-box">
     <div class="chat-header">
-      <span>CoWork AI 助理</span>
+      <span>Covo AI 助理</span>
       <button class="close-btn" (click)="toggle()">X</button>
     </div>
 
@@ -11,7 +11,7 @@
     <span># {{ today | date:'yyyy.MM.dd'}}</span>
   </div>
 
-  @for (msg of messages; track $index) {
+  @for (msg of messages(); track $index) {
     <div class="message" [class.user]="msg.role === 'user'" [class.assistant]="msg.role === 'assistant'">
 
       @if (msg.role === 'assistant') {
@@ -61,6 +61,14 @@
       </button>
     </div>
   </div>
+}
+
+@if (!isOpen() && showBubble()) {
+  @for (key of [bubbleAnimKey()]; track key) {
+    <div class="chat-bubble-tooltip">
+      {{ bubbleMessages[bubbleIndex()] }}
+    </div>
+  }
 }
 
 <button class="chat-toggle" (click)="toggle()" [class.open]="isOpen()"

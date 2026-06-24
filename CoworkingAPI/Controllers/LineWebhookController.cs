@@ -49,7 +49,7 @@ namespace CoworkingAPI.Controllers
                 {
                     var userId = ev.source.userId;
                     Utility.ReplyMessage(ev.replyToken,
-                        "歡迎加入 CoWork！\n\n" +
+                        "歡迎加入 Covo！\n\n" +
                         "請傳送您的註冊 Email，即可完成綁定，\n" +
                         "預約成功後將透過此帳號收到確認通知。\n\n" +
                         $"您的 LINE User ID：\n{userId}",

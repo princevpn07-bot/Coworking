@@ -72,4 +72,13 @@ export class SpaceService
   {
     return this.http.delete<void>(`${this.imageApiUrl}/Delete/${id}`);
   }
+
+  updateRent(spaceId: number, hourlyPrice: number | null, dailyPrice: number | null, monthlyPrice: number | null): Observable<void>
+  {
+    return this.http.put<void>(`${this.adminApiUrl}/updaterent/${spaceId}`, {
+      hourly_price: hourlyPrice,
+      daily_price: dailyPrice,
+      monthly_price: monthlyPrice,
+    });
+  }
 }

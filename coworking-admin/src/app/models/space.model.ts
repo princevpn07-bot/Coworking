@@ -64,6 +64,9 @@ export interface SpaceView {
   imagePath: string;
   introduction: string | null;
   isPendingReview: boolean;
+  hourlyPrice: number | null;
+  dailyPrice: number | null;
+  monthlyPrice: number | null;
 }
 
 export interface AdminSpaceInfoDto {
@@ -76,4 +79,7 @@ export interface AdminSpaceInfoDto {
   assetcount: number | null;
   imagePath: string | null;
   introduction: string | null;
+  hourly_price: number | null;
+  daily_price: number | null;
+  monthly_price: number | null;
 }

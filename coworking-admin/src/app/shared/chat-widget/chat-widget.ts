@@ -1,4 +1,4 @@
-import { Component, ViewChild, ElementRef, AfterViewChecked, signal,effect } from '@angular/core';
+import { Component, ViewChild, ElementRef, AfterViewChecked, OnInit, OnDestroy, signal, effect } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AiService, AIAction, ChatMessage } from '../../services/ai';
@@ -13,21 +13,29 @@ import { LottieComponent, AnimationOptions } from 'ngx-lottie'
   templateUrl: './chat-widget.html',
   styleUrl: './chat-widget.css',
 })
-export class ChatWidget implements AfterViewChecked {
+export class ChatWidget implements AfterViewChecked, OnInit, OnDestroy {
   @ViewChild('messageContainer') messageContainer!: ElementRef;
 
   today = new Date(); // show current date on ai-chat bot
   isOpen = signal(false);
   isLoading = signal(false);
-  isTyping = signal(false); // 💡 新增：獨立控制目前是否正在逐字打字吐字中
+  isTyping = signal(false);
   userInput = '';
-  messages: ChatMessage[] = [
-    { role: 'assistant', content: '你好！我是 CoWork 的 AI 助理，有任何關於空間預約或平台功能的問題都可以問我！' }
-  ];
+  messages = signal<ChatMessage[]>([
+    { role: 'assistant', content: '你好！我是 Covo 的 AI 助理，有任何關於空間預約或平台功能的問題都可以問我！' }
+  ]);
 
   // 💡 1. 新增：控制表情面板顯示狀態的 Signal 與精選表情清單
   showEmojiPicker = signal(false);
   emojis = ['😀', '😂', '🤣', '😊', '😍', '🥰', '😎', '🤔', '😭', '😮', '👍', '👏', '🙌', '🔥', '❤️', '✨'];
+
+  // 對話泡泡吸引使用者點擊
+  showBubble = signal(false);
+  bubbleAnimKey = signal(0);
+  bubbleMessages = ['想預約什麼空間嗎？🏢', '告訴我需求，我幫你篩選！✨', '找到最適合你的空間～🌿'];
+  bubbleIndex = signal(0);
+  private bubbleTimeout: any;
+  private bubbleInterval: any;
 
 catOptions: AnimationOptions = {
     path: '/assets/json/Live chatbot.json',
@@ -96,44 +104,58 @@ catOptions: AnimationOptions = {
     }
   }
 
+  ngOnInit() {
+    this.bubbleTimeout = setTimeout(() => {
+      if (!this.isOpen()) this.showBubble.set(true);
+      this.bubbleInterval = setInterval(() => {
+        this.bubbleIndex.update(i => (i + 1) % this.bubbleMessages.length);
+        this.bubbleAnimKey.update(k => k + 1);
+      }, 5000);
+    }, 2000);
+  }
+
+  ngOnDestroy() {
+    clearTimeout(this.bubbleTimeout);
+    clearInterval(this.bubbleInterval);
+  }
+
   toggle() {
     this.isOpen.update(v => !v);
+    if (this.isOpen()) this.showBubble.set(false);
   }
 // 💡 全新外掛的打字機絲滑吐字函式（100% 安全，完全不破壞既有架構）
   typewriteMessage(fullText: string, onComplete?: () => void) {
     this.isTyping.set(true);
-
-    // 先在陣列結尾塞入一個「初始為空字串」的助理對話泡泡
-    this.messages.push({ role: 'assistant', content: '' });
-    const targetIndex = this.messages.length - 1;
+    this.messages.update(m => [...m, { role: 'assistant', content: '' }]);
+    const targetIndex = this.messages().length - 1;
 
     let charIndex = 0;
     const timer = setInterval(() => {
       if (charIndex < fullText.length) {
-        // 逐字追加字元
-        this.messages[targetIndex].content += fullText.charAt(charIndex);
+        const char = fullText.charAt(charIndex);
+        this.messages.update(m => {
+          const next = [...m];
+          next[targetIndex] = { ...next[targetIndex], content: next[targetIndex].content + char };
+          return next;
+        });
         charIndex++;
       } else {
-        // 字元全部吐完，清除定時器
         clearInterval(timer);
-        this.isTyping.set(false); // 變更訊號，自動將貓咪切回待機眨眼
-
-        // 執行吐字完成後的後續動作 (如：空間過濾的路由跳轉)
+        this.isTyping.set(false);
         if (onComplete) onComplete();
       }
-    }, 30); // 💡 每 30 毫秒吐一個字，這個速度在網頁體驗上最舒適流暢、不拖泥帶水
+    }, 30);
   }
   send() {
     const prompt = this.userInput.trim();
     if (!prompt || this.isLoading()) return;
 
-    this.messages.push({ role: 'user', content: prompt });
+    this.messages.update(m => [...m, { role: 'user', content: prompt }]);
     this.userInput = '';
     this.isLoading.set(true);
-    // 💡 5. 微調：按送出或 Enter 時，自動把表情面板收起來
     this.showEmojiPicker.set(false);
 
-    const history = this.messages.slice(0, -1);
+    const history = this.messages().slice(0, -1);
 
     this.aiService.ask(prompt, history).subscribe({
       next: (res) => {
@@ -146,7 +168,7 @@ catOptions: AnimationOptions = {
         });
       },
       error: () => {
-        this.messages.push({ role: 'assistant', content: '抱歉，目前無法回應，請稍後再試。' });
+        this.messages.update(m => [...m, { role: 'assistant', content: '抱歉，目前無法回應，請稍後再試。' }]);
         this.isLoading.set(false);
       }
     });
@@ -160,7 +182,6 @@ catOptions: AnimationOptions = {
     if (action.params.city) params['city'] = action.params.city;
     if (action.params.keyword) params['keyword'] = action.params.keyword;
     this.router.navigate(['/all-spaces'], { queryParams: params });
-    this.toggle();
   }
 
   onKeydown(event: KeyboardEvent) {
