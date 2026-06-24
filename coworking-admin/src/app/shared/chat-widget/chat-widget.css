@@ -284,11 +284,11 @@
   box-shadow: none;
   cursor: not-allowed;
 }
+
 /* ==========================================================================
-   以下為新增的貓咪 Lottie 按鈕優化樣式（加在檔案最底部，不影響既有排版）
+   以下為貓咪 Lottie 按鈕優化樣式
    ========================================================================== */
 
-/* 💡 1. 漂浮容器樣式：給予 3.5 秒一週期的柔和上下滑行效果 */
 .cat-float-container {
   width: 100%;
   height: 100%;
@@ -298,64 +298,12 @@
   animation: cat-floating 3.5s ease-in-out infinite;
 }
 
-/* 💡 2. 上下漂浮的關鍵幀：利用 translateY 做出滑順的懸浮感 */
 @keyframes cat-floating {
-  0% {
-    transform: translateY(0px);
-  }
-  50% {
-    transform: translateY(-8px); /* 緩慢向上漂移 8 像素 */
-  }
-  100% {
-    transform: translateY(0px);
-  }
+  0% { transform: translateY(0px); }
+  50% { transform: translateY(-8px); }
+  100% { transform: translateY(0px); }
 }
 
-/* 對話泡泡提示 */
-.chat-bubble-tooltip {
-  position: fixed;
-  bottom: 168px;
-  right: 40px;
-  background: #ffffff;
-  border: 1.5px solid #6ec9b3;
-  border-radius: 16px 16px 4px 16px;
-  padding: 10px 16px;
-  font-size: 13px;
-  color: #2c3e35;
-  font-weight: 500;
-  box-shadow: 0 6px 20px rgba(110, 201, 179, 0.25);
-  z-index: 1001;
-  white-space: nowrap;
-  pointer-events: none;
-  animation: bubbleAppear 0.4s cubic-bezier(0.25, 1, 0.5, 1) forwards;
-}
-
-.chat-bubble-tooltip::before {
-  content: '';
-  position: absolute;
-  bottom: -11px;
-  right: 20px;
-  border-width: 9px 8px 0;
-  border-style: solid;
-  border-color: #6ec9b3 transparent transparent;
-}
-
-.chat-bubble-tooltip::after {
-  content: '';
-  position: absolute;
-  bottom: -9px;
-  right: 21px;
-  border-width: 8px 7px 0;
-  border-style: solid;
-  border-color: #ffffff transparent transparent;
-}
-
-@keyframes bubbleAppear {
-  from { opacity: 0; transform: translateY(8px) scale(0.92); }
-  to   { opacity: 1; transform: translateY(0)  scale(1);    }
-}
-
-/* 當 AI 正在載入（思考中）時，讓整個按鈕產生溫和的放大縮小呼吸效果 */
 .chat-toggle.loading ng-lottie {
   animation: cat-pulse 1.2s infinite ease-in-out;
 }
@@ -366,10 +314,9 @@
 }
 
 /* ==========================================================================
-   全新新增：表情符號功能樣式（加在檔案最底部，不影響既有排版）
+   表情符號功能樣式
    ========================================================================== */
 
-/* 輸入框左側的笑臉切換按鈕 */
 .emoji-toggle-btn {
   background: none;
   border: none;
@@ -397,7 +344,7 @@
   bottom: 74px;
   left: 16px;
   right: 16px;
-  background: rgba(255, 255, 255, 0.85); /* 表情面板也同步升級為高階毛玻璃 */
+  background: rgba(255, 255, 255, 0.85);
   backdrop-filter: blur(15px);
   -webkit-backdrop-filter: blur(15px);
   border: 1px solid rgba(255, 255, 255, 0.5);
@@ -435,11 +382,14 @@
   background: rgba(110, 201, 179, 0.2);
   transform: scale(1.25);
 }
-/* 確保外層具備定位基準 */
+
 .cat-float-container {
   position: relative;
 }
 
+/* ==========================================================================
+   精緻綠色漸層提示對話框樣式
+   ========================================================================== */
 .chat-hint-bubble {
   position: absolute;
   top: -25px;
@@ -453,8 +403,6 @@
   z-index: 1001;
   display: flex;
   align-items: center;
-
-  /* 字體抗鋸齒與邊緣高清細節 */
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
   font-size: 13px;
   font-weight: 600;
@@ -462,14 +410,10 @@
   text-shadow: 0 1px 2px rgba(0, 0, 0, 0.15);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-
-  /* 防止 3D 縮放變形時字體虛化抖動的 GPU 硬體加速設定 */
   will-change: transform;
   backface-visibility: hidden;
   -webkit-backface-visibility: hidden;
   transform-style: preserve-3d;
-
-  /* 10 秒全自動循環動畫 */
   animation: hint-loop-cycle 10s infinite ease-in-out;
 }
 
@@ -526,15 +470,9 @@
     opacity: 1;
     transform: translateX(-50%) scale(1);
   }
-  40% {
-    transform: translateX(-50%) scale(1.08);
-  }
-  52% {
-    transform: translateX(-50%) scale(1);
-  }
-  64% {
-    transform: translateX(-50%) scale(1.08);
-  }
+  40% { transform: translateX(-50%) scale(1.08); }
+  52% { transform: translateX(-50%) scale(1); }
+  64% { transform: translateX(-50%) scale(1.08); }
   72% {
     opacity: 1;
     transform: translateX(-50%) scale(1);

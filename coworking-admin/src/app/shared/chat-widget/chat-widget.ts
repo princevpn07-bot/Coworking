@@ -3,8 +3,7 @@ import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AiService, AIAction, ChatMessage } from '../../services/ai';
 import { DatePipe } from '@angular/common';
-import { LottieComponent, AnimationOptions } from 'ngx-lottie'
-
+import { LottieComponent, AnimationOptions } from 'ngx-lottie';
 
 @Component({
   selector: 'app-chat-widget',
@@ -19,10 +18,9 @@ export class ChatWidget implements AfterViewChecked, OnInit, OnDestroy {
   today = new Date(); // show current date on ai-chat bot
   isOpen = signal(false);
   isLoading = signal(false);
-<<<<<<< HEAD
-  isTyping = signal(false); // 💡 新增：獨立控制目前是否正在逐字打字吐字中
+  isTyping = signal(false); // 💡 獨立控制目前是否正在逐字打字吐字中
 
-// 🌟 1. 全新新增：提示對話框狀態、文字與隨機語句庫
+  // 🌟 提示對話框狀態、文字與隨機語句庫
   hintText = signal('點我！✨');
   isHintVisible = signal(true);
   private hintPhrases = [
@@ -33,33 +31,18 @@ export class ChatWidget implements AfterViewChecked, OnInit, OnDestroy {
     '嗨！找我聊聊吧～🐱',
     '今天想去哪裡工作？☕'
   ];
-private hintTimer: any;
+  private hintTimer: any;
 
-  userInput = '';
-  messages: ChatMessage[] = [
-    { role: 'assistant', content: '你好！我是 COVO 的 AI 助理，有任何關於空間預約或平台功能的問題都可以問我！' }
-  ];
-=======
-  isTyping = signal(false);
   userInput = '';
   messages = signal<ChatMessage[]>([
-    { role: 'assistant', content: '你好！我是 Covo 的 AI 助理，有任何關於空間預約或平台功能的問題都可以問我！' }
+    { role: 'assistant', content: '你好！我是 COVO 的 AI 助理，有任何關於空間預約或平台功能的問題都可以問我！' }
   ]);
->>>>>>> origin/main
 
-  // 💡 1. 新增：控制表情面板顯示狀態的 Signal 與精選表情清單
+  // 💡 控制表情面板顯示狀態的 Signal 與精選表情清單
   showEmojiPicker = signal(false);
   emojis = ['😀', '😂', '🤣', '😊', '😍', '🥰', '😎', '🤔', '😭', '😮', '👍', '👏', '🙌', '🔥', '❤️', '✨'];
 
-  // 對話泡泡吸引使用者點擊
-  showBubble = signal(false);
-  bubbleAnimKey = signal(0);
-  bubbleMessages = ['想預約什麼空間嗎？🏢', '告訴我需求，我幫你篩選！✨', '找到最適合你的空間～🌿'];
-  bubbleIndex = signal(0);
-  private bubbleTimeout: any;
-  private bubbleInterval: any;
-
-catOptions: AnimationOptions = {
+  catOptions: AnimationOptions = {
     path: '/assets/json/Live chatbot.json',
     loop: true,
     autoplay: true,
@@ -68,23 +51,24 @@ catOptions: AnimationOptions = {
   // 用來控制動畫實例
   private animationItem: any;
 
-  // 💡 2. 新增：點擊笑臉時切換面板開關
+  // 💡 點擊笑臉時切換面板開關
   toggleEmojiPicker() {
     this.showEmojiPicker.update(v => !v);
   }
-// 💡 3. 新增：點擊表情符號時，直接加進輸入框文字中
+
+  // 💡 點擊表情符號時，直接加進輸入框文字中
   addEmoji(emoji: string) {
     this.userInput += emoji;
   }
+
   onAnimationCreated(animationItem: any) {
     this.animationItem = animationItem;
-    // 💡 2. 初始化成功後，預設進入待機狀態：速度放慢、只循環第 40~70 影格的眨眼動態
-
   }
+
   // 💡 滑鼠移入：變超快
- onHover() {
+  onHover() {
     if (this.animationItem && !this.isLoading() && !this.isTyping()) {
-    this.animationItem.setSpeed(1.0);
+      this.animationItem.setSpeed(1.0);
       this.animationItem.playSegments([0, 85], true);
     }
   }
@@ -92,33 +76,28 @@ catOptions: AnimationOptions = {
   // 💡 滑鼠移出：控制貓咪停下來，或切換到特定平靜姿勢
   onLeave() {
     if (this.animationItem && !this.isLoading() && !this.isTyping()) {
-      // 寫法一（推薦，最乾淨）：直接讓貓咪回到第 0 影格（最乖的預設姿勢）並靜止
       this.animationItem.setSpeed(0.3);
       this.animationItem.playSegments([40, 70], true);
     }
   }
 
-  //
   constructor(private aiService: AiService, private router: Router) {
-// 💡 只有在 constructor 裡面新增這段動態監聽，不影響其他 function
     effect(() => {
       const loading = this.isLoading();
       const typing = this.isTyping();
 
       if (this.animationItem) {
         if (loading || typing) {
-          // 無論是 AI 還在動腦，還是正在輸出答案，貓咪都呈現忙碌狀態（2.0倍速，播全套手舞足蹈）
           this.animationItem.setSpeed(2.0);
           this.animationItem.playSegments([0, 85], true);
         } else {
-          // 當不思考也不打字時，秒切回極簡溫潤的待機眨眼
           this.animationItem.setSpeed(0.6);
           this.animationItem.playSegments([40, 70], true);
-      }
-
+        }
       }
     });
-     // 🌟 2. 全新新增：啟動隨機對話定時器（每 10 秒更換一次，完美對齊 CSS 隱形週期）
+
+    // 🌟 啟動隨機對話定時器（每 3 秒更換一次）
     this.hintTimer = setInterval(() => {
       if (!this.isOpen() && this.isHintVisible()) {
         const randomIndex = Math.floor(Math.random() * this.hintPhrases.length);
@@ -126,7 +105,8 @@ catOptions: AnimationOptions = {
       }
     }, 3000);
   }
-// 🌟 3. 全新新增：關閉提示對話框的專屬函式
+
+  // 🌟 關閉提示對話框的專屬函式
   closeHint(event: MouseEvent) {
     event.stopPropagation(); // 💡 超關鍵：阻止事件向上冒泡，才不會意外把聊天視窗打開！
     this.isHintVisible.set(false);
@@ -134,6 +114,7 @@ catOptions: AnimationOptions = {
       clearInterval(this.hintTimer); // 關閉後清除定時器，釋放效能
     }
   }
+
   ngAfterViewChecked() {
     if (this.messageContainer) {
       const el = this.messageContainer.nativeElement;
@@ -142,25 +123,21 @@ catOptions: AnimationOptions = {
   }
 
   ngOnInit() {
-    this.bubbleTimeout = setTimeout(() => {
-      if (!this.isOpen()) this.showBubble.set(true);
-      this.bubbleInterval = setInterval(() => {
-        this.bubbleIndex.update(i => (i + 1) % this.bubbleMessages.length);
-        this.bubbleAnimKey.update(k => k + 1);
-      }, 5000);
-    }, 2000);
+    // 💡 已移除舊有的白色對話框初始化邏輯
   }
 
   ngOnDestroy() {
-    clearTimeout(this.bubbleTimeout);
-    clearInterval(this.bubbleInterval);
+    // 💡 確保組件銷毀時清除隨機對話計時器，防記憶體洩漏
+    if (this.hintTimer) {
+      clearInterval(this.hintTimer);
+    }
   }
 
   toggle() {
     this.isOpen.update(v => !v);
-    if (this.isOpen()) this.showBubble.set(false);
   }
-// 💡 全新外掛的打字機絲滑吐字函式（100% 安全，完全不破壞既有架構）
+
+  // 💡 外掛的打字機絲滑吐字函式
   typewriteMessage(fullText: string, onComplete?: () => void) {
     this.isTyping.set(true);
     this.messages.update(m => [...m, { role: 'assistant', content: '' }]);
@@ -183,6 +160,7 @@ catOptions: AnimationOptions = {
       }
     }, 30);
   }
+
   send() {
     const prompt = this.userInput.trim();
     if (!prompt || this.isLoading()) return;
@@ -197,11 +175,10 @@ catOptions: AnimationOptions = {
     this.aiService.ask(prompt, history).subscribe({
       next: (res) => {
         this.isLoading.set(false);
-        // 💡 2. 呼叫外掛打字機函式，並把原本的路由跳轉功能包裹成回呼函式（onComplete）傳入
         this.typewriteMessage(res.reply, () => {
-        if (res.action?.type === 'filter_spaces') {
-          setTimeout(() => this.navigateToSpaces(res.action!), 1200);
-        }
+          if (res.action?.type === 'filter_spaces') {
+            setTimeout(() => this.navigateToSpaces(res.action!), 1200);
+          }
         });
       },
       error: () => {
