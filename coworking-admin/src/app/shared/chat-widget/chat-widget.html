@@ -1,78 +1,76 @@
 @if (isOpen()) {
-  <div class="chat-box">
-    <div class="chat-header">
-      <span>CoWork AI 助理</span>
-      <button class="close-btn" (click)="toggle()">X</button>
-    </div>
-
-    <div class="chat-messages" #messageContainer>
-
-  <div class="chat-date-tag">
-    <span># {{ today | date:'yyyy.MM.dd'}}</span>
+<div class="chat-box">
+  <div class="chat-header">
+    <span>CoWork AI 助理</span>
+    <button class="close-btn" (click)="toggle()">X</button>
   </div>
 
-  @for (msg of messages; track $index) {
+  <div class="chat-messages" #messageContainer>
+
+    <div class="chat-date-tag">
+      <span># {{ today | date:'yyyy.MM.dd'}}</span>
+    </div>
+
+    @for (msg of messages; track $index) {
     <div class="message" [class.user]="msg.role === 'user'" [class.assistant]="msg.role === 'assistant'">
 
       @if (msg.role === 'assistant') {
-        <div class="avatar assistant-avatar">🐱</div>
+      <div class="avatar assistant-avatar">🐱</div>
       }
 
       <div class="bubble">{{ msg.content }}</div>
 
       @if (msg.role === 'user') {
-        <div class="avatar user-avatar">👤</div>
+      <div class="avatar user-avatar">👤</div>
       }
 
     </div>
-  }
+    }
 
-  @if (isLoading()) {
+    @if (isLoading()) {
     <div class="message assistant">
       <div class="avatar assistant-avatar">🐱</div>
       <div class="bubble loading">
         <span></span><span></span><span></span>
       </div>
     </div>
-  }
-</div>
-
-
-    @if (showEmojiPicker()) {
-      <div class="emoji-picker">
-        @for (emoji of emojis; track emoji) {
-          <button class="emoji-item" (click)="addEmoji(emoji)" type="button">{{ emoji }}</button>
-        }
-      </div>
     }
-<div class="chat-input">
-      <button class="emoji-toggle-btn" (click)="toggleEmojiPicker()" [disabled]="isLoading()" type="button">
-        😊
-      </button>
-      <textarea
-        [(ngModel)]="userInput"
-        (keydown)="onKeydown($event)"
-        placeholder="輸入問題，按 Enter 送出..."
-        rows="1"
-        [disabled]="isLoading()"
-      ></textarea>
-      <button (click)="send()" [disabled]="isLoading()">
-        >
-      </button>
-    </div>
   </div>
+
+
+  @if (showEmojiPicker()) {
+  <div class="emoji-picker">
+    @for (emoji of emojis; track emoji) {
+    <button class="emoji-item" (click)="addEmoji(emoji)" type="button">{{ emoji }}</button>
+    }
+  </div>
+  }
+  <div class="chat-input">
+    <button class="emoji-toggle-btn" (click)="toggleEmojiPicker()" [disabled]="isLoading()" type="button">
+      😊
+    </button>
+    <textarea [(ngModel)]="userInput" (keydown)="onKeydown($event)" placeholder="輸入問題，按 Enter 送出..." rows="1"
+      [disabled]="isLoading()"></textarea>
+    <button (click)="send()" [disabled]="isLoading()">
+      >
+    </button>
+  </div>
+</div>
 }
 
-<button class="chat-toggle" (click)="toggle()" [class.open]="isOpen()"
-        (mouseenter)="onHover()" (mouseleave)="onLeave()"> @if (isOpen()) { X } @else {
+<button class="chat-toggle" (click)="toggle()" [class.open]="isOpen()" (mouseenter)="onHover()"
+  (mouseleave)="onLeave()"> @if (isOpen()) { X } @else {
 
-    <div class="cat-float-container">
-      <ng-lottie
-        [options]="catOptions"
-        (animationCreated)="onAnimationCreated($event)"
-        width="130px"
-        height="130px">
-      </ng-lottie>
-    </div>
+  <div class="cat-float-container">
+      @if (isHintVisible()) {
+        <div class="chat-hint-bubble">
+          <span>{{ hintText() }}</span>
+          <button class="hint-close-btn" (click)="closeHint($event)">×</button>
+        </div>
+      }
+
+    <ng-lottie [options]="catOptions" (animationCreated)="onAnimationCreated($event)" width="130px" height="130px">
+    </ng-lottie>
+  </div>
   }
 </button>

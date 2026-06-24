@@ -1,46 +1,86 @@
 .chat-toggle {
   position: fixed;
-   bottom: 28px;
-   right: 28px;
-   width: 130px;             /* 💡 改為 90px，配合貓咪的大小 */
-   height: 130px;            /* 💡 改為 90px，配合貓咪的大小 */
-   border-radius: 50%;
-   background: transparent; /* 💡 關鍵：改成透明，移去原本的藍色背景 */
-   border: none;
-   cursor: pointer;
-   box-shadow: none;        /* 💡 關鍵：移除原本藍色按鈕的陰影 */
-   z-index: 1000;
-   transition: transform 0.2s;
-   display: flex;
-   justify-content: center;
-   align-items: center;
-   padding: 0;
+  bottom: 28px;
+  right: 28px;
+  width: 130px;
+  height: 130px;
+  border-radius: 50%;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  box-shadow: none;
+  z-index: 1000;
+  transition: all 0.3s cubic-bezier(0.25, 1, 0.5, 1); /* 讓縮放與縮小動態更絲滑 */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0;
+  outline: none;            /* 💡 移除瀏覽器預設的藍/黑點擊外框 */
+  -webkit-tap-highlight-color: transparent;
 }
 
-.chat-toggle:hover {
- background: transparent; /* 💡 游標滑過去時也保持透明，不會冒出藍色 */
-   transform: scale(1.1);   /* 💡 滑過去時貓咪會微微放大 1.1 倍，視覺互動感更好！ */
+.chat-toggle:hover:not(.open) {
+  background: transparent;
+  transform: scale(1.1);
 }
+
+/* 🌟 全新修正：當聊天室開啟時，按鈕自動收縮為精緻的毛玻璃關閉鈕，解決截圖中的重疊遮擋 Bug */
+.chat-toggle.open {
+  width: 46px;
+  height: 46px;
+  bottom: 34px;             /* 精準微調位置，使其優雅地浮在輸入框右下方 */
+  right: 34px;
+  background: rgba(255, 255, 255, 0.55);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  color: #45a68f;           /* 呼應主題的文青綠 X */
+  font-size: 16px;
+  font-weight: bold;
+  box-shadow: 0 8px 24px rgba(44, 107, 91, 0.15);
+}
+
+.chat-toggle.open:hover {
+  background: rgba(255, 255, 255, 0.8);
+  transform: scale(1.08);
+}
+
+/* ==========================================================================
+   2. 聊天室主視窗 - 頂級毛玻璃材質 (Glassmorphism)
+   ========================================================================== */
 .chat-box {
   position: fixed;
   bottom: 115px;
   right: 28px;
   width: 360px;
   height: 500px;
-  background: #ffffff;
+
+  /* 💡 毛玻璃核心 1：極致輕透的白底，讓地圖完美透上來 */
+  background: rgba(255, 255, 255, 0.42);
+
+  /* 💡 毛玻璃核心 2：大幅拉高模糊半徑，並增加飽和度，營造高奢乳白質感 */
+  backdrop-filter: blur(20px) saturate(160%);
+  -webkit-backdrop-filter: blur(20px) saturate(160%);
+
   border-radius: 24px;
-  /* 柔和的淺色微陰影 */
-  box-shadow: 0 12px 32px rgba(153, 216, 202, 0.12), 0 4px 12px rgba(0, 0, 0, 0.02);
   display: flex;
   flex-direction: column;
   z-index: 999;
   overflow: hidden;
-  border: 1px solid rgba(153, 216, 202, 0.3); /* 帶有極淡粉綠色的外框 */
+
+  /* 💡 毛玻璃核心 3：雙層外陰影與內高光線條，模擬真實玻璃邊緣的折射反光 */
+  border: 1px solid rgba(255, 255, 255, 0.55);
+  box-shadow:
+    inset 0 1px 1px rgba(255, 255, 255, 0.6),
+    0 16px 40px rgba(44, 107, 91, 0.12),
+    0 4px 12px rgba(0, 0, 0, 0.02);
 }
 
-/* 標頭：對照圖片風格，改為溫柔的文青粉綠色漸層 */
+/* 標頭：改為特調「有色毛玻璃 (Tinted Glass)」材質 */
 .chat-header {
-  background: linear-gradient(135deg, #6ec9b3, #54b59e);
+  background: linear-gradient(135deg, rgba(110, 201, 179, 0.65), rgba(84, 181, 158, 0.65));
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
   color: white;
   padding: 16px 20px;
   font-weight: 500;
@@ -49,10 +89,12 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.25);
+  text-shadow: 0 1px 2px rgba(44, 107, 91, 0.2);
 }
 
 .close-btn {
-  background: rgba(255, 255, 255, 0.18);
+  background: rgba(255, 255, 255, 0.25);
   border: none;
   color: white;
   font-size: 11px;
@@ -67,7 +109,7 @@
 }
 
 .close-btn:hover {
-  background: rgba(255, 255, 255, 0.3);
+  background: rgba(255, 255, 255, 0.4);
 }
 
 /* 對話紀錄區塊 */
@@ -78,36 +120,42 @@
   display: flex;
   flex-direction: column;
   gap: 16px;
-  background: #f4faf7; /* 💡 核心：完美複製圖片中那層非常療癒、淡淡的粉綠色底面 */
+
+  /* 💡 關鍵修正：底色改成極透的微薄荷綠，才不會把背後地圖的高斯模糊給吃掉！ */
+  background: rgba(244, 250, 247, 0.12);
 }
 
-/* 💡 新增：圖片左上角客製化的日期膠囊標籤樣式 */
+/* 日期膠囊標籤樣式 */
 .chat-date-tag {
   display: flex;
   margin-bottom: 4px;
 }
 .chat-date-tag span {
-  background: #87d1c0; /* 稍微深一點的薄荷綠 */
+  background: rgba(92, 191, 167, 0.75);
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
   color: white;
   font-size: 11px;
   padding: 3px 10px 4px 10px;
-  border-radius: 0 0 10px 0; /* 模擬圖片左上角的延伸感 */
+  border-radius: 8px;
   font-weight: 500;
   letter-spacing: 0.5px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 2px 8px rgba(44, 107, 91, 0.08);
 }
 
-/* 💡 新增：頭像的基本樣式 */
+/* 頭像的基本樣式 */
 .avatar {
   width: 36px;
   height: 36px;
   border-radius: 50%;
-  background: #ffffff;
-  border: 1px solid #e2f2ed;
+  background: rgba(255, 255, 255, 0.85);
+  border: 1px solid rgba(255, 255, 255, 0.6);
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: 18px;
-  box-shadow: 0 2px 6px rgba(153, 216, 202, 0.1);
+  box-shadow: 0 2px 6px rgba(153, 216, 202, 0.15);
   flex-shrink: 0;
 }
 
@@ -118,14 +166,14 @@
 }
 .chat-messages::-webkit-scrollbar-thumb,
 .chat-input textarea::-webkit-scrollbar-thumb {
-  background: #cbdcd5;
+  background: rgba(110, 201, 179, 0.3);
   border-radius: 10px;
 }
 
 .message {
   display: flex;
-  align-items: flex-start; /* 讓頭像跟對話框頂部對齊 */
-  gap: 10px;               /* 頭像與對話框之間的精緻間距 */
+  align-items: flex-start;
+  gap: 10px;
   animation: fadeInMessage 0.3s cubic-bezier(0.25, 1, 0.5, 1) forwards;
 }
 
@@ -151,64 +199,66 @@
   word-break: break-word;
 }
 
-/* 💡 完美複製：使用者氣泡（右側純白底色 + 細緻粉綠色邊框） */
+/* 使用者氣泡：微透光高清晰白色氣泡，在毛玻璃背景上極易閱讀 */
 .message.user .bubble {
-  background: #ffffff;
-  border: 1.5px solid #bce4d6; /* 💡 圖片中標誌性的粉綠色細外框 */
-  color: #2c3e35;              /* 深森林色文字，極具文青感 */
+  background: rgba(255, 255, 255, 0.82);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  border: 1px solid rgba(188, 228, 214, 0.7);
+  color: #1e3328;
   padding: 10px 14px;
-  border-radius: 16px 4px 16px 16px; /* 不對稱圓角 */
-  box-shadow: 0 3px 10px rgba(153, 216, 202, 0.06);
+  border-radius: 16px 4px 16px 16px;
+  box-shadow: 0 4px 12px rgba(76, 166, 143, 0.06);
 }
 
-/* 💡 完美複製：AI 助理氣泡（左側無背景、無邊框，直接輕飄在綠底上） */
+/* AI 助理氣泡 */
 .message.assistant .bubble {
-  background: transparent; /* 💡 拿掉背景框 */
+  background: transparent;
   border: none;
   box-shadow: none;
-  color: #2c3e35;
-  padding: 8px 4px; /* 貼合頭像的無框自然排版 */
+  color: #14261c;
+  padding: 8px 4px;
+  font-weight: 450;
 }
 
-/* 底部輸入區塊 */
+/* 底部輸入區塊：同樣維持精緻的半透明毛玻璃呼應 */
 .chat-input {
   display: flex;
   align-items: center;
   gap: 10px;
   padding: 14px 16px;
-  background: #ffffff;
-  border-top: 1px solid #eef7f4;
+  background: rgba(255, 255, 255, 0.22);
+  border-top: 1px solid rgba(255, 255, 255, 0.35);
 }
 
 .chat-input textarea {
   flex: 1;
   resize: none;
-  border: 1px solid #dbeee7;
+  border: 1px solid rgba(110, 201, 179, 0.3);
   border-radius: 14px;
   padding: 11px 14px;
   font-size: 14px;
   font-family: inherit;
   outline: none;
   max-height: 80px;
-  background: #f7fbf9;
-  color: #2c3e35;
+  background: rgba(255, 255, 255, 0.65);
+  color: #1e3328;
   transition: all 0.2s ease;
   overflow-y: auto;
 }
 
-/* 輸入框聚焦時 */
 .chat-input textarea:focus {
-  border-color: #6ec9b3;
+  border-color: rgba(110, 201, 179, 0.8);
   background: #ffffff;
-  box-shadow: 0 0 0 3px rgba(110, 201, 179, 0.12);
+  box-shadow: 0 0 0 3px rgba(110, 201, 179, 0.15);
 }
 
-/* 發送按鈕：同樣呼應文青粉綠色 */
+/* 發送按鈕 */
 .chat-input button {
   width: 38px;
   height: 38px;
   border-radius: 50%;
-  background: linear-gradient(135deg, #6ec9b3, #4ca68f);
+  background: linear-gradient(135deg, rgba(110, 201, 179, 0.9), rgba(84, 181, 158, 0.9));
   color: #ffffff;
   border: none;
   cursor: pointer;
@@ -223,11 +273,11 @@
 
 .chat-input button:hover:not(:disabled) {
   transform: scale(1.06);
-  box-shadow: 0 5px 14px rgba(76, 166, 143, 0.25);
+  box-shadow: 0 5px 14px rgba(76, 166, 143, 0.3);
 }
 
 .chat-input button:disabled {
-  background: #eef7f4;
+  background: rgba(238, 247, 244, 0.6);
   color: #b3cbd2;
   box-shadow: none;
   cursor: not-allowed;
@@ -288,7 +338,7 @@
 }
 
 .emoji-toggle-btn:hover:not(:disabled) {
-  transform: scale(1.18); /* 滑過去時微微放大，增加趣味性 */
+  transform: scale(1.18);
 }
 
 .emoji-toggle-btn:disabled {
@@ -296,24 +346,24 @@
   opacity: 0.4;
 }
 
-/* 表情符號彈出面板：採用絕對定位，優雅浮現在輸入框之上 */
 .emoji-picker {
   position: absolute;
-  bottom: 74px; /* 完美懸浮在底部輸入欄的上方 */
+  bottom: 74px;
   left: 16px;
   right: 16px;
-  background: #ffffff;
-  border: 1px solid rgba(230, 225, 218, 0.9); /* 對照主頁溫潤暖灰色邊框 */
+  background: rgba(255, 255, 255, 0.85); /* 表情面板也同步升級為高階毛玻璃 */
+  backdrop-filter: blur(15px);
+  -webkit-backdrop-filter: blur(15px);
+  border: 1px solid rgba(255, 255, 255, 0.5);
   border-radius: 16px;
-  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.06);
+  box-shadow: 0 8px 30px rgba(44, 107, 91, 0.15);
   display: grid;
-  grid-template-columns: repeat(8, 1fr); /* 一列精準排入 8 個表情，兩列共 16 個 */
+  grid-template-columns: repeat(8, 1fr);
   gap: 6px;
   padding: 10px;
   z-index: 1001;
   max-height: 110px;
   overflow-y: auto;
-  /* 絲滑的淡入並往上飄動的小動畫 */
   animation: slideUpEmoji 0.2s cubic-bezier(0.25, 1, 0.5, 1) forwards;
 }
 
@@ -322,7 +372,6 @@
   to { opacity: 1; transform: translateY(0); }
 }
 
-/* 面板內個別表情的樣式 */
 .emoji-item {
   background: none;
   border: none;
@@ -336,8 +385,122 @@
   transition: all 0.15s ease;
 }
 
-/* 滑鼠滑過個別表情時的精緻回饋 */
 .emoji-item:hover {
-  background: #f2efeb; /* 💡 完美對照：採用主頁相同的質感暖灰色作為選取底色 */
-  transform: scale(1.25); /* 放大凸顯目前選中的表情 */
+  background: rgba(110, 201, 179, 0.2);
+  transform: scale(1.25);
+}
+/* 確保外層具備定位基準 */
+.cat-float-container {
+  position: relative;
+}
+
+.chat-hint-bubble {
+  position: absolute;
+  top: -25px;
+  left: 50%;
+  background: linear-gradient(135deg, #5cbfa7, #45a68f);
+  color: #ffffff;
+  padding: 6px 32px 6px 14px;
+  border-radius: 20px;
+  white-space: nowrap;
+  box-shadow: 0 6px 18px rgba(71, 153, 131, 0.35);
+  z-index: 1001;
+  display: flex;
+  align-items: center;
+
+  /* 字體抗鋸齒與邊緣高清細節 */
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.6px;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.15);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+
+  /* 防止 3D 縮放變形時字體虛化抖動的 GPU 硬體加速設定 */
+  will-change: transform;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  transform-style: preserve-3d;
+
+  /* 10 秒全自動循環動畫 */
+  animation: hint-loop-cycle 10s infinite ease-in-out;
+}
+
+.hint-close-btn {
+  position: absolute;
+  right: 9px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: transparent;
+  border: none;
+  color: rgba(255, 255, 255, 0.85);
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  padding: 0 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  line-height: 1;
+  -webkit-font-smoothing: antialiased;
+}
+
+.hint-close-btn:hover {
+  color: #ffffff;
+  transform: translateY(-50%) scale(1.2);
+}
+
+.chat-hint-bubble::after {
+  content: '';
+  position: absolute;
+  bottom: -5px;
+  left: 50%;
+  transform: translateX(-50%);
+  border-width: 6px 6px 0;
+  border-style: solid;
+  border-color: #45a68f transparent;
+  display: block;
+  width: 0;
+}
+
+@keyframes hint-loop-cycle {
+  0%, 20% {
+    opacity: 0;
+    transform: translateX(-50%) scale(0);
+    visibility: hidden;
+  }
+  25% {
+    opacity: 1;
+    transform: translateX(-50%) scale(1.12);
+    visibility: visible;
+  }
+  28% {
+    opacity: 1;
+    transform: translateX(-50%) scale(1);
+  }
+  40% {
+    transform: translateX(-50%) scale(1.08);
+  }
+  52% {
+    transform: translateX(-50%) scale(1);
+  }
+  64% {
+    transform: translateX(-50%) scale(1.08);
+  }
+  72% {
+    opacity: 1;
+    transform: translateX(-50%) scale(1);
+  }
+  78% {
+    opacity: 0;
+    transform: translateX(-50%) scale(0);
+    visibility: hidden;
+  }
+  100% {
+    opacity: 0;
+    transform: translateX(-50%) scale(0);
+    visibility: hidden;
+  }
 }

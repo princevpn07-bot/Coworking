@@ -20,6 +20,20 @@ export class ChatWidget implements AfterViewChecked {
   isOpen = signal(false);
   isLoading = signal(false);
   isTyping = signal(false); // 💡 新增：獨立控制目前是否正在逐字打字吐字中
+
+// 🌟 1. 全新新增：提示對話框狀態、文字與隨機語句庫
+  hintText = signal('點我！✨');
+  isHintVisible = signal(true);
+  private hintPhrases = [
+    '點我！✨',
+    '有問題問我喔！🐾',
+    '找預約空間嗎？🏢',
+    '想找熱門座位？🔥',
+    '嗨！找我聊聊吧～🐱',
+    '今天想去哪裡工作？☕'
+  ];
+private hintTimer: any;
+
   userInput = '';
   messages: ChatMessage[] = [
     { role: 'assistant', content: '你好！我是 CoWork 的 AI 助理，有任何關於空間預約或平台功能的問題都可以問我！' }
@@ -85,10 +99,25 @@ catOptions: AnimationOptions = {
           this.animationItem.setSpeed(0.6);
           this.animationItem.playSegments([40, 70], true);
       }
+
       }
     });
+     // 🌟 2. 全新新增：啟動隨機對話定時器（每 10 秒更換一次，完美對齊 CSS 隱形週期）
+    this.hintTimer = setInterval(() => {
+      if (!this.isOpen() && this.isHintVisible()) {
+        const randomIndex = Math.floor(Math.random() * this.hintPhrases.length);
+        this.hintText.set(this.hintPhrases[randomIndex]);
+      }
+    }, 3000);
   }
-
+// 🌟 3. 全新新增：關閉提示對話框的專屬函式
+  closeHint(event: MouseEvent) {
+    event.stopPropagation(); // 💡 超關鍵：阻止事件向上冒泡，才不會意外把聊天視窗打開！
+    this.isHintVisible.set(false);
+    if (this.hintTimer) {
+      clearInterval(this.hintTimer); // 關閉後清除定時器，釋放效能
+    }
+  }
   ngAfterViewChecked() {
     if (this.messageContainer) {
       const el = this.messageContainer.nativeElement;
