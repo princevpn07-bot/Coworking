@@ -39,7 +39,7 @@
 .listing-section__feed {
   flex: 1;
   padding: 2rem;
-  overflow-y: flex;
+  overflow-y: flex; /* 空間預覽伸縮 */
   min-height: 0; /* 🔑 關鍵防禦：阻斷 flex 子元素無限外溢 */
 }
 /* --------------------------------------------------------------------------
