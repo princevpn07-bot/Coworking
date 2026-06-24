@@ -5,6 +5,10 @@ html, body {
   padding: 0;
 }
 
+body:has(.admin-wrapper.dark) {
+  background-color: #0f1117;
+}
+
 :root {
   --primary: #3D5A35;
   --surface-container: #FFFFFF;

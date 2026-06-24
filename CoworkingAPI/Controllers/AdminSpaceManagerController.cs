@@ -42,7 +42,10 @@ namespace CoworkingAPI.Controllers
                 status = s.status,
                 assetcount = _context.spaceasserts.Count(sa => sa.space_id == s.space_id),
                 imagePath = _context.SpaceImages.Where(i => i.space_id == s.space_id).Select(i => i.image_path).FirstOrDefault(),
-                introduction = s.introduction
+                introduction = s.introduction,
+                hourly_price = _context.Rents.Where(r => r.space_id == s.space_id && r.price_type == 1 && r.is_active == true).Select(r => r.price).FirstOrDefault(),
+                daily_price = _context.Rents.Where(r => r.space_id == s.space_id && r.price_type == 2 && r.is_active == true).Select(r => r.price).FirstOrDefault(),
+                monthly_price = _context.Rents.Where(r => r.space_id == s.space_id && r.price_type == 3 && r.is_active == true).Select(r => r.price).FirstOrDefault()
             }).ToListAsync();
 
             return Ok(spaceinfo);
@@ -95,6 +98,31 @@ namespace CoworkingAPI.Controllers
                 .ToListAsync();
 
             return Ok(locations);
+        }
+
+        [HttpPut("updaterent/{spaceId}")]
+        public async Task<IActionResult> UpdateRent(int spaceId, [FromBody] UpdateRentDto dto)
+        {
+            await UpsertRent(spaceId, 1, dto.hourly_price);
+            await UpsertRent(spaceId, 2, dto.daily_price);
+            await UpsertRent(spaceId, 3, dto.monthly_price);
+            await _context.SaveChangesAsync();
+            return NoContent();
+        }
+
+        private async Task UpsertRent(int spaceId, int priceType, decimal? price)
+        {
+            var rent = await _context.Rents.FirstOrDefaultAsync(r => r.space_id == spaceId && r.price_type == priceType);
+            if (price.HasValue)
+            {
+                if (rent == null)
+                    _context.Rents.Add(new Rent { space_id = spaceId, price_type = priceType, price = price, is_active = true });
+                else { rent.price = price; rent.is_active = true; }
+            }
+            else if (rent != null)
+            {
+                rent.is_active = false;
+            }
         }
 
         [HttpGet("assets/{space_id}")]

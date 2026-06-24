@@ -63,17 +63,19 @@
   -webkit-backdrop-filter: blur(20px) saturate(160%);
 
   border-radius: 24px;
+  box-shadow: 0 12px 32px rgba(153, 216, 202, 0.12), 0 4px 12px rgba(0, 0, 0, 0.02);
   display: flex;
   flex-direction: column;
   z-index: 999;
   overflow: hidden;
+  border: 1px solid rgba(153, 216, 202, 0.3);
+  opacity: 0.55;
+  transition: opacity 0.25s ease;
+}
 
-  /* 💡 毛玻璃核心 3：雙層外陰影與內高光線條，模擬真實玻璃邊緣的折射反光 */
-  border: 1px solid rgba(255, 255, 255, 0.55);
-  box-shadow:
-    inset 0 1px 1px rgba(255, 255, 255, 0.6),
-    0 16px 40px rgba(44, 107, 91, 0.12),
-    0 4px 12px rgba(0, 0, 0, 0.02);
+.chat-box:hover,
+.chat-box:focus-within {
+  opacity: 1;
 }
 
 /* 標頭：改為特調「有色毛玻璃 (Tinted Glass)」材質 */
@@ -307,6 +309,50 @@
   100% {
     transform: translateY(0px);
   }
+}
+
+/* 對話泡泡提示 */
+.chat-bubble-tooltip {
+  position: fixed;
+  bottom: 168px;
+  right: 40px;
+  background: #ffffff;
+  border: 1.5px solid #6ec9b3;
+  border-radius: 16px 16px 4px 16px;
+  padding: 10px 16px;
+  font-size: 13px;
+  color: #2c3e35;
+  font-weight: 500;
+  box-shadow: 0 6px 20px rgba(110, 201, 179, 0.25);
+  z-index: 1001;
+  white-space: nowrap;
+  pointer-events: none;
+  animation: bubbleAppear 0.4s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+}
+
+.chat-bubble-tooltip::before {
+  content: '';
+  position: absolute;
+  bottom: -11px;
+  right: 20px;
+  border-width: 9px 8px 0;
+  border-style: solid;
+  border-color: #6ec9b3 transparent transparent;
+}
+
+.chat-bubble-tooltip::after {
+  content: '';
+  position: absolute;
+  bottom: -9px;
+  right: 21px;
+  border-width: 8px 7px 0;
+  border-style: solid;
+  border-color: #ffffff transparent transparent;
+}
+
+@keyframes bubbleAppear {
+  from { opacity: 0; transform: translateY(8px) scale(0.92); }
+  to   { opacity: 1; transform: translateY(0)  scale(1);    }
 }
 
 /* 當 AI 正在載入（思考中）時，讓整個按鈕產生溫和的放大縮小呼吸效果 */

@@ -361,6 +361,33 @@
             (ngModelChange)="editDraft.update(d => d ? {...d, introduction: $event} : d)"
             placeholder="請輸入空間介紹說明..."></textarea>
         </div>
+        <div class="panel-section-title" style="margin-top:8px;">
+          <span class="material-symbols-outlined">payments</span>
+          租金設定
+        </div>
+        <div class="panel-form-row">
+          <div class="panel-form-group">
+            <label>時租（元/小時）</label>
+            <input type="number" min="0"
+              [ngModel]="draft.hourlyPrice"
+              (ngModelChange)="editDraft.update(d => d ? {...d, hourlyPrice: $event ? +$event : null} : d)"
+              placeholder="未設定" />
+          </div>
+          <div class="panel-form-group">
+            <label>日租（元/天）</label>
+            <input type="number" min="0"
+              [ngModel]="draft.dailyPrice"
+              (ngModelChange)="editDraft.update(d => d ? {...d, dailyPrice: $event ? +$event : null} : d)"
+              placeholder="未設定" />
+          </div>
+        </div>
+        <div class="panel-form-group" style="max-width:50%;">
+          <label>月租（元/月）</label>
+          <input type="number" min="0"
+            [ngModel]="draft.monthlyPrice"
+            (ngModelChange)="editDraft.update(d => d ? {...d, monthlyPrice: $event ? +$event : null} : d)"
+            placeholder="未設定" />
+        </div>
         @if (panelUpdateError()) {
           <p class="panel-update-error">
             <span class="material-symbols-outlined">error</span>
@@ -410,6 +437,34 @@
         <div class="panel-intro">
           <p>{{ space.introduction }}</p>
         </div>
+      }
+
+      @if (space.hourlyPrice || space.dailyPrice || space.monthlyPrice) {
+        <div class="panel-rent-row">
+          @if (space.hourlyPrice) {
+            <div class="rent-item">
+              <span class="material-symbols-outlined">schedule</span>
+              <span class="rent-label">時租</span>
+              <span class="rent-value">NT$ {{ space.hourlyPrice | number }} / 小時</span>
+            </div>
+          }
+          @if (space.dailyPrice) {
+            <div class="rent-item">
+              <span class="material-symbols-outlined">today</span>
+              <span class="rent-label">日租</span>
+              <span class="rent-value">NT$ {{ space.dailyPrice | number }} / 天</span>
+            </div>
+          }
+          @if (space.monthlyPrice) {
+            <div class="rent-item">
+              <span class="material-symbols-outlined">calendar_month</span>
+              <span class="rent-label">月租</span>
+              <span class="rent-value">NT$ {{ space.monthlyPrice | number }} / 月</span>
+            </div>
+          }
+        </div>
+      } @else {
+        <div class="panel-rent-empty">尚未設定租金</div>
       }
     }
 

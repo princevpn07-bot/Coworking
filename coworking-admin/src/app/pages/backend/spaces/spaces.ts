@@ -1,5 +1,5 @@
 import { Component, OnInit, inject, signal, computed, ViewEncapsulation } from '@angular/core';
-import { NgClass } from '@angular/common';
+import { NgClass, DecimalPipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { AdminSpaceAssertsDto, AdminSpaceInfoDto, CreateSpace, Location, SpaceAsset, SpaceImageItem, SpaceStatus, SpaceView } from '../../../models/space.model';
 import { SpaceService } from '../../../services/space';
@@ -17,7 +17,7 @@ const STATUS_MAP: Record<number, SpaceStatus> = {
 
 @Component({
   selector: 'app-spaces',
-  imports: [NgClass, FormsModule],
+  imports: [NgClass, FormsModule, DecimalPipe],
   templateUrl: './spaces.html',
   styleUrl: './spaces.css',
   encapsulation: ViewEncapsulation.None,
@@ -87,7 +87,7 @@ export class Spaces implements OnInit {
   readonly panelUpdating = signal(false);
   readonly panelUpdateError = signal('');
   readonly panelStatusError = signal('');
-  readonly editDraft = signal<{ name: string; locationId: number; capacity: number; status: SpaceStatus; introduction: string | null } | null>(null);
+  readonly editDraft = signal<{ name: string; locationId: number; capacity: number; status: SpaceStatus; introduction: string | null; hourlyPrice: number | null; dailyPrice: number | null; monthlyPrice: number | null } | null>(null);
   readonly panelImages = signal<SpaceImageItem[]>([]);
   readonly imagesLoading = signal(false);
   readonly uploadingImage = signal(false);
@@ -244,6 +244,9 @@ export class Spaces implements OnInit {
       imagePath: d.imagePath ?? '',
       introduction: d.introduction ?? null,
       isPendingReview: d.status === 5,
+      hourlyPrice: d.hourly_price ?? null,
+      dailyPrice: d.daily_price ?? null,
+      monthlyPrice: d.monthly_price ?? null,
     };
   }
 
@@ -336,7 +339,7 @@ export class Spaces implements OnInit {
   openEditMode(): void {
     const s = this.selectedSpace();
     if (!s) return;
-    this.editDraft.set({ name: s.name, locationId: s.locationId, capacity: s.capacity, status: s.status, introduction: s.introduction });
+    this.editDraft.set({ name: s.name, locationId: s.locationId, capacity: s.capacity, status: s.status, introduction: s.introduction, hourlyPrice: s.hourlyPrice, dailyPrice: s.dailyPrice, monthlyPrice: s.monthlyPrice });
     this.panelUpdateError.set('');
     this.panelEditMode.set(true);
     if (this.locationOptions().length === 0) {
@@ -372,6 +375,7 @@ export class Spaces implements OnInit {
     this.panelUpdateError.set('');
     this.spaceService.update(payload as any).subscribe({
       next: () => {
+        this.spaceService.updateRent(s.id, draft.hourlyPrice, draft.dailyPrice, draft.monthlyPrice).subscribe();
         const updated: SpaceView = {
           ...s,
           name: draft.name,
@@ -380,6 +384,9 @@ export class Spaces implements OnInit {
           capacity: draft.capacity,
           status: draft.status,
           introduction: draft.introduction,
+          hourlyPrice: draft.hourlyPrice,
+          dailyPrice: draft.dailyPrice,
+          monthlyPrice: draft.monthlyPrice,
         };
         this.selectedSpace.set(updated);
         this.spaces.update(list => list.map(item => item.id === updated.id ? updated : item));
