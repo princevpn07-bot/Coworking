@@ -109,12 +109,35 @@
   color: #fff;
 }
 
-/* 修改狀態顏色，與原代碼邏輯保持一致，但樣式更精確 */
-.status-0 { color: #f48a1d; } /* 待確認 */
-.status-1 { color: #2e7d32; } /* 已確認 */
-.status-2 { color: #c62828; } /* 已取消 */
-.status-3 { color: #3949ab; } /* 已完成 */
+/* 狀態 0：待確認（使用優雅的高級感暖橘襯底） */
+.status-0 { 
+  background-color: rgba(255, 243, 224, 0.95); 
+  color: #f48a1d; 
+  border: 1px solid rgba(244, 138, 29, 0.3);
+} 
 
+/* 狀態 1：已確認 🔥🔥🔥 改為顯眼的實心經典綠，搭配層次陰影，保證一眼聚焦 */
+.status-1 { 
+  background-color: #2e7d32 !important; 
+  color: #ffffff !important; 
+  font-weight: 800;
+  box-shadow: 0 4px 14px rgba(46, 125, 50, 0.5);
+  border: 1px solid #1b5e20;
+} 
+
+/* 狀態 2：已取消（使用低飽和的柔和紅襯底） */
+.status-2 { 
+  background-color: rgba(255, 235, 235, 0.95); 
+  color: #c62828; 
+  border: 1px solid rgba(198, 40, 40, 0.2);
+} 
+
+/* 狀態 3：已完成（使用內斂的莫蘭迪藍灰襯底） */
+.status-3 { 
+  background-color: rgba(232, 234, 246, 0.95); 
+  color: #3949ab; 
+  border: 1px solid rgba(57, 73, 171, 0.2);
+}
 /* 右側資訊區 */
 .order-card__info-section {
   flex: 1;
